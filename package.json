@@ -4,8 +4,27 @@
   "description": "",
   "main": "./src/main.js",
   "type": "module",
+  "imports": {
+    "#config": "./src/config/config.js",
+    "#prisma/*": "./src/prisma/*",
+    "#repositories": "./src/repositories/index.js",
+    "#constants": "./src/common/constants/index.js",
+    "#exceptions": "./src/common/exceptions/index.js",
+    "#controllers": "./src/controllers/index.js",
+    "#services": "./src/services/index.js",
+    "#middlewares": "./src/middlewares/index.js",
+    "#providers": "./src/providers/index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --env-file=./env/.env.development ./src/main.js",
+    "prod": "node --env-file=./env/.env.production src/main.js",
+    "prisma:emit": "dotenv -e ./env/.env.development -- prisma contract emit",
+    "prisma:init": "dotenv -e ./env/.env.development -- prisma db init",
+    "prisma:update": "dotenv -e ./env/.env.development -- prisma db update",
+    "seed": "node --env-file=./env/.env.development ./scripts/seed.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -14,6 +33,7 @@
     "node": ">=24"
   },
   "dependencies": {
+    "15-bias-photo-phoeniv-be": "link:",
     "@prisma/orm-postgres": "8.0.0-rc.18",
     "awilix": "^13.0.5",
     "bcrypt": "^6.0.0",
