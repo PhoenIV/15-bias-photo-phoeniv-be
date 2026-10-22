@@ -1,0 +1,35 @@
+{
+  "name": "15-bias-photo-phoeniv-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@prisma/orm-postgres": "8.0.0-rc.18",
+    "awilix": "^13.0.5",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@faker-js/faker": "^10.6.0",
+    "@types/node": "^26.6.5",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^10.13.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.10",
+    "prisma": "8.0.0-rc.23"
+  }
+}
