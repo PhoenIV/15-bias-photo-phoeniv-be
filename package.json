@@ -33,7 +33,6 @@
     "node": ">=24"
   },
   "dependencies": {
-    "15-bias-photo-phoeniv-be": "link:",
     "@prisma/orm-postgres": "8.0.0-rc.18",
     "awilix": "^13.0.5",
     "bcrypt": "^6.0.0",

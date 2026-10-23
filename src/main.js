@@ -1,5 +1,5 @@
 import { App } from './app.js';
-import { config } from 'zod/v4/core';
+import { config } from '#config';
 import { setupGracefulShutdown } from './common/lifecycle/graceful-shutdown.js';
 import { EXIT_CODE } from './common/constants/exit-code.js';
 
