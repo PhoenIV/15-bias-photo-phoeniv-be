@@ -42,9 +42,9 @@ const parseEnvironment = () => {
 
 export const config = parseEnvironment();
 
-export const isDevelopment = config.NODE_ENV === 'development';
-export const isProduction = config.NODE_ENV === 'production';
-export const isTest = config.NODE_ENV === 'test';
+export const isDevelopment = config.NODE_ENV === 'DEVELOPMENT';
+export const isProduction = config.NODE_ENV === 'PRODUCTION';
+export const isTest = config.NODE_ENV === 'TEST';
 
 export const corsOrigins = config.CORS_ORIGINS.split(',')
   .map((origin) => origin.trim())
