@@ -24,7 +24,8 @@
     "seed": "node --env-file=./env/.env.development ./scripts/seed.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -49,11 +50,15 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@faker-js/faker": "^10.6.0",
     "@types/node": "^26.6.5",
     "dotenv-cli": "^11.0.0",
     "eslint": "^10.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.10",
     "prisma": "8.0.0-rc.27"
