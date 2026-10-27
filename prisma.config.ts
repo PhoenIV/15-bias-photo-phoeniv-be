@@ -9,6 +9,6 @@ export default definePrismaConfig({
     },
   }),
   skills: {
-    check: false,
+    check: true,
   },
 });
