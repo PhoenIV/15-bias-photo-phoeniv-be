@@ -23,8 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9e07ba63e0d34088ee0cb317fe58f500b9aad2eed307f24c36d2f6df98008cdf'>;
-export type ExecutionHash = ExecutionHashBase<string>;
+  StorageHashBase<'93b6141a1d1f87244b599acc6cd86eeb01e8d66c04d7573c375aa4bb3de5e97a'>;
+export type ExecutionHash =
+  ExecutionHashBase<'5a452a55476d56f65f87b544dce1877d52e7335b5ec8af486886a19ac969e7ce'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -242,8 +243,8 @@ type FieldTypeOverrides = {
     readonly models: {
       readonly ExchangeOffer: {
         readonly status: {
-          readonly output: 'PENDING' | 'APPROVED' | 'REJECTED';
-          readonly input: 'PENDING' | 'APPROVED' | 'REJECTED';
+          readonly output: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+          readonly input: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
         };
       };
       readonly Notification: {
@@ -355,8 +356,8 @@ type ColumnTypeOverrides = {
   readonly public: {
     readonly exchange_offer: {
       readonly status: {
-        readonly output: 'PENDING' | 'APPROVED' | 'REJECTED';
-        readonly input: 'PENDING' | 'APPROVED' | 'REJECTED';
+        readonly output: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+        readonly input: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
       };
     };
     readonly notification: {
@@ -701,7 +702,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
               };
@@ -1382,7 +1382,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
                 readonly user_card_id: {
@@ -1509,7 +1508,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
               };
@@ -1569,7 +1567,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
               };
@@ -1620,7 +1617,7 @@ type ContractBase = Omit<
           readonly valueSet: {
             readonly ExchangeStatus: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['PENDING', 'APPROVED', 'REJECTED'];
+              readonly values: readonly ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
             };
             readonly Genre: {
               readonly kind: 'valueSet';
@@ -2601,6 +2598,7 @@ type ContractBase = Omit<
               { readonly name: 'PENDING'; readonly value: 'PENDING' },
               { readonly name: 'APPROVED'; readonly value: 'APPROVED' },
               { readonly name: 'REJECTED'; readonly value: 'REJECTED' },
+              { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
             ];
           };
           readonly Genre: {
@@ -2660,6 +2658,7 @@ type ContractBase = Omit<
             { readonly name: 'PENDING'; readonly value: 'PENDING' },
             { readonly name: 'APPROVED'; readonly value: 'APPROVED' },
             { readonly name: 'REJECTED'; readonly value: 'REJECTED' },
+            { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
           ];
           readonly Genre: readonly [
             { readonly name: 'ALBUM'; readonly value: 'ALBUM' },
@@ -2726,6 +2725,49 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
+  readonly execution: {
+    readonly executionHash: ExecutionHash;
+    readonly mutations: {
+      readonly defaults: readonly [
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'exchange_offer';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'sale';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'user';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'user_card';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+      ];
+    };
+  };
   readonly meta: {};
 
   readonly profileHash: ProfileHash;

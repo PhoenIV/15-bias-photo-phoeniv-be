@@ -4,7 +4,7 @@ import { HealthCheckController } from './health-check.controller.js';
 export class Controller extends BaseController {
   constructor() {
     super();
-    this.healthCheckController = new HealthCheckController;
+    this.healthCheckController = new HealthCheckController();
   }
 
   routes() {

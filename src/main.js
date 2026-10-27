@@ -5,7 +5,6 @@ import { setupGracefulShutdown } from './common/lifecycle/graceful-shutdown.js';
 import { EXIT_CODE } from './common/constants/exit-code.js';
 import { Controller } from '#controllers';
 
-
 async function bootstrap() {
   const controller = new Controller();
   const app = new App(controller, config);

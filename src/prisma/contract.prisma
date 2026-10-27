@@ -32,6 +32,7 @@ enum ExchangeStatus {
   PENDING
   APPROVED
   REJECTED
+  CANCELLED
 }
 
 enum NotificationType {
@@ -51,15 +52,15 @@ enum PointHistoryType {
 
 namespace public {
   model User {
-    id             Int               @id @default(autoincrement())
-    email          String            @unique
-    nickname       String            @unique
+    id             Int                      @id @default(autoincrement())
+    email          String                   @unique
+    nickname       String                   @unique
     password       String?
-    provider       OAuthProvider     @default(LOCAL)
-    providerId     String?           @map("provider_id")
-    point          Int               @default(0)
-    createdAt      TimestamptzString @default(now()) @map("created_at")
-    updatedAt      TimestamptzString @default(now()) @map("updated_at")
+    provider       OAuthProvider            @default(LOCAL)
+    providerId     String?                  @map("provider_id")
+    point          Int                      @default(0)
+    createdAt      TimestamptzString        @default(now()) @map("created_at")
+    updatedAt      temporal.UpdatedAtString @map("updated_at")
     photoCards     PhotoCard[]
     userCards      UserCard[]
     sales          Sale[]
@@ -97,15 +98,15 @@ namespace public {
   }
 
   model UserCard {
-    id             Int               @id @default(autoincrement())
-    netQuantity    Int               @map("net_quantity")
-    totalQuantity  Int               @map("total_quantity")
-    createdAt      TimestamptzString @default(now()) @map("created_at")
-    updatedAt      TimestamptzString @default(now()) @map("updated_at")
-    photoCardId    Int               @map("photo_card_id")
-    photoCard      PhotoCard         @relation(fields: [photoCardId], references: [id], onDelete: Restrict)
-    ownerId        Int               @map("owner_id")
-    owner          User              @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+    id             Int                      @id @default(autoincrement())
+    netQuantity    Int                      @map("net_quantity")
+    totalQuantity  Int                      @map("total_quantity")
+    createdAt      TimestamptzString        @default(now()) @map("created_at")
+    updatedAt      temporal.UpdatedAtString @map("updated_at")
+    photoCardId    Int                      @map("photo_card_id")
+    photoCard      PhotoCard                @relation(fields: [photoCardId], references: [id], onDelete: Restrict)
+    ownerId        Int                      @map("owner_id")
+    owner          User                     @relation(fields: [ownerId], references: [id], onDelete: Restrict)
     sales          Sale[]
     exchangeOffers ExchangeOffer[]
 
@@ -116,20 +117,20 @@ namespace public {
   }
 
   model Sale {
-    id                  Int                @id @default(autoincrement())
+    id                  Int                      @id @default(autoincrement())
     price               Int
-    totalQuantity       Int                @map("total_quantity")
-    remainingQuantity   Int                @map("remaining_quantity")
-    exchangeGrade       Grade?             @map("exchange_grade")
-    exchangeGenre       Genre?             @map("exchange_genre")
-    exchangeDescription String?            @map("exchange_description")
-    createdAt           TimestamptzString  @default(now()) @map("created_at")
-    updatedAt           TimestamptzString  @default(now()) @map("updated_at")
-    cancelledAt         TimestamptzString? @map("cancelled_at")
-    sellerId            Int                @map("seller_id")
-    seller              User               @relation(fields: [sellerId], references: [id], onDelete: Restrict)
-    userCardId          Int                @map("user_card_id")
-    userCard            UserCard           @relation(fields: [userCardId], references: [id], onDelete: Restrict)
+    totalQuantity       Int                      @map("total_quantity")
+    remainingQuantity   Int                      @map("remaining_quantity")
+    exchangeGrade       Grade?                   @map("exchange_grade")
+    exchangeGenre       Genre?                   @map("exchange_genre")
+    exchangeDescription String?                  @map("exchange_description")
+    createdAt           TimestamptzString        @default(now()) @map("created_at")
+    updatedAt           temporal.UpdatedAtString @map("updated_at")
+    cancelledAt         TimestamptzString?       @map("cancelled_at")
+    sellerId            Int                      @map("seller_id")
+    seller              User                     @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+    userCardId          Int                      @map("user_card_id")
+    userCard            UserCard                 @relation(fields: [userCardId], references: [id], onDelete: Restrict)
     purchases           Purchase[]
     exchangeOffers      ExchangeOffer[]
     notifications       Notification[]
@@ -160,17 +161,17 @@ namespace public {
   }
 
   model ExchangeOffer {
-    id                Int               @id @default(autoincrement())
+    id                Int                      @id @default(autoincrement())
     description       String?
-    status            ExchangeStatus    @default(PENDING)
-    createdAt         TimestamptzString @default(now()) @map("created_at")
-    updatedAt         TimestamptzString @default(now()) @map("updated_at")
-    saleId            Int               @map("sale_id")
-    sale              Sale              @relation(fields: [saleId], references: [id], onDelete: Restrict)
-    proposerId        Int               @map("proposer_id")
-    proposer          User              @relation(fields: [proposerId], references: [id], onDelete: Restrict)
-    offeredUserCardId Int               @map("offered_user_card_id")
-    offeredUserCard   UserCard          @relation(fields: [offeredUserCardId], references: [id], onDelete: Restrict)
+    status            ExchangeStatus           @default(PENDING)
+    createdAt         TimestamptzString        @default(now()) @map("created_at")
+    updatedAt         temporal.UpdatedAtString @map("updated_at")
+    saleId            Int                      @map("sale_id")
+    sale              Sale                     @relation(fields: [saleId], references: [id], onDelete: Restrict)
+    proposerId        Int                      @map("proposer_id")
+    proposer          User                     @relation(fields: [proposerId], references: [id], onDelete: Restrict)
+    offeredUserCardId Int                      @map("offered_user_card_id")
+    offeredUserCard   UserCard                 @relation(fields: [offeredUserCardId], references: [id], onDelete: Restrict)
     notifications     Notification[]
 
     @@unique([saleId, offeredUserCardId]) // 같은 카드로 같은 판매글에 중복제안 방지
