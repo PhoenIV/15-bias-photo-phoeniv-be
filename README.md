@@ -1,1 +1,118 @@
-# 15-bias-photo-phoeniv-be develop
+# PhoenIV
+
+[팀 협업 문서](https://app.notion.com/p/b0c8c54986818390ad5d018ef529bd16?v=9998c5498681829b87858877c6f5c7b8)
+
+## 팀원 구성
+
+| 이름 | 담당 | 개인 GitHub 링크 |
+| --- | --- | --- |
+| **임의균** (팀장) | 인증(회원가입, 로그인) | [Limug-g](https://github.com/Limug-g) |
+| **박수환** | 판매 + 교환 | 추후 추가 |
+| **이승현** | 판매 + 교환 | 추후 추가 |
+| **김수지** | 마이갤러리 + 포토카드 생성 | 추후 추가 |
+| **김숙연** | 랜덤박스 + 알림 + 프로필 | 추후 추가 |
+
+---
+
+## 프로젝트 소개
+
+- **서비스명:** 최애의 포토 (bias-photo)
+- 좋아하는 아이돌·스포츠 스타·그림의 디지털 포토카드를 사고팔고 교환하며 나만의 컬렉션을 완성하는 수집 커뮤니티 플랫폼입니다.
+- **백엔드:** 회원 인증, 포토카드 거래, 포인트·알림 기능을 위한 API와 데이터 처리 로직을 개발합니다.
+- **프로젝트 기간:** 2026.10.23 ~ 2026.11.12
+
+---
+
+## 기술 스택
+
+| 구분 | 사용 기술 |
+| --- | --- |
+| Frontend | JavaScript(ESM), React, Next.js(App Router), TanStack Query, vanilla-extract |
+| Backend | JavaScript(ESM), Node.js, Express 5, Prisma 8(RC), Zod |
+| 인증 | JWT(jsonwebtoken), bcrypt, cookie-parser |
+| 서버 구성·보안 | Awilix(의존성 연결 관리), Helmet, CORS |
+| 이미지 업로드·저장 | Multer, Cloudinary |
+| Database | PostgreSQL, Neon(공용 개발 DB) |
+| API 문서·확인 | Swagger(swagger-jsdoc, swagger-ui-express), Postman |
+| DB 확인 | DBeaver |
+| 개발·로그 도구 | nodemon, Morgan, dotenv-cli |
+| 테스트 데이터 생성 | Faker(@faker-js/faker) |
+| 패키지 관리 | pnpm |
+| 코드 검사 | ESLint, perfectionist(프론트엔드 컨벤션), Prettier |
+| 커밋·리뷰 자동화 | Husky, lint-staged, Commitlint, CodeRabbit |
+| 공통 Tool | Git, GitHub, Discord, Notion, Figma |
+| 배포 계획 | Vercel(프론트엔드), Render(백엔드) |
+
+프론트엔드와 공통 도구는 팀 문서와 합의한 기술 스택을 기준으로 작성했습니다. 백엔드 패키지는 현재 팀 저장소의 `package.json`을 기준으로 보완했으며, Prisma 8은 RC 버전을 사용합니다.
+
+---
+
+## 협업 규칙 요약
+
+- **역할 분담:** 각자 담당 기능의 프론트엔드와 백엔드를 함께 구현하고, 초기 세팅과 공용 컴포넌트는 역할을 나누어 작업합니다.
+- **진행 공유:** 매일 오전 10시 데일리 스크럼에서 어제 한 일, 오늘 할 일, 막힌 내용을 공유합니다. 코어타임은 오후 5시까지이며, 개인 일정은 긴급한 경우를 제외하고 이틀 전에 알립니다.
+- **작업·브랜치:** 관련 Issue를 기준으로 `develop`에서 작업 브랜치를 만들고 PR로 통합합니다. `main`은 배포용이며, `main`·`develop`에 직접 push하지 않습니다.
+- **커밋·PR:** `type(scope): 제목` 형식으로 작성합니다. 예: `feat(auth): 로그인 기능 구현`. PR에는 관련 이슈, 변경 내용과 확인 결과를 적고, UI 변경 시 화면 자료를 첨부합니다.
+- **리뷰·공통 규칙:** 팀원 리뷰와 승인 후 병합합니다. 공통 파일 변경은 먼저 공유하고, ESLint·Prettier 설정과 합의한 API 명세·응답 형식을 따릅니다.
+- **AI 활용:** 생성된 코드는 본인이 이해하고 설명할 수 있을 때 사용합니다. CodeRabbit 의견도 현재 코드와 요구사항을 확인한 뒤 필요한 내용을 반영합니다.
+
+상세 컨벤션은 [팀 협업 문서](https://app.notion.com/p/b0c8c54986818390ad5d018ef529bd16?v=9998c5498681829b87858877c6f5c7b8)와 [GitHub 협업·커밋·PR 가이드](https://app.notion.com/p/GitHub-4058c5498681807596aed09dae90a3e9)에서 확인할 수 있습니다.
+
+---
+
+## 팀원별 구현 기능 상세
+
+개발하면서 각자 구현 내용과 사진 또는 GIF를 추가하고, 테스트·버그 수정 단계에서 최종 결과를 정리할 예정입니다.
+
+### 임의균
+
+<!-- 담당: 인증(회원가입, 로그인). 구현 내용과 화면 자료는 추후 작성합니다. -->
+
+### 박수환
+
+<!-- 담당: 판매 + 교환. 개인별 구현 범위와 화면 자료는 추후 작성합니다. -->
+
+### 이승현
+
+<!-- 담당: 판매 + 교환. 개인별 구현 범위와 화면 자료는 추후 작성합니다. -->
+
+### 김수지
+
+<!-- 담당: 마이갤러리 + 포토카드 생성. 구현 내용과 화면 자료는 추후 작성합니다. -->
+
+### 김숙연
+
+<!-- 담당: 랜덤박스 + 알림 + 프로필. 구현 내용과 화면 자료는 추후 작성합니다. -->
+
+---
+
+## 파일 구조
+
+프론트엔드와 백엔드는 별도 저장소로 관리합니다.
+
+- [Frontend 저장소](https://github.com/PhoenIV/15-bias-photo-phoeniv-fe)
+- [Backend 저장소](https://github.com/PhoenIV/15-bias-photo-phoeniv-be)
+
+현재 확인한 백엔드 주요 파일입니다. 기능별 전체 구조와 프론트엔드 구조는 개발하면서 추가합니다.
+
+```text
+15-bias-photo-phoeniv-be/
+├─ src/
+│  ├─ app.js        # Express 앱·공통 미들웨어·API 연결
+│  └─ main.js       # 서버 실행과 종료 처리 연결
+└─ package.json    # 사용 패키지와 실행 명령
+```
+
+`node_modules/`, `dist/`, Prisma 생성 파일과 환경변수 파일은 구조를 정리할 때 제외합니다.
+
+---
+
+## 구현 홈페이지
+
+배포 후 서비스 링크를 추가할 예정입니다.
+
+---
+
+## 프로젝트 회고록
+
+테스트·버그 수정 및 최종 발표 준비 단계에서 발표자료와 팀원별 회고 링크를 추가할 예정입니다.
