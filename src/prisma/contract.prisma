@@ -1,66 +1,66 @@
 // use prisma-8
 enum OAuthProvider {
   @@type("pg/text@1")
-  Local
-  Google
+  LOCAL
+  GOOGLE
 }
 
 enum Grade {
   @@type("pg/text@1")
-  Common
-  Rare
-  SuperRare
-  Legendary
+  COMMON
+  RARE
+  SUPER_RARE
+  LEGENDARY
 }
 
 enum Genre {
   @@type("pg/text@1")
-  Album
-  Special
-  FanSign
-  SeasonsGreetings
-  FanMeeting
-  Concert
+  ALBUM
+  SPECIAL
+  FAN_SIGN
+  SEASONS_GREETINGS
+  FAN_MEETING
+  CONCERT
   MD
-  Collab
-  FanClub
-  Others
+  COLLAB
+  FAN_CLUB
+  OTHERS
 }
 
 enum ExchangeStatus {
   @@type("pg/text@1")
-  Pending
-  Approved
-  Rejected
-  Cancelled // 교환 제시를 취소하는 경우, 소프트 삭제를 한다면 필요.
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
 }
 
 enum NotificationType {
   @@type("pg/text@1")
-  Purchase
-  Soldout
-  ExchangeApproved
-  ExchangeRejected
-  ExchangeOfferReceived // 교환 신청이 들어왔을 때의 알림.
+  PURCHASE
+  SOLDOUT
+  EXCHANGE_APPROVED
+  EXCHANGE_REJECTED
+  EXCHANGE_OFFER_RECEIVED
 }
 
 enum PointHistoryType {
   @@type("pg/text@1")
-  Purchase
-  PointDraw
+  PURCHASE
+  POINT_DRAW
 }
 
 namespace public {
   model User {
-    id             Int               @id @default(autoincrement())
-    email          String            @unique
-    nickname       String            @unique
+    id             Int                      @id @default(autoincrement())
+    email          String                   @unique
+    nickname       String                   @unique
     password       String?
-    provider       OAuthProvider     @default(Local)
-    providerId     String?
-    point          Int               @default(0)
-    createdAt      TimestamptzString @default(now())
-    updatedAt      TimestamptzString @default(now())
+    provider       OAuthProvider            @default(LOCAL)
+    providerId     String?                  @map("provider_id")
+    point          Int                      @default(0)
+    createdAt      TimestamptzString        @default(now()) @map("created_at")
+    updatedAt      temporal.UpdatedAtString @map("updated_at")
     photoCards     PhotoCard[]
     userCards      UserCard[]
     sales          Sale[]
@@ -71,81 +71,85 @@ namespace public {
     pointDraws     PointDraw[]
 
     @@unique([provider, providerId]) // 같은 구글아이디로 중복 가입 방지
-    @@check(expression: sql`("point" >= 0)`, name: "user_point_check")
-    @@check(expression: sql`(("provider" = 'Local' AND "password" IS NOT NULL) OR ("provider" = 'Google' AND "providerId" IS NOT NULL))`, name: "user_provider_check")
+    @@check(expression: sql`("point" >= 0)`, name: "user_point_nonnegative_ck")
+    @@check(expression: sql`(("provider" = 'LOCAL' AND "password" IS NOT NULL) OR ("provider" = 'GOOGLE' AND "provider_id" IS NOT NULL))`, name: "user_provider_rule_ck")
+    @@map("user")
   }
 
   model PhotoCard {
     id            Int               @id @default(autoincrement())
     name          String
     description   String?
-    grade         Grade             @default(Common)
-    genre         Genre             @default(Others)
-    minPrice      Int
-    totalCreated  Int
-    imagePublicId String
-    imageUrl      String
-    createdAt     TimestamptzString @default(now())
-    creatorId     Int
+    grade         Grade             @default(COMMON)
+    genre         Genre             @default(OTHERS)
+    minPrice      Int               @map("min_price")
+    totalCreated  Int               @map("total_created")
+    imagePublicId String            @unique @map("image_public_id")
+    imageUrl      String            @map("image_url")
+    createdAt     TimestamptzString @default(now()) @map("created_at")
+    creatorId     Int               @map("creator_id")
     creator       User              @relation(fields: [creatorId], references: [id], onDelete: Restrict)
     userCards     UserCard[]
 
-    @@check(expression: sql`("minPrice" >= 0 AND "totalCreated" >= 1)`, name: "photo_card_check")
+    @@check(expression: sql`("min_price" >= 0 AND "total_created" >= 1)`, name: "photo_card_check")
     @@index([creatorId], name: "photo_card_creator_id_idx")
     @@index([grade, genre], name: "photo_card_grade_genre_idx")
+    @@map("photo_card")
   }
 
   model UserCard {
-    id             Int               @id @default(autoincrement())
-    netQuantity    Int
-    totalQuantity  Int
-    createdAt      TimestamptzString @default(now())
-    updatedAt      TimestamptzString @default(now())
-    photoCardId    Int
-    photoCard      PhotoCard         @relation(fields: [photoCardId], references: [id], onDelete: Restrict)
-    ownerId        Int
-    owner          User              @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+    id             Int                      @id @default(autoincrement())
+    netQuantity    Int                      @map("net_quantity")
+    totalQuantity  Int                      @map("total_quantity")
+    createdAt      TimestamptzString        @default(now()) @map("created_at")
+    updatedAt      temporal.UpdatedAtString @map("updated_at")
+    photoCardId    Int                      @map("photo_card_id")
+    photoCard      PhotoCard                @relation(fields: [photoCardId], references: [id], onDelete: Restrict)
+    ownerId        Int                      @map("owner_id")
+    owner          User                     @relation(fields: [ownerId], references: [id], onDelete: Restrict)
     sales          Sale[]
     exchangeOffers ExchangeOffer[]
 
     @@unique([ownerId, photoCardId])
-    @@check(expression: sql`("netQuantity" >= 0 AND "netQuantity" <= "totalQuantity")`, name: "user_card_quantity_check")
+    @@check(expression: sql`("net_quantity" >= 0 AND "net_quantity" <= "total_quantity")`, name: "user_card_quantity_check")
     @@index([photoCardId], name: "user_card_photo_card_id_idx")
+    @@map("user_card")
   }
 
   model Sale {
-    id                  Int                @id @default(autoincrement())
+    id                  Int                      @id @default(autoincrement())
     price               Int
-    totalQuantity       Int
-    remainingQuantity   Int
-    exchangeGrade       Grade?
-    exchangeGenre       Genre?
-    exchangeDescription String?
-    createdAt           TimestamptzString  @default(now())
-    updatedAt           TimestamptzString  @default(now())
-    cancelledAt         TimestamptzString?
-    sellerId            Int
-    seller              User               @relation(fields: [sellerId], references: [id], onDelete: Restrict)
-    userCardId          Int
-    userCard            UserCard           @relation(fields: [userCardId], references: [id], onDelete: Restrict)
+    totalQuantity       Int                      @map("total_quantity")
+    remainingQuantity   Int                      @map("remaining_quantity")
+    exchangeGrade       Grade?                   @map("exchange_grade")
+    exchangeGenre       Genre?                   @map("exchange_genre")
+    exchangeDescription String?                  @map("exchange_description")
+    createdAt           TimestamptzString        @default(now()) @map("created_at")
+    updatedAt           temporal.UpdatedAtString @map("updated_at")
+    cancelledAt         TimestamptzString?       @map("cancelled_at")
+    sellerId            Int                      @map("seller_id")
+    seller              User                     @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+    userCardId          Int                      @map("user_card_id")
+    userCard            UserCard                 @relation(fields: [userCardId], references: [id], onDelete: Restrict)
     purchases           Purchase[]
     exchangeOffers      ExchangeOffer[]
     notifications       Notification[]
 
-    @@check(expression: sql`("price" >= 0 AND "totalQuantity" >= 1 AND "remainingQuantity" >= 0 AND "remainingQuantity" <= "totalQuantity")`, name: "sale_quantity_check")
+    @@check(expression: sql`("price" >= 0 AND "total_quantity" >= 1 AND "remaining_quantity" >= 0 AND "remaining_quantity" <= "total_quantity")`, name: "sale_quantity_check")
     @@index([sellerId], name: "sale_seller_id_idx")
     @@index([userCardId], name: "sale_user_card_id_idx")
-    @@index([createdAt], name: "sale_active_created_at_idx", where: sql`"cancelledAt" IS NULL`)
+    @@index([createdAt], name: "sale_active_created_at_idx", where: sql`"cancelled_at" IS NULL`)
+    @@map("sale")
   }
 
   model Purchase {
     id             Int               @id @default(autoincrement())
     quantity       Int
     price          Int
-    createdAt      TimestamptzString @default(now())
-    saleId         Int
+    createdAt      TimestamptzString @default(now()) @map("created_at")
+    saleId         Int               @map("sale_id")
     sale           Sale              @relation(fields: [saleId], references: [id], onDelete: Restrict)
-    buyerId        Int
+    buyerId        Int               @map("buyer_id")
     buyer          User              @relation(fields: [buyerId], references: [id], onDelete: Restrict)
     notifications  Notification[]
     pointHistories PointHistory[]
@@ -153,75 +157,80 @@ namespace public {
     @@check(expression: sql`("quantity" >= 1 AND "price" >= 0)`, name: "purchase_check")
     @@index([saleId], name: "purchase_sale_id_idx")
     @@index([buyerId, createdAt], name: "purchase_buyer_created_at_idx")
+    @@map("purchase")
   }
 
   model ExchangeOffer {
-    id                Int               @id @default(autoincrement())
+    id                Int                      @id @default(autoincrement())
     description       String?
-    status            ExchangeStatus    @default(Pending)
-    createdAt         TimestamptzString @default(now())
-    updatedAt         TimestamptzString @default(now())
-    saleId            Int
-    sale              Sale              @relation(fields: [saleId], references: [id], onDelete: Restrict)
-    proposerId        Int
-    proposer          User              @relation(fields: [proposerId], references: [id], onDelete: Restrict)
-    offeredUserCardId Int
-    offeredUserCard   UserCard          @relation(fields: [offeredUserCardId], references: [id], onDelete: Restrict)
+    status            ExchangeStatus           @default(PENDING)
+    createdAt         TimestamptzString        @default(now()) @map("created_at")
+    updatedAt         temporal.UpdatedAtString @map("updated_at")
+    saleId            Int                      @map("sale_id")
+    sale              Sale                     @relation(fields: [saleId], references: [id], onDelete: Restrict)
+    proposerId        Int                      @map("proposer_id")
+    proposer          User                     @relation(fields: [proposerId], references: [id], onDelete: Restrict)
+    offeredUserCardId Int                      @map("offered_user_card_id")
+    offeredUserCard   UserCard                 @relation(fields: [offeredUserCardId], references: [id], onDelete: Restrict)
     notifications     Notification[]
 
     @@unique([saleId, offeredUserCardId]) // 같은 카드로 같은 판매글에 중복제안 방지
     @@index([proposerId], name: "exchange_offer_proposer_id_idx")
     @@index([offeredUserCardId, status], name: "exchange_offer_card_status_idx")
+    @@map("exchange_offer")
   }
 
   model Notification {
     id              Int                @id @default(autoincrement())
-    userId          Int
+    userId          Int                @map("user_id")
     user            User               @relation(fields: [userId], references: [id], onDelete: Restrict)
     type            NotificationType
     message         String
-    createdAt       TimestamptzString  @default(now())
-    readAt          TimestamptzString?
-    saleId          Int?
+    createdAt       TimestamptzString  @default(now()) @map("created_at")
+    readAt          TimestamptzString? @map("read_at")
+    saleId          Int?               @map("sale_id")
     sale            Sale?              @relation(fields: [saleId], references: [id], onDelete: Restrict)
-    purchaseId      Int?
+    purchaseId      Int?               @map("purchase_id")
     purchase        Purchase?          @relation(fields: [purchaseId], references: [id], onDelete: Restrict)
-    exchangeOfferId Int?
+    exchangeOfferId Int?               @map("exchange_offer_id")
     exchangeOffer   ExchangeOffer?     @relation(fields: [exchangeOfferId], references: [id], onDelete: Restrict)
 
-    @@check(expression: sql`(num_nonnulls("saleId", "purchaseId", "exchangeOfferId") = 1)`, name: "notification_ref_check")
+    @@check(expression: sql`(num_nonnulls("sale_id", "purchase_id", "exchange_offer_id") = 1)`, name: "notification_ref_check")
     //위의 @@check는 알림을 발생시키는 원인이 sale, purchase, exchangeOffer 중 단 하나만 참조하도록 검사하는 식이라고 합니다!
     @@index([userId, createdAt], name: "notification_user_created_at_idx")
-    @@index([userId], name: "notification_unread_idx", where: sql`"readAt" IS NULL`)
+    @@index([userId], name: "notification_unread_idx", where: sql`"read_at" IS NULL`)
+    @@map("notification")
   }
 
   model PointHistory {
     id           Int               @id @default(autoincrement())
-    balanceAfter Int
+    balanceAfter Int               @map("balance_after")
     amount       Int
     type         PointHistoryType
-    createdAt    TimestamptzString @default(now())
-    userId       Int
+    createdAt    TimestamptzString @default(now()) @map("created_at")
+    userId       Int               @map("user_id")
     user         User              @relation(fields: [userId], references: [id], onDelete: Restrict)
-    purchaseId   Int?
+    purchaseId   Int?              @map("purchase_id")
     purchase     Purchase?         @relation(fields: [purchaseId], references: [id], onDelete: Restrict)
-    pointDrawId  Int?              @unique
+    pointDrawId  Int?              @unique @map("point_draw_id")
     pointDraw    PointDraw?        @relation(fields: [pointDrawId], references: [id], onDelete: Restrict)
 
     @@unique([purchaseId, userId]) // 같은 구매 중복 기록 방지
-    @@check(expression: sql`(("type" = 'Purchase' AND "purchaseId" IS NOT NULL AND "pointDrawId" IS NULL) OR ("type" = 'PointDraw' AND "pointDrawId" IS NOT NULL AND "purchaseId" IS NULL))`, name: "point_history_ref_check")
+    @@check(expression: sql`(("type" = 'PURCHASE' AND "purchase_id" IS NOT NULL AND "point_draw_id" IS NULL) OR ("type" = 'POINT_DRAW' AND "point_draw_id" IS NOT NULL AND "purchase_id" IS NULL))`, name: "point_history_ref_check")
     @@index([userId, createdAt], name: "point_history_user_created_at_idx")
+    @@map("point_history")
   }
 
   model PointDraw {
     id           Int               @id @default(autoincrement())
-    createdAt    TimestamptzString @default(now())
-    userId       Int
+    createdAt    TimestamptzString @default(now()) @map("created_at")
+    userId       Int               @map("user_id")
     user         User              @relation(fields: [userId], references: [id], onDelete: Restrict)
     pointHistory PointHistory? // 여기서 ? 는 nullable이 아닌, “FK가 반대쪽에 있어서 ORM이 이 필드를 필수로 표시할 수 없다”는 뜻이라고 합니다.
 
     // 다시 말해, “PointDraw가 기록 없이 존재해도 된다”는 허용이 아니라, “DB가 그걸 막지 못하니 타입은 null을 열어둔다”는 정직한 표시이고,
     // 실제로 기록과 항상 연결되도록 하는 건 트랜잭션으로 구현해야 한다고 합니다.
     @@index([userId, createdAt], name: "point_draw_user_created_at_idx")
+    @@map("point_draw")
   }
 }

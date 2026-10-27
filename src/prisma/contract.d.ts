@@ -23,8 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'5d8bc954e0d3eb490e71b06fec9b131d5251005682f2d83b7535148e36d631e1'>;
-export type ExecutionHash = ExecutionHashBase<string>;
+  StorageHashBase<'93b6141a1d1f87244b599acc6cd86eeb01e8d66c04d7573c375aa4bb3de5e97a'>;
+export type ExecutionHash =
+  ExecutionHashBase<'5a452a55476d56f65f87b544dce1877d52e7335b5ec8af486886a19ac969e7ce'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -242,96 +243,96 @@ type FieldTypeOverrides = {
     readonly models: {
       readonly ExchangeOffer: {
         readonly status: {
-          readonly output: 'Pending' | 'Approved' | 'Rejected' | 'Cancelled';
-          readonly input: 'Pending' | 'Approved' | 'Rejected' | 'Cancelled';
+          readonly output: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+          readonly input: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
         };
       };
       readonly Notification: {
         readonly type: {
           readonly output:
-            | 'Purchase'
-            | 'Soldout'
-            | 'ExchangeApproved'
-            | 'ExchangeRejected'
-            | 'ExchangeOfferReceived';
+            | 'PURCHASE'
+            | 'SOLDOUT'
+            | 'EXCHANGE_APPROVED'
+            | 'EXCHANGE_REJECTED'
+            | 'EXCHANGE_OFFER_RECEIVED';
           readonly input:
-            | 'Purchase'
-            | 'Soldout'
-            | 'ExchangeApproved'
-            | 'ExchangeRejected'
-            | 'ExchangeOfferReceived';
+            | 'PURCHASE'
+            | 'SOLDOUT'
+            | 'EXCHANGE_APPROVED'
+            | 'EXCHANGE_REJECTED'
+            | 'EXCHANGE_OFFER_RECEIVED';
         };
       };
       readonly PhotoCard: {
         readonly genre: {
           readonly output:
-            | 'Album'
-            | 'Special'
-            | 'FanSign'
-            | 'SeasonsGreetings'
-            | 'FanMeeting'
-            | 'Concert'
+            | 'ALBUM'
+            | 'SPECIAL'
+            | 'FAN_SIGN'
+            | 'SEASONS_GREETINGS'
+            | 'FAN_MEETING'
+            | 'CONCERT'
             | 'MD'
-            | 'Collab'
-            | 'FanClub'
-            | 'Others';
+            | 'COLLAB'
+            | 'FAN_CLUB'
+            | 'OTHERS';
           readonly input:
-            | 'Album'
-            | 'Special'
-            | 'FanSign'
-            | 'SeasonsGreetings'
-            | 'FanMeeting'
-            | 'Concert'
+            | 'ALBUM'
+            | 'SPECIAL'
+            | 'FAN_SIGN'
+            | 'SEASONS_GREETINGS'
+            | 'FAN_MEETING'
+            | 'CONCERT'
             | 'MD'
-            | 'Collab'
-            | 'FanClub'
-            | 'Others';
+            | 'COLLAB'
+            | 'FAN_CLUB'
+            | 'OTHERS';
         };
         readonly grade: {
-          readonly output: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
-          readonly input: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
+          readonly output: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
+          readonly input: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
         };
       };
       readonly PointHistory: {
         readonly type: {
-          readonly output: 'Purchase' | 'PointDraw';
-          readonly input: 'Purchase' | 'PointDraw';
+          readonly output: 'PURCHASE' | 'POINT_DRAW';
+          readonly input: 'PURCHASE' | 'POINT_DRAW';
         };
       };
       readonly Sale: {
         readonly exchangeGenre: {
           readonly output:
-            | 'Album'
-            | 'Special'
-            | 'FanSign'
-            | 'SeasonsGreetings'
-            | 'FanMeeting'
-            | 'Concert'
+            | 'ALBUM'
+            | 'SPECIAL'
+            | 'FAN_SIGN'
+            | 'SEASONS_GREETINGS'
+            | 'FAN_MEETING'
+            | 'CONCERT'
             | 'MD'
-            | 'Collab'
-            | 'FanClub'
-            | 'Others';
+            | 'COLLAB'
+            | 'FAN_CLUB'
+            | 'OTHERS';
           readonly input:
-            | 'Album'
-            | 'Special'
-            | 'FanSign'
-            | 'SeasonsGreetings'
-            | 'FanMeeting'
-            | 'Concert'
+            | 'ALBUM'
+            | 'SPECIAL'
+            | 'FAN_SIGN'
+            | 'SEASONS_GREETINGS'
+            | 'FAN_MEETING'
+            | 'CONCERT'
             | 'MD'
-            | 'Collab'
-            | 'FanClub'
-            | 'Others';
+            | 'COLLAB'
+            | 'FAN_CLUB'
+            | 'OTHERS';
         };
         readonly exchangeGrade: {
-          readonly output: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
-          readonly input: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
+          readonly output: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
+          readonly input: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
         };
       };
       readonly User: {
         readonly provider: {
-          readonly output: 'Local' | 'Google';
-          readonly input: 'Local' | 'Google';
+          readonly output: 'LOCAL' | 'GOOGLE';
+          readonly input: 'LOCAL' | 'GOOGLE';
         };
       };
     };
@@ -353,98 +354,98 @@ export type FieldInputTypes = FieldTypesFromDomain<
 >;
 type ColumnTypeOverrides = {
   readonly public: {
-    readonly ExchangeOffer: {
+    readonly exchange_offer: {
       readonly status: {
-        readonly output: 'Pending' | 'Approved' | 'Rejected' | 'Cancelled';
-        readonly input: 'Pending' | 'Approved' | 'Rejected' | 'Cancelled';
+        readonly output: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+        readonly input: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
       };
     };
-    readonly Notification: {
+    readonly notification: {
       readonly type: {
         readonly output:
-          | 'Purchase'
-          | 'Soldout'
-          | 'ExchangeApproved'
-          | 'ExchangeRejected'
-          | 'ExchangeOfferReceived';
+          | 'PURCHASE'
+          | 'SOLDOUT'
+          | 'EXCHANGE_APPROVED'
+          | 'EXCHANGE_REJECTED'
+          | 'EXCHANGE_OFFER_RECEIVED';
         readonly input:
-          | 'Purchase'
-          | 'Soldout'
-          | 'ExchangeApproved'
-          | 'ExchangeRejected'
-          | 'ExchangeOfferReceived';
+          | 'PURCHASE'
+          | 'SOLDOUT'
+          | 'EXCHANGE_APPROVED'
+          | 'EXCHANGE_REJECTED'
+          | 'EXCHANGE_OFFER_RECEIVED';
       };
     };
-    readonly PhotoCard: {
+    readonly photo_card: {
       readonly genre: {
         readonly output:
-          | 'Album'
-          | 'Special'
-          | 'FanSign'
-          | 'SeasonsGreetings'
-          | 'FanMeeting'
-          | 'Concert'
+          | 'ALBUM'
+          | 'SPECIAL'
+          | 'FAN_SIGN'
+          | 'SEASONS_GREETINGS'
+          | 'FAN_MEETING'
+          | 'CONCERT'
           | 'MD'
-          | 'Collab'
-          | 'FanClub'
-          | 'Others';
+          | 'COLLAB'
+          | 'FAN_CLUB'
+          | 'OTHERS';
         readonly input:
-          | 'Album'
-          | 'Special'
-          | 'FanSign'
-          | 'SeasonsGreetings'
-          | 'FanMeeting'
-          | 'Concert'
+          | 'ALBUM'
+          | 'SPECIAL'
+          | 'FAN_SIGN'
+          | 'SEASONS_GREETINGS'
+          | 'FAN_MEETING'
+          | 'CONCERT'
           | 'MD'
-          | 'Collab'
-          | 'FanClub'
-          | 'Others';
+          | 'COLLAB'
+          | 'FAN_CLUB'
+          | 'OTHERS';
       };
       readonly grade: {
-        readonly output: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
-        readonly input: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
+        readonly output: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
+        readonly input: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
       };
     };
-    readonly PointHistory: {
+    readonly point_history: {
       readonly type: {
-        readonly output: 'Purchase' | 'PointDraw';
-        readonly input: 'Purchase' | 'PointDraw';
+        readonly output: 'PURCHASE' | 'POINT_DRAW';
+        readonly input: 'PURCHASE' | 'POINT_DRAW';
       };
     };
-    readonly Sale: {
-      readonly exchangeGenre: {
+    readonly sale: {
+      readonly exchange_genre: {
         readonly output:
-          | 'Album'
-          | 'Special'
-          | 'FanSign'
-          | 'SeasonsGreetings'
-          | 'FanMeeting'
-          | 'Concert'
+          | 'ALBUM'
+          | 'SPECIAL'
+          | 'FAN_SIGN'
+          | 'SEASONS_GREETINGS'
+          | 'FAN_MEETING'
+          | 'CONCERT'
           | 'MD'
-          | 'Collab'
-          | 'FanClub'
-          | 'Others';
+          | 'COLLAB'
+          | 'FAN_CLUB'
+          | 'OTHERS';
         readonly input:
-          | 'Album'
-          | 'Special'
-          | 'FanSign'
-          | 'SeasonsGreetings'
-          | 'FanMeeting'
-          | 'Concert'
+          | 'ALBUM'
+          | 'SPECIAL'
+          | 'FAN_SIGN'
+          | 'SEASONS_GREETINGS'
+          | 'FAN_MEETING'
+          | 'CONCERT'
           | 'MD'
-          | 'Collab'
-          | 'FanClub'
-          | 'Others';
+          | 'COLLAB'
+          | 'FAN_CLUB'
+          | 'OTHERS';
       };
-      readonly exchangeGrade: {
-        readonly output: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
-        readonly input: 'Common' | 'Rare' | 'SuperRare' | 'Legendary';
+      readonly exchange_grade: {
+        readonly output: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
+        readonly input: 'COMMON' | 'RARE' | 'SUPER_RARE' | 'LEGENDARY';
       };
     };
-    readonly User: {
+    readonly user: {
       readonly provider: {
-        readonly output: 'Local' | 'Google';
-        readonly input: 'Local' | 'Google';
+        readonly output: 'LOCAL' | 'GOOGLE';
+        readonly input: 'LOCAL' | 'GOOGLE';
       };
     };
   };
@@ -644,9 +645,9 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
-            readonly ExchangeOffer: {
+            readonly exchange_offer: {
               columns: {
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
@@ -669,19 +670,19 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly offeredUserCardId: {
+                readonly offered_user_card_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly proposerId: {
+                readonly proposer_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly saleId: {
+                readonly sale_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -693,43 +694,44 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'Pending'>;
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'PENDING'>;
                   };
                   readonly many: false;
                 };
-                readonly updatedAt: {
+                readonly updated_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['saleId', 'offeredUserCardId'] }];
+              uniques: readonly [
+                { readonly columns: readonly ['sale_id', 'offered_user_card_id'] },
+              ];
               indexes: readonly [
                 {
-                  readonly name: 'ExchangeOffer_offeredUserCardId_idx_80a48e54';
-                  readonly prefix: 'ExchangeOffer_offeredUserCardId_idx';
-                  readonly columns: readonly ['offeredUserCardId'];
-                  readonly unique: false;
-                },
-                {
-                  readonly name: 'ExchangeOffer_saleId_idx_b4c0fb73';
-                  readonly prefix: 'ExchangeOffer_saleId_idx';
-                  readonly columns: readonly ['saleId'];
-                  readonly unique: false;
-                },
-                {
-                  readonly name: 'exchange_offer_card_status_idx_8dc11292';
+                  readonly name: 'exchange_offer_card_status_idx_0ddac7fe';
                   readonly prefix: 'exchange_offer_card_status_idx';
-                  readonly columns: readonly ['offeredUserCardId', 'status'];
+                  readonly columns: readonly ['offered_user_card_id', 'status'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'exchange_offer_proposer_id_idx_a1d96f6a';
+                  readonly name: 'exchange_offer_offered_user_card_id_idx_34a80427';
+                  readonly prefix: 'exchange_offer_offered_user_card_id_idx';
+                  readonly columns: readonly ['offered_user_card_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'exchange_offer_proposer_id_idx_f9a4d8da';
                   readonly prefix: 'exchange_offer_proposer_id_idx';
-                  readonly columns: readonly ['proposerId'];
+                  readonly columns: readonly ['proposer_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'exchange_offer_sale_id_idx_43e6ad69';
+                  readonly prefix: 'exchange_offer_sale_id_idx';
+                  readonly columns: readonly ['sale_id'];
                   readonly unique: false;
                 },
               ];
@@ -737,51 +739,51 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'ExchangeOffer';
-                    readonly columns: readonly ['saleId'];
+                    readonly tableName: 'exchange_offer';
+                    readonly columns: readonly ['sale_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Sale';
+                    readonly tableName: 'sale';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'ExchangeOffer';
-                    readonly columns: readonly ['proposerId'];
+                    readonly tableName: 'exchange_offer';
+                    readonly columns: readonly ['proposer_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'ExchangeOffer';
-                    readonly columns: readonly ['offeredUserCardId'];
+                    readonly tableName: 'exchange_offer';
+                    readonly columns: readonly ['offered_user_card_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'UserCard';
+                    readonly tableName: 'user_card';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly Notification: {
+            readonly notification: {
               columns: {
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
-                readonly exchangeOfferId: {
+                readonly exchange_offer_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
@@ -803,19 +805,19 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly purchaseId: {
+                readonly purchase_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly readAt: {
+                readonly read_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly saleId: {
+                readonly sale_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
@@ -827,7 +829,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly userId: {
+                readonly user_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -838,40 +840,40 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'Notification_exchangeOfferId_idx_1e0042f8';
-                  readonly prefix: 'Notification_exchangeOfferId_idx';
-                  readonly columns: readonly ['exchangeOfferId'];
+                  readonly name: 'notification_exchange_offer_id_idx_89187884';
+                  readonly prefix: 'notification_exchange_offer_id_idx';
+                  readonly columns: readonly ['exchange_offer_id'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'Notification_purchaseId_idx_10cddd2f';
-                  readonly prefix: 'Notification_purchaseId_idx';
-                  readonly columns: readonly ['purchaseId'];
+                  readonly name: 'notification_purchase_id_idx_91976ef4';
+                  readonly prefix: 'notification_purchase_id_idx';
+                  readonly columns: readonly ['purchase_id'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'Notification_saleId_idx_b4c0fb73';
-                  readonly prefix: 'Notification_saleId_idx';
-                  readonly columns: readonly ['saleId'];
+                  readonly name: 'notification_sale_id_idx_43e6ad69';
+                  readonly prefix: 'notification_sale_id_idx';
+                  readonly columns: readonly ['sale_id'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'Notification_userId_idx_a489d58a';
-                  readonly prefix: 'Notification_userId_idx';
-                  readonly columns: readonly ['userId'];
-                  readonly unique: false;
-                },
-                {
-                  readonly name: 'notification_unread_idx_4ec396a0';
+                  readonly name: 'notification_unread_idx_8d07162c';
                   readonly prefix: 'notification_unread_idx';
-                  readonly columns: readonly ['userId'];
-                  readonly where: '"readAt" IS NULL';
+                  readonly columns: readonly ['user_id'];
+                  readonly where: '"read_at" IS NULL';
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'notification_user_created_at_idx_f726f04a';
+                  readonly name: 'notification_user_created_at_idx_b562028f';
                   readonly prefix: 'notification_user_created_at_idx';
-                  readonly columns: readonly ['userId', 'createdAt'];
+                  readonly columns: readonly ['user_id', 'created_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'notification_user_id_idx_6c952402';
+                  readonly prefix: 'notification_user_id_idx';
+                  readonly columns: readonly ['user_id'];
                   readonly unique: false;
                 },
               ];
@@ -879,63 +881,63 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Notification';
-                    readonly columns: readonly ['userId'];
+                    readonly tableName: 'notification';
+                    readonly columns: readonly ['user_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Notification';
-                    readonly columns: readonly ['saleId'];
+                    readonly tableName: 'notification';
+                    readonly columns: readonly ['sale_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Sale';
+                    readonly tableName: 'sale';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Notification';
-                    readonly columns: readonly ['purchaseId'];
+                    readonly tableName: 'notification';
+                    readonly columns: readonly ['purchase_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Purchase';
+                    readonly tableName: 'purchase';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Notification';
-                    readonly columns: readonly ['exchangeOfferId'];
+                    readonly tableName: 'notification';
+                    readonly columns: readonly ['exchange_offer_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'ExchangeOffer';
+                    readonly tableName: 'exchange_offer';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly PhotoCard: {
+            readonly photo_card: {
               columns: {
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
-                readonly creatorId: {
+                readonly creator_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -953,7 +955,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'Others'>;
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'OTHERS'>;
                   };
                   readonly many: false;
                 };
@@ -963,7 +965,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'Common'>;
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'COMMON'>;
                   };
                   readonly many: false;
                 };
@@ -977,19 +979,19 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly imagePublicId: {
+                readonly image_public_id: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly imageUrl: {
+                readonly image_url: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly minPrice: {
+                readonly min_price: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -1001,7 +1003,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly totalCreated: {
+                readonly total_created: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -1009,12 +1011,12 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
+              uniques: readonly [{ readonly columns: readonly ['image_public_id'] }];
               indexes: readonly [
                 {
-                  readonly name: 'photo_card_creator_id_idx_3a77d800';
+                  readonly name: 'photo_card_creator_id_idx_c8bab67a';
                   readonly prefix: 'photo_card_creator_id_idx';
-                  readonly columns: readonly ['creatorId'];
+                  readonly columns: readonly ['creator_id'];
                   readonly unique: false;
                 },
                 {
@@ -1028,20 +1030,20 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PhotoCard';
-                    readonly columns: readonly ['creatorId'];
+                    readonly tableName: 'photo_card';
+                    readonly columns: readonly ['creator_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly PointDraw: {
+            readonly point_draw: {
               columns: {
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
@@ -1058,7 +1060,7 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly userId: {
+                readonly user_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -1069,15 +1071,15 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'PointDraw_userId_idx_a489d58a';
-                  readonly prefix: 'PointDraw_userId_idx';
-                  readonly columns: readonly ['userId'];
+                  readonly name: 'point_draw_user_created_at_idx_b562028f';
+                  readonly prefix: 'point_draw_user_created_at_idx';
+                  readonly columns: readonly ['user_id', 'created_at'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'point_draw_user_created_at_idx_f726f04a';
-                  readonly prefix: 'point_draw_user_created_at_idx';
-                  readonly columns: readonly ['userId', 'createdAt'];
+                  readonly name: 'point_draw_user_id_idx_6c952402';
+                  readonly prefix: 'point_draw_user_id_idx';
+                  readonly columns: readonly ['user_id'];
                   readonly unique: false;
                 },
               ];
@@ -1085,18 +1087,18 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PointDraw';
-                    readonly columns: readonly ['userId'];
+                    readonly tableName: 'point_draw';
+                    readonly columns: readonly ['user_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly PointHistory: {
+            readonly point_history: {
               columns: {
                 readonly amount: {
                   readonly dataType: 'pg/int4';
@@ -1104,13 +1106,13 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly balanceAfter: {
+                readonly balance_after: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
@@ -1127,13 +1129,13 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly pointDrawId: {
+                readonly point_draw_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly purchaseId: {
+                readonly purchase_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
@@ -1145,7 +1147,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly userId: {
+                readonly user_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -1154,26 +1156,26 @@ type ContractBase = Omit<
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [
-                { readonly columns: readonly ['pointDrawId'] },
-                { readonly columns: readonly ['purchaseId', 'userId'] },
+                { readonly columns: readonly ['point_draw_id'] },
+                { readonly columns: readonly ['purchase_id', 'user_id'] },
               ];
               indexes: readonly [
                 {
-                  readonly name: 'PointHistory_purchaseId_idx_10cddd2f';
-                  readonly prefix: 'PointHistory_purchaseId_idx';
-                  readonly columns: readonly ['purchaseId'];
+                  readonly name: 'point_history_purchase_id_idx_91976ef4';
+                  readonly prefix: 'point_history_purchase_id_idx';
+                  readonly columns: readonly ['purchase_id'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'PointHistory_userId_idx_a489d58a';
-                  readonly prefix: 'PointHistory_userId_idx';
-                  readonly columns: readonly ['userId'];
-                  readonly unique: false;
-                },
-                {
-                  readonly name: 'point_history_user_created_at_idx_f726f04a';
+                  readonly name: 'point_history_user_created_at_idx_b562028f';
                   readonly prefix: 'point_history_user_created_at_idx';
-                  readonly columns: readonly ['userId', 'createdAt'];
+                  readonly columns: readonly ['user_id', 'created_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'point_history_user_id_idx_6c952402';
+                  readonly prefix: 'point_history_user_id_idx';
+                  readonly columns: readonly ['user_id'];
                   readonly unique: false;
                 },
               ];
@@ -1181,50 +1183,50 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PointHistory';
-                    readonly columns: readonly ['userId'];
+                    readonly tableName: 'point_history';
+                    readonly columns: readonly ['user_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PointHistory';
-                    readonly columns: readonly ['purchaseId'];
+                    readonly tableName: 'point_history';
+                    readonly columns: readonly ['purchase_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Purchase';
+                    readonly tableName: 'purchase';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PointHistory';
-                    readonly columns: readonly ['pointDrawId'];
+                    readonly tableName: 'point_history';
+                    readonly columns: readonly ['point_draw_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PointDraw';
+                    readonly tableName: 'point_draw';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly Purchase: {
+            readonly purchase: {
               columns: {
-                readonly buyerId: {
+                readonly buyer_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
@@ -1253,7 +1255,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly saleId: {
+                readonly sale_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -1264,21 +1266,21 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'Purchase_buyerId_idx_80be0de9';
-                  readonly prefix: 'Purchase_buyerId_idx';
-                  readonly columns: readonly ['buyerId'];
-                  readonly unique: false;
-                },
-                {
-                  readonly name: 'purchase_buyer_created_at_idx_7547b79f';
+                  readonly name: 'purchase_buyer_created_at_idx_7f687fb1';
                   readonly prefix: 'purchase_buyer_created_at_idx';
-                  readonly columns: readonly ['buyerId', 'createdAt'];
+                  readonly columns: readonly ['buyer_id', 'created_at'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'purchase_sale_id_idx_b4c0fb73';
+                  readonly name: 'purchase_buyer_id_idx_a09525cc';
+                  readonly prefix: 'purchase_buyer_id_idx';
+                  readonly columns: readonly ['buyer_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'purchase_sale_id_idx_43e6ad69';
                   readonly prefix: 'purchase_sale_id_idx';
-                  readonly columns: readonly ['saleId'];
+                  readonly columns: readonly ['sale_id'];
                   readonly unique: false;
                 },
               ];
@@ -1286,57 +1288,57 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Purchase';
-                    readonly columns: readonly ['saleId'];
+                    readonly tableName: 'purchase';
+                    readonly columns: readonly ['sale_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Sale';
+                    readonly tableName: 'sale';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Purchase';
-                    readonly columns: readonly ['buyerId'];
+                    readonly tableName: 'purchase';
+                    readonly columns: readonly ['buyer_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly Sale: {
+            readonly sale: {
               columns: {
-                readonly cancelledAt: {
+                readonly cancelled_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
-                readonly exchangeDescription: {
+                readonly exchange_description: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly exchangeGenre: {
+                readonly exchange_genre: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly exchangeGrade: {
+                readonly exchange_grade: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
@@ -1358,32 +1360,31 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly remainingQuantity: {
+                readonly remaining_quantity: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly sellerId: {
+                readonly seller_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly totalQuantity: {
+                readonly total_quantity: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly updatedAt: {
+                readonly updated_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
-                readonly userCardId: {
+                readonly user_card_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
@@ -1394,22 +1395,22 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'sale_active_created_at_idx_d8d6fad2';
+                  readonly name: 'sale_active_created_at_idx_30867079';
                   readonly prefix: 'sale_active_created_at_idx';
-                  readonly columns: readonly ['createdAt'];
-                  readonly where: '"cancelledAt" IS NULL';
+                  readonly columns: readonly ['created_at'];
+                  readonly where: '"cancelled_at" IS NULL';
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'sale_seller_id_idx_d71255f2';
+                  readonly name: 'sale_seller_id_idx_de05cd59';
                   readonly prefix: 'sale_seller_id_idx';
-                  readonly columns: readonly ['sellerId'];
+                  readonly columns: readonly ['seller_id'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'sale_user_card_id_idx_5ba616ea';
+                  readonly name: 'sale_user_card_id_idx_b9db0af5';
                   readonly prefix: 'sale_user_card_id_idx';
-                  readonly columns: readonly ['userCardId'];
+                  readonly columns: readonly ['user_card_id'];
                   readonly unique: false;
                 },
               ];
@@ -1417,32 +1418,32 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Sale';
-                    readonly columns: readonly ['sellerId'];
+                    readonly tableName: 'sale';
+                    readonly columns: readonly ['seller_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Sale';
-                    readonly columns: readonly ['userCardId'];
+                    readonly tableName: 'sale';
+                    readonly columns: readonly ['user_card_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'UserCard';
+                    readonly tableName: 'user_card';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly User: {
+            readonly user: {
               columns: {
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
@@ -1493,21 +1494,20 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'Local'>;
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'LOCAL'>;
                   };
                   readonly many: false;
                 };
-                readonly providerId: {
+                readonly provider_id: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly updatedAt: {
+                readonly updated_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
               };
@@ -1515,14 +1515,14 @@ type ContractBase = Omit<
               uniques: readonly [
                 { readonly columns: readonly ['email'] },
                 { readonly columns: readonly ['nickname'] },
-                { readonly columns: readonly ['provider', 'providerId'] },
+                { readonly columns: readonly ['provider', 'provider_id'] },
               ];
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly UserCard: {
+            readonly user_card: {
               columns: {
-                readonly createdAt: {
+                readonly created_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
@@ -1539,51 +1539,50 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly netQuantity: {
+                readonly net_quantity: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly ownerId: {
+                readonly owner_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly photoCardId: {
+                readonly photo_card_id: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly totalQuantity: {
+                readonly total_quantity: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly updatedAt: {
+                readonly updated_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly many: false;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['ownerId', 'photoCardId'] }];
+              uniques: readonly [{ readonly columns: readonly ['owner_id', 'photo_card_id'] }];
               indexes: readonly [
                 {
-                  readonly name: 'UserCard_ownerId_idx_e2d0c1ef';
-                  readonly prefix: 'UserCard_ownerId_idx';
-                  readonly columns: readonly ['ownerId'];
+                  readonly name: 'user_card_owner_id_idx_ade9f347';
+                  readonly prefix: 'user_card_owner_id_idx';
+                  readonly columns: readonly ['owner_id'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'user_card_photo_card_id_idx_f3ca9eb9';
+                  readonly name: 'user_card_photo_card_id_idx_92021706';
                   readonly prefix: 'user_card_photo_card_id_idx';
-                  readonly columns: readonly ['photoCardId'];
+                  readonly columns: readonly ['photo_card_id'];
                   readonly unique: false;
                 },
               ];
@@ -1591,24 +1590,24 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'UserCard';
-                    readonly columns: readonly ['photoCardId'];
+                    readonly tableName: 'user_card';
+                    readonly columns: readonly ['photo_card_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PhotoCard';
+                    readonly tableName: 'photo_card';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'UserCard';
-                    readonly columns: readonly ['ownerId'];
+                    readonly tableName: 'user_card';
+                    readonly columns: readonly ['owner_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'user';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -1618,44 +1617,44 @@ type ContractBase = Omit<
           readonly valueSet: {
             readonly ExchangeStatus: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['Pending', 'Approved', 'Rejected', 'Cancelled'];
+              readonly values: readonly ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
             };
             readonly Genre: {
               readonly kind: 'valueSet';
               readonly values: readonly [
-                'Album',
-                'Special',
-                'FanSign',
-                'SeasonsGreetings',
-                'FanMeeting',
-                'Concert',
+                'ALBUM',
+                'SPECIAL',
+                'FAN_SIGN',
+                'SEASONS_GREETINGS',
+                'FAN_MEETING',
+                'CONCERT',
                 'MD',
-                'Collab',
-                'FanClub',
-                'Others',
+                'COLLAB',
+                'FAN_CLUB',
+                'OTHERS',
               ];
             };
             readonly Grade: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['Common', 'Rare', 'SuperRare', 'Legendary'];
+              readonly values: readonly ['COMMON', 'RARE', 'SUPER_RARE', 'LEGENDARY'];
             };
             readonly NotificationType: {
               readonly kind: 'valueSet';
               readonly values: readonly [
-                'Purchase',
-                'Soldout',
-                'ExchangeApproved',
-                'ExchangeRejected',
-                'ExchangeOfferReceived',
+                'PURCHASE',
+                'SOLDOUT',
+                'EXCHANGE_APPROVED',
+                'EXCHANGE_REJECTED',
+                'EXCHANGE_OFFER_RECEIVED',
               ];
             };
             readonly OAuthProvider: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['Local', 'Google'];
+              readonly values: readonly ['LOCAL', 'GOOGLE'];
             };
             readonly PointHistoryType: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['Purchase', 'PointDraw'];
+              readonly values: readonly ['PURCHASE', 'POINT_DRAW'];
             };
           };
         };
@@ -1668,24 +1667,30 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
-    readonly ExchangeOffer: {
+    readonly exchange_offer: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'ExchangeOffer';
     };
-    readonly Notification: {
+    readonly notification: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Notification';
     };
-    readonly PhotoCard: { readonly namespace: 'public' & NamespaceId; readonly model: 'PhotoCard' };
-    readonly PointDraw: { readonly namespace: 'public' & NamespaceId; readonly model: 'PointDraw' };
-    readonly PointHistory: {
+    readonly photo_card: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'PhotoCard';
+    };
+    readonly point_draw: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'PointDraw';
+    };
+    readonly point_history: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'PointHistory';
     };
-    readonly Purchase: { readonly namespace: 'public' & NamespaceId; readonly model: 'Purchase' };
-    readonly Sale: { readonly namespace: 'public' & NamespaceId; readonly model: 'Sale' };
-    readonly User: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-    readonly UserCard: { readonly namespace: 'public' & NamespaceId; readonly model: 'UserCard' };
+    readonly purchase: { readonly namespace: 'public' & NamespaceId; readonly model: 'Purchase' };
+    readonly sale: { readonly namespace: 'public' & NamespaceId; readonly model: 'Sale' };
+    readonly user: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+    readonly user_card: { readonly namespace: 'public' & NamespaceId; readonly model: 'UserCard' };
   };
   readonly domain: {
     readonly namespaces: {
@@ -1776,17 +1781,17 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'ExchangeOffer';
+              readonly table: 'exchange_offer';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly createdAt: { readonly column: 'created_at' };
                 readonly description: { readonly column: 'description' };
                 readonly id: { readonly column: 'id' };
-                readonly offeredUserCardId: { readonly column: 'offeredUserCardId' };
-                readonly proposerId: { readonly column: 'proposerId' };
-                readonly saleId: { readonly column: 'saleId' };
+                readonly offeredUserCardId: { readonly column: 'offered_user_card_id' };
+                readonly proposerId: { readonly column: 'proposer_id' };
+                readonly saleId: { readonly column: 'sale_id' };
                 readonly status: { readonly column: 'status' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly updatedAt: { readonly column: 'updated_at' };
               };
             };
           };
@@ -1880,18 +1885,18 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'Notification';
+              readonly table: 'notification';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
-                readonly exchangeOfferId: { readonly column: 'exchangeOfferId' };
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly exchangeOfferId: { readonly column: 'exchange_offer_id' };
                 readonly id: { readonly column: 'id' };
                 readonly message: { readonly column: 'message' };
-                readonly purchaseId: { readonly column: 'purchaseId' };
-                readonly readAt: { readonly column: 'readAt' };
-                readonly saleId: { readonly column: 'saleId' };
+                readonly purchaseId: { readonly column: 'purchase_id' };
+                readonly readAt: { readonly column: 'read_at' };
+                readonly saleId: { readonly column: 'sale_id' };
                 readonly type: { readonly column: 'type' };
-                readonly userId: { readonly column: 'userId' };
+                readonly userId: { readonly column: 'user_id' };
               };
             };
           };
@@ -1968,20 +1973,20 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'PhotoCard';
+              readonly table: 'photo_card';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
-                readonly creatorId: { readonly column: 'creatorId' };
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly creatorId: { readonly column: 'creator_id' };
                 readonly description: { readonly column: 'description' };
                 readonly genre: { readonly column: 'genre' };
                 readonly grade: { readonly column: 'grade' };
                 readonly id: { readonly column: 'id' };
-                readonly imagePublicId: { readonly column: 'imagePublicId' };
-                readonly imageUrl: { readonly column: 'imageUrl' };
-                readonly minPrice: { readonly column: 'minPrice' };
+                readonly imagePublicId: { readonly column: 'image_public_id' };
+                readonly imageUrl: { readonly column: 'image_url' };
+                readonly minPrice: { readonly column: 'min_price' };
                 readonly name: { readonly column: 'name' };
-                readonly totalCreated: { readonly column: 'totalCreated' };
+                readonly totalCreated: { readonly column: 'total_created' };
               };
             };
           };
@@ -2027,12 +2032,12 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'PointDraw';
+              readonly table: 'point_draw';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly createdAt: { readonly column: 'created_at' };
                 readonly id: { readonly column: 'id' };
-                readonly userId: { readonly column: 'userId' };
+                readonly userId: { readonly column: 'user_id' };
               };
             };
           };
@@ -2110,17 +2115,17 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'PointHistory';
+              readonly table: 'point_history';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly amount: { readonly column: 'amount' };
-                readonly balanceAfter: { readonly column: 'balanceAfter' };
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly balanceAfter: { readonly column: 'balance_after' };
+                readonly createdAt: { readonly column: 'created_at' };
                 readonly id: { readonly column: 'id' };
-                readonly pointDrawId: { readonly column: 'pointDrawId' };
-                readonly purchaseId: { readonly column: 'purchaseId' };
+                readonly pointDrawId: { readonly column: 'point_draw_id' };
+                readonly purchaseId: { readonly column: 'purchase_id' };
                 readonly type: { readonly column: 'type' };
-                readonly userId: { readonly column: 'userId' };
+                readonly userId: { readonly column: 'user_id' };
               };
             };
           };
@@ -2197,15 +2202,15 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'Purchase';
+              readonly table: 'purchase';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly buyerId: { readonly column: 'buyerId' };
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly buyerId: { readonly column: 'buyer_id' };
+                readonly createdAt: { readonly column: 'created_at' };
                 readonly id: { readonly column: 'id' };
                 readonly price: { readonly column: 'price' };
                 readonly quantity: { readonly column: 'quantity' };
-                readonly saleId: { readonly column: 'saleId' };
+                readonly saleId: { readonly column: 'sale_id' };
               };
             };
           };
@@ -2326,21 +2331,21 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'Sale';
+              readonly table: 'sale';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly cancelledAt: { readonly column: 'cancelledAt' };
-                readonly createdAt: { readonly column: 'createdAt' };
-                readonly exchangeDescription: { readonly column: 'exchangeDescription' };
-                readonly exchangeGenre: { readonly column: 'exchangeGenre' };
-                readonly exchangeGrade: { readonly column: 'exchangeGrade' };
+                readonly cancelledAt: { readonly column: 'cancelled_at' };
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly exchangeDescription: { readonly column: 'exchange_description' };
+                readonly exchangeGenre: { readonly column: 'exchange_genre' };
+                readonly exchangeGrade: { readonly column: 'exchange_grade' };
                 readonly id: { readonly column: 'id' };
                 readonly price: { readonly column: 'price' };
-                readonly remainingQuantity: { readonly column: 'remainingQuantity' };
-                readonly sellerId: { readonly column: 'sellerId' };
-                readonly totalQuantity: { readonly column: 'totalQuantity' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
-                readonly userCardId: { readonly column: 'userCardId' };
+                readonly remainingQuantity: { readonly column: 'remaining_quantity' };
+                readonly sellerId: { readonly column: 'seller_id' };
+                readonly totalQuantity: { readonly column: 'total_quantity' };
+                readonly updatedAt: { readonly column: 'updated_at' };
+                readonly userCardId: { readonly column: 'user_card_id' };
               };
             };
           };
@@ -2477,18 +2482,18 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'User';
+              readonly table: 'user';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly createdAt: { readonly column: 'created_at' };
                 readonly email: { readonly column: 'email' };
                 readonly id: { readonly column: 'id' };
                 readonly nickname: { readonly column: 'nickname' };
                 readonly password: { readonly column: 'password' };
                 readonly point: { readonly column: 'point' };
                 readonly provider: { readonly column: 'provider' };
-                readonly providerId: { readonly column: 'providerId' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly providerId: { readonly column: 'provider_id' };
+                readonly updatedAt: { readonly column: 'updated_at' };
               };
             };
           };
@@ -2572,16 +2577,16 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'UserCard';
+              readonly table: 'user_card';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly createdAt: { readonly column: 'created_at' };
                 readonly id: { readonly column: 'id' };
-                readonly netQuantity: { readonly column: 'netQuantity' };
-                readonly ownerId: { readonly column: 'ownerId' };
-                readonly photoCardId: { readonly column: 'photoCardId' };
-                readonly totalQuantity: { readonly column: 'totalQuantity' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly netQuantity: { readonly column: 'net_quantity' };
+                readonly ownerId: { readonly column: 'owner_id' };
+                readonly photoCardId: { readonly column: 'photo_card_id' };
+                readonly totalQuantity: { readonly column: 'total_quantity' };
+                readonly updatedAt: { readonly column: 'updated_at' };
               };
             };
           };
@@ -2590,100 +2595,103 @@ type ContractBase = Omit<
           readonly ExchangeStatus: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Pending'; readonly value: 'Pending' },
-              { readonly name: 'Approved'; readonly value: 'Approved' },
-              { readonly name: 'Rejected'; readonly value: 'Rejected' },
-              { readonly name: 'Cancelled'; readonly value: 'Cancelled' },
+              { readonly name: 'PENDING'; readonly value: 'PENDING' },
+              { readonly name: 'APPROVED'; readonly value: 'APPROVED' },
+              { readonly name: 'REJECTED'; readonly value: 'REJECTED' },
+              { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
             ];
           };
           readonly Genre: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Album'; readonly value: 'Album' },
-              { readonly name: 'Special'; readonly value: 'Special' },
-              { readonly name: 'FanSign'; readonly value: 'FanSign' },
-              { readonly name: 'SeasonsGreetings'; readonly value: 'SeasonsGreetings' },
-              { readonly name: 'FanMeeting'; readonly value: 'FanMeeting' },
-              { readonly name: 'Concert'; readonly value: 'Concert' },
+              { readonly name: 'ALBUM'; readonly value: 'ALBUM' },
+              { readonly name: 'SPECIAL'; readonly value: 'SPECIAL' },
+              { readonly name: 'FAN_SIGN'; readonly value: 'FAN_SIGN' },
+              { readonly name: 'SEASONS_GREETINGS'; readonly value: 'SEASONS_GREETINGS' },
+              { readonly name: 'FAN_MEETING'; readonly value: 'FAN_MEETING' },
+              { readonly name: 'CONCERT'; readonly value: 'CONCERT' },
               { readonly name: 'MD'; readonly value: 'MD' },
-              { readonly name: 'Collab'; readonly value: 'Collab' },
-              { readonly name: 'FanClub'; readonly value: 'FanClub' },
-              { readonly name: 'Others'; readonly value: 'Others' },
+              { readonly name: 'COLLAB'; readonly value: 'COLLAB' },
+              { readonly name: 'FAN_CLUB'; readonly value: 'FAN_CLUB' },
+              { readonly name: 'OTHERS'; readonly value: 'OTHERS' },
             ];
           };
           readonly Grade: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Common'; readonly value: 'Common' },
-              { readonly name: 'Rare'; readonly value: 'Rare' },
-              { readonly name: 'SuperRare'; readonly value: 'SuperRare' },
-              { readonly name: 'Legendary'; readonly value: 'Legendary' },
+              { readonly name: 'COMMON'; readonly value: 'COMMON' },
+              { readonly name: 'RARE'; readonly value: 'RARE' },
+              { readonly name: 'SUPER_RARE'; readonly value: 'SUPER_RARE' },
+              { readonly name: 'LEGENDARY'; readonly value: 'LEGENDARY' },
             ];
           };
           readonly NotificationType: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Purchase'; readonly value: 'Purchase' },
-              { readonly name: 'Soldout'; readonly value: 'Soldout' },
-              { readonly name: 'ExchangeApproved'; readonly value: 'ExchangeApproved' },
-              { readonly name: 'ExchangeRejected'; readonly value: 'ExchangeRejected' },
-              { readonly name: 'ExchangeOfferReceived'; readonly value: 'ExchangeOfferReceived' },
+              { readonly name: 'PURCHASE'; readonly value: 'PURCHASE' },
+              { readonly name: 'SOLDOUT'; readonly value: 'SOLDOUT' },
+              { readonly name: 'EXCHANGE_APPROVED'; readonly value: 'EXCHANGE_APPROVED' },
+              { readonly name: 'EXCHANGE_REJECTED'; readonly value: 'EXCHANGE_REJECTED' },
+              {
+                readonly name: 'EXCHANGE_OFFER_RECEIVED';
+                readonly value: 'EXCHANGE_OFFER_RECEIVED';
+              },
             ];
           };
           readonly OAuthProvider: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Local'; readonly value: 'Local' },
-              { readonly name: 'Google'; readonly value: 'Google' },
+              { readonly name: 'LOCAL'; readonly value: 'LOCAL' },
+              { readonly name: 'GOOGLE'; readonly value: 'GOOGLE' },
             ];
           };
           readonly PointHistoryType: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Purchase'; readonly value: 'Purchase' },
-              { readonly name: 'PointDraw'; readonly value: 'PointDraw' },
+              { readonly name: 'PURCHASE'; readonly value: 'PURCHASE' },
+              { readonly name: 'POINT_DRAW'; readonly value: 'POINT_DRAW' },
             ];
           };
         };
         readonly enumMemberTypes?: {
           readonly ExchangeStatus: readonly [
-            { readonly name: 'Pending'; readonly value: 'Pending' },
-            { readonly name: 'Approved'; readonly value: 'Approved' },
-            { readonly name: 'Rejected'; readonly value: 'Rejected' },
-            { readonly name: 'Cancelled'; readonly value: 'Cancelled' },
+            { readonly name: 'PENDING'; readonly value: 'PENDING' },
+            { readonly name: 'APPROVED'; readonly value: 'APPROVED' },
+            { readonly name: 'REJECTED'; readonly value: 'REJECTED' },
+            { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
           ];
           readonly Genre: readonly [
-            { readonly name: 'Album'; readonly value: 'Album' },
-            { readonly name: 'Special'; readonly value: 'Special' },
-            { readonly name: 'FanSign'; readonly value: 'FanSign' },
-            { readonly name: 'SeasonsGreetings'; readonly value: 'SeasonsGreetings' },
-            { readonly name: 'FanMeeting'; readonly value: 'FanMeeting' },
-            { readonly name: 'Concert'; readonly value: 'Concert' },
+            { readonly name: 'ALBUM'; readonly value: 'ALBUM' },
+            { readonly name: 'SPECIAL'; readonly value: 'SPECIAL' },
+            { readonly name: 'FAN_SIGN'; readonly value: 'FAN_SIGN' },
+            { readonly name: 'SEASONS_GREETINGS'; readonly value: 'SEASONS_GREETINGS' },
+            { readonly name: 'FAN_MEETING'; readonly value: 'FAN_MEETING' },
+            { readonly name: 'CONCERT'; readonly value: 'CONCERT' },
             { readonly name: 'MD'; readonly value: 'MD' },
-            { readonly name: 'Collab'; readonly value: 'Collab' },
-            { readonly name: 'FanClub'; readonly value: 'FanClub' },
-            { readonly name: 'Others'; readonly value: 'Others' },
+            { readonly name: 'COLLAB'; readonly value: 'COLLAB' },
+            { readonly name: 'FAN_CLUB'; readonly value: 'FAN_CLUB' },
+            { readonly name: 'OTHERS'; readonly value: 'OTHERS' },
           ];
           readonly Grade: readonly [
-            { readonly name: 'Common'; readonly value: 'Common' },
-            { readonly name: 'Rare'; readonly value: 'Rare' },
-            { readonly name: 'SuperRare'; readonly value: 'SuperRare' },
-            { readonly name: 'Legendary'; readonly value: 'Legendary' },
+            { readonly name: 'COMMON'; readonly value: 'COMMON' },
+            { readonly name: 'RARE'; readonly value: 'RARE' },
+            { readonly name: 'SUPER_RARE'; readonly value: 'SUPER_RARE' },
+            { readonly name: 'LEGENDARY'; readonly value: 'LEGENDARY' },
           ];
           readonly NotificationType: readonly [
-            { readonly name: 'Purchase'; readonly value: 'Purchase' },
-            { readonly name: 'Soldout'; readonly value: 'Soldout' },
-            { readonly name: 'ExchangeApproved'; readonly value: 'ExchangeApproved' },
-            { readonly name: 'ExchangeRejected'; readonly value: 'ExchangeRejected' },
-            { readonly name: 'ExchangeOfferReceived'; readonly value: 'ExchangeOfferReceived' },
+            { readonly name: 'PURCHASE'; readonly value: 'PURCHASE' },
+            { readonly name: 'SOLDOUT'; readonly value: 'SOLDOUT' },
+            { readonly name: 'EXCHANGE_APPROVED'; readonly value: 'EXCHANGE_APPROVED' },
+            { readonly name: 'EXCHANGE_REJECTED'; readonly value: 'EXCHANGE_REJECTED' },
+            { readonly name: 'EXCHANGE_OFFER_RECEIVED'; readonly value: 'EXCHANGE_OFFER_RECEIVED' },
           ];
           readonly OAuthProvider: readonly [
-            { readonly name: 'Local'; readonly value: 'Local' },
-            { readonly name: 'Google'; readonly value: 'Google' },
+            { readonly name: 'LOCAL'; readonly value: 'LOCAL' },
+            { readonly name: 'GOOGLE'; readonly value: 'GOOGLE' },
           ];
           readonly PointHistoryType: readonly [
-            { readonly name: 'Purchase'; readonly value: 'Purchase' },
-            { readonly name: 'PointDraw'; readonly value: 'PointDraw' },
+            { readonly name: 'PURCHASE'; readonly value: 'PURCHASE' },
+            { readonly name: 'POINT_DRAW'; readonly value: 'POINT_DRAW' },
           ];
         };
       };
@@ -2717,6 +2725,49 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
+  readonly execution: {
+    readonly executionHash: ExecutionHash;
+    readonly mutations: {
+      readonly defaults: readonly [
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'exchange_offer';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'sale';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'user';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'user_card';
+            readonly field: 'updated_at';
+            readonly namespace: 'public';
+          };
+        },
+      ];
+    };
+  };
   readonly meta: {};
 
   readonly profileHash: ProfileHash;

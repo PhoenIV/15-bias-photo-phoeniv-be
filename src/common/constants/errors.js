@@ -32,9 +32,9 @@ export const ERROR_MESSAGE = {
   FAILED_TO_FETCH_USERCARDS: '사용자 보유 카드 목록을 조회하지 못했습니다.',
   FAILED_TO_FETCH_USERCARD: '사용자 보유 카드 정보를 조회하지 못했습니다.',
   FAILED_TO_CREATE_USERCARD: '사용자 보유 카드를 생성하지 못했습니다.',
-  FAILED_TO_UPDATE_USECARD: '사용자 보유 카드 정보를 수정하지 못했습니다.',
+  FAILED_TO_UPDATE_USERCARD: '사용자 보유 카드 정보를 수정하지 못했습니다.',
   FAILED_TO_DELETE_USERCARD: '사용자 보유 카드를 삭제하지 못했습니다.',
-  
+
   // 판매글 관련
   SALE_NOT_FOUND: '판매글 정보를 찾을 수 없습니다.',
   PRICE_REQUIRED: '판매 가격을 입력해야 합니다.',
@@ -66,18 +66,21 @@ export const ERROR_MESSAGE = {
 
   // 알림 관련
   NOTIFICATION_NOT_FOUND: '알림을 찾을 수 없습니다',
-  NOTIFICATION_SINGLE_CAUSE_REQUIRED: '알림을 발생시키는 단일한 원인이 있어야 합니다.',
+  NOTIFICATION_SINGLE_CAUSE_REQUIRED:
+    '알림을 발생시키는 단일한 원인이 있어야 합니다.',
   FAILED_TO_FETCH_NOTIFICATIONS: '알림 목록을 조회하지 못했습니다',
   FAILED_TO_FETCH_NOTIFICATION: '알림을 조회하지 못했습니다.',
   FAILED_TO_CREATE_NOTIFICATION: '알림을 생성하지 못했습니다',
   FAILED_TO_UPDATE_NOTIFICATION: '알림을 수정하지 못했습니다',
-  FAILED_TO_DELETE_NOTIFICATIONL: '알림을 삭제하지 못했습니다.',
+  FAILED_TO_DELETE_NOTIFICATION: '알림을 삭제하지 못했습니다.',
 
   // 포인트 변동이력 관련
   POINT_HISTORY_NOT_FOUND: '포인트 변동이력을 찾을 수 없습니다.',
   POINT_HISTORY_ALREADY_CREATED: '이미 생성된 포인트 변동이력입니다.',
-  POINT_HISTORY_SINGLE_CAUSE_REQUIRED: '포인트 변동을 발생시키는 단일한 원인이 있어야 합니다.',
-  FAILED_TO_FETCH_POINT_HISTORIES: '포인트 변동이력 목록을 조회하지 못했습니다.',
+  POINT_HISTORY_SINGLE_CAUSE_REQUIRED:
+    '포인트 변동을 발생시키는 단일한 원인이 있어야 합니다.',
+  FAILED_TO_FETCH_POINT_HISTORIES:
+    '포인트 변동이력 목록을 조회하지 못했습니다.',
   FAILED_TO_FETCH_POINT_HISTORY: '포인트 변동이력을 조회하지 못했습니다.',
   FAILED_TO_CREATE_POINT_HISTORY: '포인트 변동이력을 생성하지 못했습니다.',
   FAILED_TO_UPDATE_POINT_HISTORY: '포인트 변동이력을 수정하지 못했습니다.',

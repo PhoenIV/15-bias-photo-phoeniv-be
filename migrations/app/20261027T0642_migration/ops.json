@@ -1,0 +1,283 @@
+[
+  {
+    "id": "dropCheckConstraint.exchange_offer.exchange_offer_status_check_56005a61",
+    "label": "Drop check constraint \"exchange_offer_status_check_56005a61\" on \"exchange_offer\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "exchange_offer_status_check_56005a61",
+        "table": "exchange_offer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"exchange_offer_status_check_56005a61\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "exchange_offer_status_check_56005a61",
+          "public",
+          "\"public\".\"exchange_offer\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"exchange_offer_status_check_56005a61\" on \"exchange_offer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"exchange_offer_status_check_56005a61\"",
+        "sql": "ALTER TABLE \"public\".\"exchange_offer\" DROP CONSTRAINT \"exchange_offer_status_check_56005a61\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"exchange_offer_status_check_56005a61\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "exchange_offer_status_check_56005a61",
+          "public",
+          "\"public\".\"exchange_offer\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"exchange_offer_status_check_56005a61\" on \"exchange_offer\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropDefault.exchange_offer.updated_at",
+    "label": "Drop default on \"exchange_offer\".\"updated_at\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "exchange_offer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "exchange_offer",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"exchange_offer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop default on \"updated_at\"",
+        "sql": "ALTER TABLE \"public\".\"exchange_offer\" ALTER COLUMN \"updated_at\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has no default",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "exchange_offer",
+          "updated_at"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropDefault.sale.updated_at",
+    "label": "Drop default on \"sale\".\"updated_at\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "sale"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sale",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"sale\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop default on \"updated_at\"",
+        "sql": "ALTER TABLE \"public\".\"sale\" ALTER COLUMN \"updated_at\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has no default",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "sale",
+          "updated_at"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropDefault.user.updated_at",
+    "label": "Drop default on \"user\".\"updated_at\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"user\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop default on \"updated_at\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ALTER COLUMN \"updated_at\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has no default",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "updated_at"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropDefault.user_card.updated_at",
+    "label": "Drop default on \"user_card\".\"updated_at\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "user_card"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user_card",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"user_card\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop default on \"updated_at\"",
+        "sql": "ALTER TABLE \"public\".\"user_card\" ALTER COLUMN \"updated_at\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has no default",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "user_card",
+          "updated_at"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.exchange_offer.exchange_offer_status_check_57fe5f48",
+    "label": "Add check constraint \"exchange_offer_status_check_57fe5f48\" on \"exchange_offer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "exchange_offer_status_check_57fe5f48",
+        "table": "exchange_offer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"exchange_offer_status_check_57fe5f48\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "exchange_offer_status_check_57fe5f48",
+          "public",
+          "\"public\".\"exchange_offer\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"exchange_offer_status_check_57fe5f48\" on \"exchange_offer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"exchange_offer_status_check_57fe5f48\"",
+        "sql": "ALTER TABLE \"public\".\"exchange_offer\" ADD CONSTRAINT \"exchange_offer_status_check_57fe5f48\" CHECK (\"status\" IN ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"exchange_offer_status_check_57fe5f48\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "exchange_offer_status_check_57fe5f48",
+          "public",
+          "\"public\".\"exchange_offer\"",
+          "c"
+        ]
+      }
+    ]
+  }
+]

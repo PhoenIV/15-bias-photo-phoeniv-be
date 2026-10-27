@@ -10,8 +10,8 @@ export class HealthCheckController extends BaseController {
 
   routes() {
     this.router.get('/', (req, res) => {
-      const { message, time } = this.healthCheckService.ping();
-      res.status(HTTP_STATUS.OK).json({ message, time });
+      const { message, timestamp } = this.healthCheckService.ping();
+      res.status(HTTP_STATUS.OK).json({ message, timestamp });
     });
     return this.router;
   }

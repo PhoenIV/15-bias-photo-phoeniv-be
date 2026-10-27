@@ -17,12 +17,14 @@ export class App {
   middleware() {
     this.app.use(helmet());
     this.app.use(morgan());
-    this.app.use(cors({
+    this.app.use(
+      cors({
         origin: corsOrigins,
         credentials: true,
-    }));
-    this.app.use(express.json())
-    this.app.use(cookieParser())
+      }),
+    );
+    this.app.use(express.json());
+    this.app.use(cookieParser());
   }
 
   routes(controller) {

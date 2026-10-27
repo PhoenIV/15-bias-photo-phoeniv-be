@@ -4,39 +4,39 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "ExchangeOffer": {
+    "exchange_offer": {
       "model": "ExchangeOffer",
       "namespace": "public"
     },
-    "Notification": {
+    "notification": {
       "model": "Notification",
       "namespace": "public"
     },
-    "PhotoCard": {
+    "photo_card": {
       "model": "PhotoCard",
       "namespace": "public"
     },
-    "PointDraw": {
+    "point_draw": {
       "model": "PointDraw",
       "namespace": "public"
     },
-    "PointHistory": {
+    "point_history": {
       "model": "PointHistory",
       "namespace": "public"
     },
-    "Purchase": {
+    "purchase": {
       "model": "Purchase",
       "namespace": "public"
     },
-    "Sale": {
+    "sale": {
       "model": "Sale",
       "namespace": "public"
     },
-    "User": {
+    "user": {
       "model": "User",
       "namespace": "public"
     },
-    "UserCard": {
+    "user_card": {
       "model": "UserCard",
       "namespace": "public"
     }
@@ -49,20 +49,20 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Pending",
-                "value": "Pending"
+                "name": "PENDING",
+                "value": "PENDING"
               },
               {
-                "name": "Approved",
-                "value": "Approved"
+                "name": "APPROVED",
+                "value": "APPROVED"
               },
               {
-                "name": "Rejected",
-                "value": "Rejected"
+                "name": "REJECTED",
+                "value": "REJECTED"
               },
               {
-                "name": "Cancelled",
-                "value": "Cancelled"
+                "name": "CANCELLED",
+                "value": "CANCELLED"
               }
             ]
           },
@@ -70,44 +70,44 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Album",
-                "value": "Album"
+                "name": "ALBUM",
+                "value": "ALBUM"
               },
               {
-                "name": "Special",
-                "value": "Special"
+                "name": "SPECIAL",
+                "value": "SPECIAL"
               },
               {
-                "name": "FanSign",
-                "value": "FanSign"
+                "name": "FAN_SIGN",
+                "value": "FAN_SIGN"
               },
               {
-                "name": "SeasonsGreetings",
-                "value": "SeasonsGreetings"
+                "name": "SEASONS_GREETINGS",
+                "value": "SEASONS_GREETINGS"
               },
               {
-                "name": "FanMeeting",
-                "value": "FanMeeting"
+                "name": "FAN_MEETING",
+                "value": "FAN_MEETING"
               },
               {
-                "name": "Concert",
-                "value": "Concert"
+                "name": "CONCERT",
+                "value": "CONCERT"
               },
               {
                 "name": "MD",
                 "value": "MD"
               },
               {
-                "name": "Collab",
-                "value": "Collab"
+                "name": "COLLAB",
+                "value": "COLLAB"
               },
               {
-                "name": "FanClub",
-                "value": "FanClub"
+                "name": "FAN_CLUB",
+                "value": "FAN_CLUB"
               },
               {
-                "name": "Others",
-                "value": "Others"
+                "name": "OTHERS",
+                "value": "OTHERS"
               }
             ]
           },
@@ -115,20 +115,20 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Common",
-                "value": "Common"
+                "name": "COMMON",
+                "value": "COMMON"
               },
               {
-                "name": "Rare",
-                "value": "Rare"
+                "name": "RARE",
+                "value": "RARE"
               },
               {
-                "name": "SuperRare",
-                "value": "SuperRare"
+                "name": "SUPER_RARE",
+                "value": "SUPER_RARE"
               },
               {
-                "name": "Legendary",
-                "value": "Legendary"
+                "name": "LEGENDARY",
+                "value": "LEGENDARY"
               }
             ]
           },
@@ -136,24 +136,24 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Purchase",
-                "value": "Purchase"
+                "name": "PURCHASE",
+                "value": "PURCHASE"
               },
               {
-                "name": "Soldout",
-                "value": "Soldout"
+                "name": "SOLDOUT",
+                "value": "SOLDOUT"
               },
               {
-                "name": "ExchangeApproved",
-                "value": "ExchangeApproved"
+                "name": "EXCHANGE_APPROVED",
+                "value": "EXCHANGE_APPROVED"
               },
               {
-                "name": "ExchangeRejected",
-                "value": "ExchangeRejected"
+                "name": "EXCHANGE_REJECTED",
+                "value": "EXCHANGE_REJECTED"
               },
               {
-                "name": "ExchangeOfferReceived",
-                "value": "ExchangeOfferReceived"
+                "name": "EXCHANGE_OFFER_RECEIVED",
+                "value": "EXCHANGE_OFFER_RECEIVED"
               }
             ]
           },
@@ -161,12 +161,12 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Local",
-                "value": "Local"
+                "name": "LOCAL",
+                "value": "LOCAL"
               },
               {
-                "name": "Google",
-                "value": "Google"
+                "name": "GOOGLE",
+                "value": "GOOGLE"
               }
             ]
           },
@@ -174,12 +174,12 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Purchase",
-                "value": "Purchase"
+                "name": "PURCHASE",
+                "value": "PURCHASE"
               },
               {
-                "name": "PointDraw",
-                "value": "PointDraw"
+                "name": "POINT_DRAW",
+                "value": "POINT_DRAW"
               }
             ]
           }
@@ -318,7 +318,7 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "description": {
                   "column": "description"
@@ -327,23 +327,23 @@
                   "column": "id"
                 },
                 "offeredUserCardId": {
-                  "column": "offeredUserCardId"
+                  "column": "offered_user_card_id"
                 },
                 "proposerId": {
-                  "column": "proposerId"
+                  "column": "proposer_id"
                 },
                 "saleId": {
-                  "column": "saleId"
+                  "column": "sale_id"
                 },
                 "status": {
                   "column": "status"
                 },
                 "updatedAt": {
-                  "column": "updatedAt"
+                  "column": "updated_at"
                 }
               },
               "namespaceId": "public",
-              "table": "ExchangeOffer"
+              "table": "exchange_offer"
             }
           },
           "Notification": {
@@ -487,10 +487,10 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "exchangeOfferId": {
-                  "column": "exchangeOfferId"
+                  "column": "exchange_offer_id"
                 },
                 "id": {
                   "column": "id"
@@ -499,23 +499,23 @@
                   "column": "message"
                 },
                 "purchaseId": {
-                  "column": "purchaseId"
+                  "column": "purchase_id"
                 },
                 "readAt": {
-                  "column": "readAt"
+                  "column": "read_at"
                 },
                 "saleId": {
-                  "column": "saleId"
+                  "column": "sale_id"
                 },
                 "type": {
                   "column": "type"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
-              "table": "Notification"
+              "table": "notification"
             }
           },
           "PhotoCard": {
@@ -646,10 +646,10 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "creatorId": {
-                  "column": "creatorId"
+                  "column": "creator_id"
                 },
                 "description": {
                   "column": "description"
@@ -664,23 +664,23 @@
                   "column": "id"
                 },
                 "imagePublicId": {
-                  "column": "imagePublicId"
+                  "column": "image_public_id"
                 },
                 "imageUrl": {
-                  "column": "imageUrl"
+                  "column": "image_url"
                 },
                 "minPrice": {
-                  "column": "minPrice"
+                  "column": "min_price"
                 },
                 "name": {
                   "column": "name"
                 },
                 "totalCreated": {
-                  "column": "totalCreated"
+                  "column": "total_created"
                 }
               },
               "namespaceId": "public",
-              "table": "PhotoCard"
+              "table": "photo_card"
             }
           },
           "PointDraw": {
@@ -744,17 +744,17 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "id": {
                   "column": "id"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
-              "table": "PointDraw"
+              "table": "point_draw"
             }
           },
           "PointHistory": {
@@ -878,29 +878,29 @@
                   "column": "amount"
                 },
                 "balanceAfter": {
-                  "column": "balanceAfter"
+                  "column": "balance_after"
                 },
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "id": {
                   "column": "id"
                 },
                 "pointDrawId": {
-                  "column": "pointDrawId"
+                  "column": "point_draw_id"
                 },
                 "purchaseId": {
-                  "column": "purchaseId"
+                  "column": "purchase_id"
                 },
                 "type": {
                   "column": "type"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
-              "table": "PointHistory"
+              "table": "point_history"
             }
           },
           "Purchase": {
@@ -1015,10 +1015,10 @@
             "storage": {
               "fields": {
                 "buyerId": {
-                  "column": "buyerId"
+                  "column": "buyer_id"
                 },
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "id": {
                   "column": "id"
@@ -1030,11 +1030,11 @@
                   "column": "quantity"
                 },
                 "saleId": {
-                  "column": "saleId"
+                  "column": "sale_id"
                 }
               },
               "namespaceId": "public",
-              "table": "Purchase"
+              "table": "purchase"
             }
           },
           "Sale": {
@@ -1218,19 +1218,19 @@
             "storage": {
               "fields": {
                 "cancelledAt": {
-                  "column": "cancelledAt"
+                  "column": "cancelled_at"
                 },
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "exchangeDescription": {
-                  "column": "exchangeDescription"
+                  "column": "exchange_description"
                 },
                 "exchangeGenre": {
-                  "column": "exchangeGenre"
+                  "column": "exchange_genre"
                 },
                 "exchangeGrade": {
-                  "column": "exchangeGrade"
+                  "column": "exchange_grade"
                 },
                 "id": {
                   "column": "id"
@@ -1239,23 +1239,23 @@
                   "column": "price"
                 },
                 "remainingQuantity": {
-                  "column": "remainingQuantity"
+                  "column": "remaining_quantity"
                 },
                 "sellerId": {
-                  "column": "sellerId"
+                  "column": "seller_id"
                 },
                 "totalQuantity": {
-                  "column": "totalQuantity"
+                  "column": "total_quantity"
                 },
                 "updatedAt": {
-                  "column": "updatedAt"
+                  "column": "updated_at"
                 },
                 "userCardId": {
-                  "column": "userCardId"
+                  "column": "user_card_id"
                 }
               },
               "namespaceId": "public",
-              "table": "Sale"
+              "table": "sale"
             }
           },
           "User": {
@@ -1455,7 +1455,7 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "email": {
                   "column": "email"
@@ -1476,14 +1476,14 @@
                   "column": "provider"
                 },
                 "providerId": {
-                  "column": "providerId"
+                  "column": "provider_id"
                 },
                 "updatedAt": {
-                  "column": "updatedAt"
+                  "column": "updated_at"
                 }
               },
               "namespaceId": "public",
-              "table": "User"
+              "table": "user"
             }
           },
           "UserCard": {
@@ -1605,29 +1605,29 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "id": {
                   "column": "id"
                 },
                 "netQuantity": {
-                  "column": "netQuantity"
+                  "column": "net_quantity"
                 },
                 "ownerId": {
-                  "column": "ownerId"
+                  "column": "owner_id"
                 },
                 "photoCardId": {
-                  "column": "photoCardId"
+                  "column": "photo_card_id"
                 },
                 "totalQuantity": {
-                  "column": "totalQuantity"
+                  "column": "total_quantity"
                 },
                 "updatedAt": {
-                  "column": "updatedAt"
+                  "column": "updated_at"
                 }
               },
               "namespaceId": "public",
-              "table": "UserCard"
+              "table": "user_card"
             }
           }
         }
@@ -1639,16 +1639,16 @@
       "public": {
         "entries": {
           "table": {
-            "ExchangeOffer": {
+            "exchange_offer": {
               "checks": [
                 {
-                  "expression": "\"status\" IN ('Pending', 'Approved', 'Rejected', 'Cancelled')",
-                  "name": "ExchangeOffer_status_check_769b3142",
-                  "prefix": "ExchangeOffer_status_check"
+                  "expression": "\"status\" IN ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED')",
+                  "name": "exchange_offer_status_check_57fe5f48",
+                  "prefix": "exchange_offer_status_check"
                 }
               ],
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -1671,17 +1671,17 @@
                   },
                   "nullable": false
                 },
-                "offeredUserCardId": {
+                "offered_user_card_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "proposerId": {
+                "proposer_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "saleId": {
+                "sale_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -1691,7 +1691,7 @@
                   "dataType": "pg/text",
                   "default": {
                     "kind": "literal",
-                    "value": "Pending"
+                    "value": "PENDING"
                   },
                   "nullable": false,
                   "valueSet": {
@@ -1701,110 +1701,106 @@
                     "plane": "storage"
                   }
                 },
-                "updatedAt": {
+                "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nullable": false
                 }
               },
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "ExchangeOffer_saleId_idx_b4c0fb73"
+                    "name": "exchange_offer_sale_id_idx_43e6ad69"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "saleId"
+                      "sale_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "ExchangeOffer"
+                    "tableName": "exchange_offer"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Sale"
+                    "tableName": "sale"
                   }
                 },
                 {
                   "index": {
-                    "name": "exchange_offer_proposer_id_idx_a1d96f6a"
+                    "name": "exchange_offer_proposer_id_idx_f9a4d8da"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "proposerId"
+                      "proposer_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "ExchangeOffer"
+                    "tableName": "exchange_offer"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 },
                 {
                   "index": {
-                    "name": "ExchangeOffer_offeredUserCardId_idx_80a48e54"
+                    "name": "exchange_offer_offered_user_card_id_idx_34a80427"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "offeredUserCardId"
+                      "offered_user_card_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "ExchangeOffer"
+                    "tableName": "exchange_offer"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "UserCard"
+                    "tableName": "user_card"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "offeredUserCardId"
-                  ],
-                  "name": "ExchangeOffer_offeredUserCardId_idx_80a48e54",
-                  "prefix": "ExchangeOffer_offeredUserCardId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "saleId"
-                  ],
-                  "name": "ExchangeOffer_saleId_idx_b4c0fb73",
-                  "prefix": "ExchangeOffer_saleId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "offeredUserCardId",
+                    "offered_user_card_id",
                     "status"
                   ],
-                  "name": "exchange_offer_card_status_idx_8dc11292",
+                  "name": "exchange_offer_card_status_idx_0ddac7fe",
                   "prefix": "exchange_offer_card_status_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "proposerId"
+                    "offered_user_card_id"
                   ],
-                  "name": "exchange_offer_proposer_id_idx_a1d96f6a",
+                  "name": "exchange_offer_offered_user_card_id_idx_34a80427",
+                  "prefix": "exchange_offer_offered_user_card_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "proposer_id"
+                  ],
+                  "name": "exchange_offer_proposer_id_idx_f9a4d8da",
                   "prefix": "exchange_offer_proposer_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "sale_id"
+                  ],
+                  "name": "exchange_offer_sale_id_idx_43e6ad69",
+                  "prefix": "exchange_offer_sale_id_idx",
                   "unique": false
                 }
               ],
@@ -1816,27 +1812,27 @@
               "uniques": [
                 {
                   "columns": [
-                    "saleId",
-                    "offeredUserCardId"
+                    "sale_id",
+                    "offered_user_card_id"
                   ]
                 }
               ]
             },
-            "Notification": {
+            "notification": {
               "checks": [
                 {
-                  "expression": "\"type\" IN ('Purchase', 'Soldout', 'ExchangeApproved', 'ExchangeRejected', 'ExchangeOfferReceived')",
-                  "name": "Notification_type_check_b2d06bfc",
-                  "prefix": "Notification_type_check"
+                  "expression": "(num_nonnulls(\"sale_id\", \"purchase_id\", \"exchange_offer_id\") = 1)",
+                  "name": "notification_ref_check_eb31b53b",
+                  "prefix": "notification_ref_check"
                 },
                 {
-                  "expression": "(num_nonnulls(\"saleId\", \"purchaseId\", \"exchangeOfferId\") = 1)",
-                  "name": "notification_ref_check_0fd367d4",
-                  "prefix": "notification_ref_check"
+                  "expression": "\"type\" IN ('PURCHASE', 'SOLDOUT', 'EXCHANGE_APPROVED', 'EXCHANGE_REJECTED', 'EXCHANGE_OFFER_RECEIVED')",
+                  "name": "notification_type_check_29c6617e",
+                  "prefix": "notification_type_check"
                 }
               ],
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -1845,7 +1841,7 @@
                   },
                   "nullable": false
                 },
-                "exchangeOfferId": {
+                "exchange_offer_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": true
@@ -1864,17 +1860,17 @@
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "purchaseId": {
+                "purchase_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": true
                 },
-                "readAt": {
+                "read_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true
                 },
-                "saleId": {
+                "sale_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": true
@@ -1890,7 +1886,7 @@
                     "plane": "storage"
                   }
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -1899,134 +1895,134 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Notification_userId_idx_a489d58a"
+                    "name": "notification_user_id_idx_6c952402"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Notification"
+                    "tableName": "notification"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 },
                 {
                   "index": {
-                    "name": "Notification_saleId_idx_b4c0fb73"
+                    "name": "notification_sale_id_idx_43e6ad69"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "saleId"
+                      "sale_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Notification"
+                    "tableName": "notification"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Sale"
+                    "tableName": "sale"
                   }
                 },
                 {
                   "index": {
-                    "name": "Notification_purchaseId_idx_10cddd2f"
+                    "name": "notification_purchase_id_idx_91976ef4"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "purchaseId"
+                      "purchase_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Notification"
+                    "tableName": "notification"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Purchase"
+                    "tableName": "purchase"
                   }
                 },
                 {
                   "index": {
-                    "name": "Notification_exchangeOfferId_idx_1e0042f8"
+                    "name": "notification_exchange_offer_id_idx_89187884"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "exchangeOfferId"
+                      "exchange_offer_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Notification"
+                    "tableName": "notification"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "ExchangeOffer"
+                    "tableName": "exchange_offer"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "exchangeOfferId"
+                    "exchange_offer_id"
                   ],
-                  "name": "Notification_exchangeOfferId_idx_1e0042f8",
-                  "prefix": "Notification_exchangeOfferId_idx",
+                  "name": "notification_exchange_offer_id_idx_89187884",
+                  "prefix": "notification_exchange_offer_id_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "purchaseId"
+                    "purchase_id"
                   ],
-                  "name": "Notification_purchaseId_idx_10cddd2f",
-                  "prefix": "Notification_purchaseId_idx",
+                  "name": "notification_purchase_id_idx_91976ef4",
+                  "prefix": "notification_purchase_id_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "saleId"
+                    "sale_id"
                   ],
-                  "name": "Notification_saleId_idx_b4c0fb73",
-                  "prefix": "Notification_saleId_idx",
+                  "name": "notification_sale_id_idx_43e6ad69",
+                  "prefix": "notification_sale_id_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "userId"
+                    "user_id"
                   ],
-                  "name": "Notification_userId_idx_a489d58a",
-                  "prefix": "Notification_userId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "userId"
-                  ],
-                  "name": "notification_unread_idx_4ec396a0",
+                  "name": "notification_unread_idx_8d07162c",
                   "prefix": "notification_unread_idx",
                   "unique": false,
-                  "where": "\"readAt\" IS NULL"
+                  "where": "\"read_at\" IS NULL"
                 },
                 {
                   "columns": [
-                    "userId",
-                    "createdAt"
+                    "user_id",
+                    "created_at"
                   ],
-                  "name": "notification_user_created_at_idx_f726f04a",
+                  "name": "notification_user_created_at_idx_b562028f",
                   "prefix": "notification_user_created_at_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "user_id"
+                  ],
+                  "name": "notification_user_id_idx_6c952402",
+                  "prefix": "notification_user_id_idx",
                   "unique": false
                 }
               ],
@@ -2037,26 +2033,26 @@
               },
               "uniques": []
             },
-            "PhotoCard": {
+            "photo_card": {
               "checks": [
                 {
-                  "expression": "\"genre\" IN ('Album', 'Special', 'FanSign', 'SeasonsGreetings', 'FanMeeting', 'Concert', 'MD', 'Collab', 'FanClub', 'Others')",
-                  "name": "PhotoCard_genre_check_caa08e7d",
-                  "prefix": "PhotoCard_genre_check"
-                },
-                {
-                  "expression": "\"grade\" IN ('Common', 'Rare', 'SuperRare', 'Legendary')",
-                  "name": "PhotoCard_grade_check_b973fee2",
-                  "prefix": "PhotoCard_grade_check"
-                },
-                {
-                  "expression": "(\"minPrice\" >= 0 AND \"totalCreated\" >= 1)",
-                  "name": "photo_card_check_aa270336",
+                  "expression": "(\"min_price\" >= 0 AND \"total_created\" >= 1)",
+                  "name": "photo_card_check_be2f7c0a",
                   "prefix": "photo_card_check"
+                },
+                {
+                  "expression": "\"genre\" IN ('ALBUM', 'SPECIAL', 'FAN_SIGN', 'SEASONS_GREETINGS', 'FAN_MEETING', 'CONCERT', 'MD', 'COLLAB', 'FAN_CLUB', 'OTHERS')",
+                  "name": "photo_card_genre_check_9d25f790",
+                  "prefix": "photo_card_genre_check"
+                },
+                {
+                  "expression": "\"grade\" IN ('COMMON', 'RARE', 'SUPER_RARE', 'LEGENDARY')",
+                  "name": "photo_card_grade_check_5e1f14a6",
+                  "prefix": "photo_card_grade_check"
                 }
               ],
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2065,7 +2061,7 @@
                   },
                   "nullable": false
                 },
-                "creatorId": {
+                "creator_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2080,7 +2076,7 @@
                   "dataType": "pg/text",
                   "default": {
                     "kind": "literal",
-                    "value": "Others"
+                    "value": "OTHERS"
                   },
                   "nullable": false,
                   "valueSet": {
@@ -2095,7 +2091,7 @@
                   "dataType": "pg/text",
                   "default": {
                     "kind": "literal",
-                    "value": "Common"
+                    "value": "COMMON"
                   },
                   "nullable": false,
                   "valueSet": {
@@ -2114,17 +2110,17 @@
                   },
                   "nullable": false
                 },
-                "imagePublicId": {
+                "image_public_id": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "imageUrl": {
+                "image_url": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "minPrice": {
+                "min_price": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2134,7 +2130,7 @@
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "totalCreated": {
+                "total_created": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2143,31 +2139,31 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "photo_card_creator_id_idx_3a77d800"
+                    "name": "photo_card_creator_id_idx_c8bab67a"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "creatorId"
+                      "creator_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PhotoCard"
+                    "tableName": "photo_card"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "creatorId"
+                    "creator_id"
                   ],
-                  "name": "photo_card_creator_id_idx_3a77d800",
+                  "name": "photo_card_creator_id_idx_c8bab67a",
                   "prefix": "photo_card_creator_id_idx",
                   "unique": false
                 },
@@ -2186,11 +2182,17 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "image_public_id"
+                  ]
+                }
+              ]
             },
-            "PointDraw": {
+            "point_draw": {
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2208,7 +2210,7 @@
                   },
                   "nullable": false
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2217,41 +2219,41 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "PointDraw_userId_idx_a489d58a"
+                    "name": "point_draw_user_id_idx_6c952402"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PointDraw"
+                    "tableName": "point_draw"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "userId"
+                    "user_id",
+                    "created_at"
                   ],
-                  "name": "PointDraw_userId_idx_a489d58a",
-                  "prefix": "PointDraw_userId_idx",
+                  "name": "point_draw_user_created_at_idx_b562028f",
+                  "prefix": "point_draw_user_created_at_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "userId",
-                    "createdAt"
+                    "user_id"
                   ],
-                  "name": "point_draw_user_created_at_idx_f726f04a",
-                  "prefix": "point_draw_user_created_at_idx",
+                  "name": "point_draw_user_id_idx_6c952402",
+                  "prefix": "point_draw_user_id_idx",
                   "unique": false
                 }
               ],
@@ -2262,17 +2264,17 @@
               },
               "uniques": []
             },
-            "PointHistory": {
+            "point_history": {
               "checks": [
                 {
-                  "expression": "\"type\" IN ('Purchase', 'PointDraw')",
-                  "name": "PointHistory_type_check_1087e67e",
-                  "prefix": "PointHistory_type_check"
+                  "expression": "((\"type\" = 'PURCHASE' AND \"purchase_id\" IS NOT NULL AND \"point_draw_id\" IS NULL) OR (\"type\" = 'POINT_DRAW' AND \"point_draw_id\" IS NOT NULL AND \"purchase_id\" IS NULL))",
+                  "name": "point_history_ref_check_82e3a824",
+                  "prefix": "point_history_ref_check"
                 },
                 {
-                  "expression": "((\"type\" = 'Purchase' AND \"purchaseId\" IS NOT NULL AND \"pointDrawId\" IS NULL) OR (\"type\" = 'PointDraw' AND \"pointDrawId\" IS NOT NULL AND \"purchaseId\" IS NULL))",
-                  "name": "point_history_ref_check_21e7b6a9",
-                  "prefix": "point_history_ref_check"
+                  "expression": "\"type\" IN ('PURCHASE', 'POINT_DRAW')",
+                  "name": "point_history_type_check_dfd4e960",
+                  "prefix": "point_history_type_check"
                 }
               ],
               "columns": {
@@ -2281,12 +2283,12 @@
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "balanceAfter": {
+                "balance_after": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2304,12 +2306,12 @@
                   },
                   "nullable": false
                 },
-                "pointDrawId": {
+                "point_draw_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": true
                 },
-                "purchaseId": {
+                "purchase_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": true
@@ -2325,7 +2327,7 @@
                     "plane": "storage"
                   }
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2334,91 +2336,91 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "PointHistory_userId_idx_a489d58a"
+                    "name": "point_history_user_id_idx_6c952402"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PointHistory"
+                    "tableName": "point_history"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 },
                 {
                   "index": {
-                    "name": "PointHistory_purchaseId_idx_10cddd2f"
+                    "name": "point_history_purchase_id_idx_91976ef4"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "purchaseId"
+                      "purchase_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PointHistory"
+                    "tableName": "point_history"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Purchase"
+                    "tableName": "purchase"
                   }
                 },
                 {
                   "index": {
                     "unique": [
-                      "pointDrawId"
+                      "point_draw_id"
                     ]
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "pointDrawId"
+                      "point_draw_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PointHistory"
+                    "tableName": "point_history"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PointDraw"
+                    "tableName": "point_draw"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "purchaseId"
+                    "purchase_id"
                   ],
-                  "name": "PointHistory_purchaseId_idx_10cddd2f",
-                  "prefix": "PointHistory_purchaseId_idx",
+                  "name": "point_history_purchase_id_idx_91976ef4",
+                  "prefix": "point_history_purchase_id_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "userId"
+                    "user_id",
+                    "created_at"
                   ],
-                  "name": "PointHistory_userId_idx_a489d58a",
-                  "prefix": "PointHistory_userId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "userId",
-                    "createdAt"
-                  ],
-                  "name": "point_history_user_created_at_idx_f726f04a",
+                  "name": "point_history_user_created_at_idx_b562028f",
                   "prefix": "point_history_user_created_at_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "user_id"
+                  ],
+                  "name": "point_history_user_id_idx_6c952402",
+                  "prefix": "point_history_user_id_idx",
                   "unique": false
                 }
               ],
@@ -2430,18 +2432,18 @@
               "uniques": [
                 {
                   "columns": [
-                    "pointDrawId"
+                    "point_draw_id"
                   ]
                 },
                 {
                   "columns": [
-                    "purchaseId",
-                    "userId"
+                    "purchase_id",
+                    "user_id"
                   ]
                 }
               ]
             },
-            "Purchase": {
+            "purchase": {
               "checks": [
                 {
                   "expression": "(\"quantity\" >= 1 AND \"price\" >= 0)",
@@ -2450,12 +2452,12 @@
                 }
               ],
               "columns": {
-                "buyerId": {
+                "buyer_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2483,7 +2485,7 @@
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "saleId": {
+                "sale_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2492,68 +2494,68 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "purchase_sale_id_idx_b4c0fb73"
+                    "name": "purchase_sale_id_idx_43e6ad69"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "saleId"
+                      "sale_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Purchase"
+                    "tableName": "purchase"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Sale"
+                    "tableName": "sale"
                   }
                 },
                 {
                   "index": {
-                    "name": "Purchase_buyerId_idx_80be0de9"
+                    "name": "purchase_buyer_id_idx_a09525cc"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "buyerId"
+                      "buyer_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Purchase"
+                    "tableName": "purchase"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "buyerId"
+                    "buyer_id",
+                    "created_at"
                   ],
-                  "name": "Purchase_buyerId_idx_80be0de9",
-                  "prefix": "Purchase_buyerId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "buyerId",
-                    "createdAt"
-                  ],
-                  "name": "purchase_buyer_created_at_idx_7547b79f",
+                  "name": "purchase_buyer_created_at_idx_7f687fb1",
                   "prefix": "purchase_buyer_created_at_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "saleId"
+                    "buyer_id"
                   ],
-                  "name": "purchase_sale_id_idx_b4c0fb73",
+                  "name": "purchase_buyer_id_idx_a09525cc",
+                  "prefix": "purchase_buyer_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "sale_id"
+                  ],
+                  "name": "purchase_sale_id_idx_43e6ad69",
                   "prefix": "purchase_sale_id_idx",
                   "unique": false
                 }
@@ -2565,31 +2567,31 @@
               },
               "uniques": []
             },
-            "Sale": {
+            "sale": {
               "checks": [
                 {
-                  "expression": "\"exchangeGenre\" IN ('Album', 'Special', 'FanSign', 'SeasonsGreetings', 'FanMeeting', 'Concert', 'MD', 'Collab', 'FanClub', 'Others')",
-                  "name": "Sale_exchangeGenre_check_738e391c",
-                  "prefix": "Sale_exchangeGenre_check"
+                  "expression": "\"exchange_genre\" IN ('ALBUM', 'SPECIAL', 'FAN_SIGN', 'SEASONS_GREETINGS', 'FAN_MEETING', 'CONCERT', 'MD', 'COLLAB', 'FAN_CLUB', 'OTHERS')",
+                  "name": "sale_exchange_genre_check_9951e072",
+                  "prefix": "sale_exchange_genre_check"
                 },
                 {
-                  "expression": "\"exchangeGrade\" IN ('Common', 'Rare', 'SuperRare', 'Legendary')",
-                  "name": "Sale_exchangeGrade_check_0fe63347",
-                  "prefix": "Sale_exchangeGrade_check"
+                  "expression": "\"exchange_grade\" IN ('COMMON', 'RARE', 'SUPER_RARE', 'LEGENDARY')",
+                  "name": "sale_exchange_grade_check_a5a1957f",
+                  "prefix": "sale_exchange_grade_check"
                 },
                 {
-                  "expression": "(\"price\" >= 0 AND \"totalQuantity\" >= 1 AND \"remainingQuantity\" >= 0 AND \"remainingQuantity\" <= \"totalQuantity\")",
-                  "name": "sale_quantity_check_19d80806",
+                  "expression": "(\"price\" >= 0 AND \"total_quantity\" >= 1 AND \"remaining_quantity\" >= 0 AND \"remaining_quantity\" <= \"total_quantity\")",
+                  "name": "sale_quantity_check_152ad791",
                   "prefix": "sale_quantity_check"
                 }
               ],
               "columns": {
-                "cancelledAt": {
+                "cancelled_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true
                 },
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2598,12 +2600,12 @@
                   },
                   "nullable": false
                 },
-                "exchangeDescription": {
+                "exchange_description": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": true
                 },
-                "exchangeGenre": {
+                "exchange_genre": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": true,
@@ -2614,7 +2616,7 @@
                     "plane": "storage"
                   }
                 },
-                "exchangeGrade": {
+                "exchange_grade": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": true,
@@ -2639,31 +2641,27 @@
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "remainingQuantity": {
+                "remaining_quantity": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "sellerId": {
+                "seller_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "totalQuantity": {
+                "total_quantity": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "updatedAt": {
+                "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nullable": false
                 },
-                "userCardId": {
+                "user_card_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -2672,68 +2670,68 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "sale_seller_id_idx_d71255f2"
+                    "name": "sale_seller_id_idx_de05cd59"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "sellerId"
+                      "seller_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Sale"
+                    "tableName": "sale"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 },
                 {
                   "index": {
-                    "name": "sale_user_card_id_idx_5ba616ea"
+                    "name": "sale_user_card_id_idx_b9db0af5"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "userCardId"
+                      "user_card_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Sale"
+                    "tableName": "sale"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "UserCard"
+                    "tableName": "user_card"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "createdAt"
+                    "created_at"
                   ],
-                  "name": "sale_active_created_at_idx_d8d6fad2",
+                  "name": "sale_active_created_at_idx_30867079",
                   "prefix": "sale_active_created_at_idx",
                   "unique": false,
-                  "where": "\"cancelledAt\" IS NULL"
+                  "where": "\"cancelled_at\" IS NULL"
                 },
                 {
                   "columns": [
-                    "sellerId"
+                    "seller_id"
                   ],
-                  "name": "sale_seller_id_idx_d71255f2",
+                  "name": "sale_seller_id_idx_de05cd59",
                   "prefix": "sale_seller_id_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "userCardId"
+                    "user_card_id"
                   ],
-                  "name": "sale_user_card_id_idx_5ba616ea",
+                  "name": "sale_user_card_id_idx_b9db0af5",
                   "prefix": "sale_user_card_id_idx",
                   "unique": false
                 }
@@ -2745,26 +2743,26 @@
               },
               "uniques": []
             },
-            "User": {
+            "user": {
               "checks": [
                 {
-                  "expression": "\"provider\" IN ('Local', 'Google')",
-                  "name": "User_provider_check_6cd7b865",
-                  "prefix": "User_provider_check"
-                },
-                {
                   "expression": "(\"point\" >= 0)",
-                  "name": "user_point_check_43ed1220",
-                  "prefix": "user_point_check"
+                  "name": "user_point_nonnegative_ck_43ed1220",
+                  "prefix": "user_point_nonnegative_ck"
                 },
                 {
-                  "expression": "((\"provider\" = 'Local' AND \"password\" IS NOT NULL) OR (\"provider\" = 'Google' AND \"providerId\" IS NOT NULL))",
-                  "name": "user_provider_check_65fd690e",
+                  "expression": "\"provider\" IN ('LOCAL', 'GOOGLE')",
+                  "name": "user_provider_check_909bb46d",
                   "prefix": "user_provider_check"
+                },
+                {
+                  "expression": "((\"provider\" = 'LOCAL' AND \"password\" IS NOT NULL) OR (\"provider\" = 'GOOGLE' AND \"provider_id\" IS NOT NULL))",
+                  "name": "user_provider_rule_ck_5b46b8b9",
+                  "prefix": "user_provider_rule_ck"
                 }
               ],
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2811,7 +2809,7 @@
                   "dataType": "pg/text",
                   "default": {
                     "kind": "literal",
-                    "value": "Local"
+                    "value": "LOCAL"
                   },
                   "nullable": false,
                   "valueSet": {
@@ -2821,18 +2819,14 @@
                     "plane": "storage"
                   }
                 },
-                "providerId": {
+                "provider_id": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": true
                 },
-                "updatedAt": {
+                "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nullable": false
                 }
               },
@@ -2857,21 +2851,21 @@
                 {
                   "columns": [
                     "provider",
-                    "providerId"
+                    "provider_id"
                   ]
                 }
               ]
             },
-            "UserCard": {
+            "user_card": {
               "checks": [
                 {
-                  "expression": "(\"netQuantity\" >= 0 AND \"netQuantity\" <= \"totalQuantity\")",
-                  "name": "user_card_quantity_check_29326975",
+                  "expression": "(\"net_quantity\" >= 0 AND \"net_quantity\" <= \"total_quantity\")",
+                  "name": "user_card_quantity_check_c5b3f46f",
                   "prefix": "user_card_quantity_check"
                 }
               ],
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -2889,92 +2883,88 @@
                   },
                   "nullable": false
                 },
-                "netQuantity": {
+                "net_quantity": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "ownerId": {
+                "owner_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "photoCardId": {
+                "photo_card_id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "totalQuantity": {
+                "total_quantity": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "updatedAt": {
+                "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nullable": false
                 }
               },
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "user_card_photo_card_id_idx_f3ca9eb9"
+                    "name": "user_card_photo_card_id_idx_92021706"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "photoCardId"
+                      "photo_card_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "UserCard"
+                    "tableName": "user_card"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PhotoCard"
+                    "tableName": "photo_card"
                   }
                 },
                 {
                   "index": {
-                    "name": "UserCard_ownerId_idx_e2d0c1ef"
+                    "name": "user_card_owner_id_idx_ade9f347"
                   },
                   "onDelete": "restrict",
                   "source": {
                     "columns": [
-                      "ownerId"
+                      "owner_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "UserCard"
+                    "tableName": "user_card"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "user"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "ownerId"
+                    "owner_id"
                   ],
-                  "name": "UserCard_ownerId_idx_e2d0c1ef",
-                  "prefix": "UserCard_ownerId_idx",
+                  "name": "user_card_owner_id_idx_ade9f347",
+                  "prefix": "user_card_owner_id_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "photoCardId"
+                    "photo_card_id"
                   ],
-                  "name": "user_card_photo_card_id_idx_f3ca9eb9",
+                  "name": "user_card_photo_card_id_idx_92021706",
                   "prefix": "user_card_photo_card_id_idx",
                   "unique": false
                 }
@@ -2987,8 +2977,8 @@
               "uniques": [
                 {
                   "columns": [
-                    "ownerId",
-                    "photoCardId"
+                    "owner_id",
+                    "photo_card_id"
                   ]
                 }
               ]
@@ -2998,58 +2988,58 @@
             "ExchangeStatus": {
               "kind": "valueSet",
               "values": [
-                "Pending",
-                "Approved",
-                "Rejected",
-                "Cancelled"
+                "PENDING",
+                "APPROVED",
+                "REJECTED",
+                "CANCELLED"
               ]
             },
             "Genre": {
               "kind": "valueSet",
               "values": [
-                "Album",
-                "Special",
-                "FanSign",
-                "SeasonsGreetings",
-                "FanMeeting",
-                "Concert",
+                "ALBUM",
+                "SPECIAL",
+                "FAN_SIGN",
+                "SEASONS_GREETINGS",
+                "FAN_MEETING",
+                "CONCERT",
                 "MD",
-                "Collab",
-                "FanClub",
-                "Others"
+                "COLLAB",
+                "FAN_CLUB",
+                "OTHERS"
               ]
             },
             "Grade": {
               "kind": "valueSet",
               "values": [
-                "Common",
-                "Rare",
-                "SuperRare",
-                "Legendary"
+                "COMMON",
+                "RARE",
+                "SUPER_RARE",
+                "LEGENDARY"
               ]
             },
             "NotificationType": {
               "kind": "valueSet",
               "values": [
-                "Purchase",
-                "Soldout",
-                "ExchangeApproved",
-                "ExchangeRejected",
-                "ExchangeOfferReceived"
+                "PURCHASE",
+                "SOLDOUT",
+                "EXCHANGE_APPROVED",
+                "EXCHANGE_REJECTED",
+                "EXCHANGE_OFFER_RECEIVED"
               ]
             },
             "OAuthProvider": {
               "kind": "valueSet",
               "values": [
-                "Local",
-                "Google"
+                "LOCAL",
+                "GOOGLE"
               ]
             },
             "PointHistoryType": {
               "kind": "valueSet",
               "values": [
-                "Purchase",
-                "PointDraw"
+                "PURCHASE",
+                "POINT_DRAW"
               ]
             }
           }
@@ -3058,7 +3048,74 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "5d8bc954e0d3eb490e71b06fec9b131d5251005682f2d83b7535148e36d631e1"
+    "storageHash": "93b6141a1d1f87244b599acc6cd86eeb01e8d66c04d7573c375aa4bb3de5e97a"
+  },
+  "execution": {
+    "executionHash": "5a452a55476d56f65f87b544dce1877d52e7335b5ec8af486886a19ac969e7ce",
+    "mutations": {
+      "defaults": [
+        {
+          "onCreate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "exchange_offer",
+            "field": "updated_at",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "sale",
+            "field": "updated_at",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "user",
+            "field": "updated_at",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestamptzStringNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "user_card",
+            "field": "updated_at",
+            "namespace": "public"
+          }
+        }
+      ]
+    }
   },
   "capabilities": {
     "postgres": {
