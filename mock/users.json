@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "nickname": "user1",
+    "email": "user1@example.com",
+    "password": "password1",
+    "points": 16000
+  },
+  {
+    "id": 2,
+    "nickname": "user2",
+    "email": "user2@example.com",
+    "password": "password2",
+    "points": 17000
+  },
+  {
+    "id": 3,
+    "nickname": "user3",
+    "email": "user3@example.com",
+    "password": "password3",
+    "points": 24000
+  },
+  {
+    "id": 4,
+    "nickname": "user4",
+    "email": "user4@example.com",
+    "password": "password4",
+    "points": 19000
+  },
+  {
+    "id": 5,
+    "nickname": "user5",
+    "email": "user5@example.com",
+    "password": "password5",
+    "points": 25000
+  },
+  {
+    "id": 6,
+    "nickname": "user6",
+    "email": "user6@example.com",
+    "password": "password6",
+    "points": 20000
+  },
+  {
+    "id": 7,
+    "nickname": "user7",
+    "email": "user7@example.com",
+    "password": "password7",
+    "points": 14000
+  },
+  {
+    "id": 8,
+    "nickname": "user8",
+    "email": "user8@example.com",
+    "password": "password8",
+    "points": 5000
+  },
+  {
+    "id": 9,
+    "nickname": "user9",
+    "email": "user9@example.com",
+    "password": "password9",
+    "points": 12000
+  },
+  {
+    "id": 10,
+    "nickname": "user10",
+    "email": "user10@example.com",
+    "password": "password10",
+    "points": 27000
+  },
+  {
+    "id": 11,
+    "nickname": "user11",
+    "email": "user11@example.com",
+    "password": "password11",
+    "points": 2000
+  },
+  {
+    "id": 12,
+    "nickname": "user12",
+    "email": "user12@example.com",
+    "password": "password12",
+    "points": 2000
+  },
+  {
+    "id": 13,
+    "nickname": "user13",
+    "email": "user13@example.com",
+    "password": "password13",
+    "points": 15000
+  },
+  {
+    "id": 14,
+    "nickname": "user14",
+    "email": "user14@example.com",
+    "password": "password14",
+    "points": 2000
+  },
+  {
+    "id": 15,
+    "nickname": "user15",
+    "email": "user15@example.com",
+    "password": "password15",
+    "points": 11000
+  },
+  {
+    "id": 16,
+    "nickname": "user16",
+    "email": "user16@example.com",
+    "password": "password16",
+    "points": 18000
+  },
+  {
+    "id": 17,
+    "nickname": "user17",
+    "email": "user17@example.com",
+    "password": "password17",
+    "points": 1000
+  },
+  {
+    "id": 18,
+    "nickname": "user18",
+    "email": "user18@example.com",
+    "password": "password18",
+    "points": 2000
+  },
+  {
+    "id": 19,
+    "nickname": "user19",
+    "email": "user19@example.com",
+    "password": "password19",
+    "points": 19000
+  },
+  {
+    "id": 20,
+    "nickname": "user20",
+    "email": "user20@example.com",
+    "password": "password20",
+    "points": 7000
+  }
+]
