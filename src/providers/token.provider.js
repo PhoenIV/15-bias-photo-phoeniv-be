@@ -59,7 +59,7 @@ export class TokenProvider {
     }
 
     const expiresIn = payload.exp - Math.floor(Date.now() / 1000);
-    return expiresIn < MINUTE_IN_SECONDS * 5 && expiresIn > 0;
+    return expiresIn <= MINUTE_IN_SECONDS * 5 && expiresIn > 0;
     //반환값을 참 거짓으로 전달 (5분 이내 참 / 5분 이상 거짓)
   }
 }
