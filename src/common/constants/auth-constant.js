@@ -1,0 +1,4 @@
+import { MINUTE_IN_SECONDS, DAY_IN_SECONDS } from './time.js';
+
+export const ACCESS_TOKEN_TTL_SECONDS = 15 * MINUTE_IN_SECONDS;
+export const REFRESH_TOKEN_TTL_SECONDS = 7 * DAY_IN_SECONDS;
