@@ -3,7 +3,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
 import { corsOrigins } from '#config';
+import { swaggerSpec } from './config/swagger.js';
 export class App {
   #config;
 
@@ -28,6 +30,7 @@ export class App {
   }
 
   routes(controller) {
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     this.app.use('/api', controller.routes());
   }
 
