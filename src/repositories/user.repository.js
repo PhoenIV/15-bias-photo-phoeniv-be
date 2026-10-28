@@ -38,8 +38,13 @@ export class UserRepository {
       .first();
   }
 
-  findAll() {
-    return this.#users.select(...this.#fields).all();
+  findAll({ limit = 20, offset = 0 } = {}) {
+    return this.#users
+      .select(...this.#fields)
+      .orderBy((u) => u.id.asc())
+      .limit(limit)
+      .offset(offset)
+      .all();
   }
 
   update(id, data) {
