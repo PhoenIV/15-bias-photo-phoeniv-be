@@ -180,6 +180,8 @@ const getDevelopmentDatabaseUrl = () => {
     databaseUrl.hostname !== seedDatabaseHost ||
     (databaseUrl.port || SEED_DATABASE_PORT) !== SEED_DATABASE_PORT ||
     databaseName !== SEED_DATABASE_NAME ||
+    databaseUrl.searchParams.has('host') ||
+    databaseUrl.searchParams.has('port') ||
     (databaseUrl.search !== '' && sslmode !== 'require') ||
     databaseUrl.hash !== ''
   ) {
@@ -196,23 +198,30 @@ const getDevelopmentDatabaseUrl = () => {
 async function seed(db) {
   console.log('🌱 시딩 시작...');
 
-  await resetDb(db);
+  const counts = await db.transaction(async (tx) => {
+    await resetDb(tx);
+
+    const userIdMap = await seedUsers(tx, mockUsers);
+
+    const photoCardIdMap = await seedPhotoCards(tx, mockCards, userIdMap);
+
+    const userCards = await seedUserCards(
+      tx,
+      mockCards,
+      userIdMap,
+      photoCardIdMap,
+    );
+
+    return {
+      users: userIdMap.size,
+      photoCards: photoCardIdMap.size,
+      userCards: userCards.length,
+    };
+  });
   console.log('✅ 기존 데이터 삭제 완료');
-
-  const userIdMap = await seedUsers(db, mockUsers);
-  console.log(`✅ ${userIdMap.size}명의 유저가 생성되었습니다`);
-
-  const photoCardIdMap = await seedPhotoCards(db, mockCards, userIdMap);
-  console.log(`✅ ${photoCardIdMap.size}장의 포토카드가 생성되었습니다`);
-
-  const userCards = await seedUserCards(
-    db,
-    mockCards,
-    userIdMap,
-    photoCardIdMap,
+  console.log(
+    `✅ 유저 ${counts.users}명, 포토카드 ${counts.photoCards}장, 보유 카드 ${counts.userCards}개 생성`,
   );
-  console.log(`✅ ${userCards.length}개의 보유 카드가 생성되었습니다`);
-
   console.log('✅ 데이터 시딩 완료');
 }
 
