@@ -55,6 +55,9 @@ export class UserRepository {
   }
 
   delete(id) {
-    return this.#users.where({ id }).delete();
+    return this.#users
+      .where({ id })
+      .select(...this.#fields)
+      .delete();
   }
 }
