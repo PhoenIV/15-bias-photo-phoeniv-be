@@ -62,7 +62,7 @@ info:
     이 화면이 백엔드와 같은 주소에서 열려 있으면, 로그인 API를 먼저 실행한 뒤 다른 API를 "Try it out"으로 테스트할 수 있습니다.
 
 servers:
-  - url: http://localhost:5001
+  - url: 
     description: 로컬 개발 서버
 
 tags:
