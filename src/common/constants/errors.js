@@ -45,6 +45,11 @@ export const ERROR_MESSAGE = {
   FAILED_TO_CREATE_SALE: '판매글을 생성하지 못했습니다.',
   FAILED_TO_UPDATE_SALE: '판매글을 수정하지 못했습니다.',
   FAILED_TO_DELETE_SALE: '판매글을 삭제하지 못했습니다.',
+  MUST_OWN_CARD_TO_SELL: '나의 카드만 판매할 수 있습니다.',
+  INSUFFICIENT_CARD: '보유한 카드 수량이 부족합니다.',
+  PRICE_TOO_LOW: '최소가격 미만으로 설정할 수 없습니다.',
+  UNAUTHORIZED_FOR_THIS_SALE: '해당 판매글에 대한 권한이 없습니다.',
+  CANNOT_SELL_ZERO_ITEM: '판매 수량은 한 개 이상이어야 합니다.',
 
   // 구매 관련
   PURCHASE_NOT_FOUND: '구매이력 정보를 찾을 수 없습니다.',

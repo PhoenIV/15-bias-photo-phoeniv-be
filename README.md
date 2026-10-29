@@ -4,13 +4,13 @@
 
 ## 팀원 구성
 
-| 이름 | 담당 | 개인 GitHub 링크 |
-| --- | --- | --- |
-| **임의균** (팀장) | 인증(회원가입, 로그인) | [Limug-g](https://github.com/Limug-g) |
-| **박수환** | 판매 + 교환 | 추후 추가 |
-| **이승현** | 판매 + 교환 | 추후 추가 |
-| **김수지** | 마이갤러리 + 포토카드 생성 | 추후 추가 |
-| **김숙연** | 랜덤박스 + 알림 + 프로필 | 추후 추가 |
+| 이름              | 담당                       | 개인 GitHub 링크                      |
+| ----------------- | -------------------------- | ------------------------------------- |
+| **임의균** (팀장) | 인증(회원가입, 로그인)     | [Limug-g](https://github.com/Limug-g) |
+| **박수환**        | 판매 + 교환                | 추후 추가                             |
+| **이승현**        | 판매 + 교환                | 추후 추가                             |
+| **김수지**        | 마이갤러리 + 포토카드 생성 | 추후 추가                             |
+| **김숙연**        | 랜덤박스 + 알림 + 프로필   | 추후 추가                             |
 
 ---
 
@@ -25,23 +25,23 @@
 
 ## 기술 스택
 
-| 구분 | 사용 기술 |
-| --- | --- |
-| Frontend | JavaScript(ESM), React, Next.js(App Router), TanStack Query, vanilla-extract |
-| Backend | JavaScript(ESM), Node.js, Express 5, Prisma 8(RC), Zod |
-| 인증 | JWT(jsonwebtoken), bcrypt, cookie-parser |
-| 서버 구성·보안 | Awilix(의존성 연결 관리), Helmet, CORS |
-| 이미지 업로드·저장 | Multer, Cloudinary |
-| Database | PostgreSQL, Neon(공용 개발 DB) |
-| API 문서·확인 | Swagger(swagger-jsdoc, swagger-ui-express), Postman |
-| DB 확인 | DBeaver |
-| 개발·로그 도구 | nodemon, Morgan, dotenv-cli |
-| 테스트 데이터 생성 | Faker(@faker-js/faker) |
-| 패키지 관리 | pnpm |
-| 코드 검사 | ESLint, perfectionist(프론트엔드 컨벤션), Prettier |
-| 커밋·리뷰 자동화 | Husky, lint-staged, Commitlint, CodeRabbit |
-| 공통 Tool | Git, GitHub, Discord, Notion, Figma |
-| 배포 계획 | Vercel(프론트엔드), Render(백엔드) |
+| 구분               | 사용 기술                                                                    |
+| ------------------ | ---------------------------------------------------------------------------- |
+| Frontend           | JavaScript(ESM), React, Next.js(App Router), TanStack Query, vanilla-extract |
+| Backend            | JavaScript(ESM), Node.js, Express 5, Prisma 8(RC), Zod                       |
+| 인증               | JWT(jsonwebtoken), bcrypt, cookie-parser                                     |
+| 서버 구성·보안     | Awilix(의존성 연결 관리), Helmet, CORS                                       |
+| 이미지 업로드·저장 | Multer, Cloudinary                                                           |
+| Database           | PostgreSQL, Neon(공용 개발 DB)                                               |
+| API 문서·확인      | Swagger(swagger-jsdoc, swagger-ui-express), Postman                          |
+| DB 확인            | DBeaver                                                                      |
+| 개발·로그 도구     | nodemon, Morgan, dotenv-cli                                                  |
+| 테스트 데이터 생성 | Faker(@faker-js/faker)                                                       |
+| 패키지 관리        | pnpm                                                                         |
+| 코드 검사          | ESLint, perfectionist(프론트엔드 컨벤션), Prettier                           |
+| 커밋·리뷰 자동화   | Husky, lint-staged, Commitlint, CodeRabbit                                   |
+| 공통 Tool          | Git, GitHub, Discord, Notion, Figma                                          |
+| 배포 계획          | Vercel(프론트엔드), Render(백엔드)                                           |
 
 프론트엔드와 공통 도구는 팀 문서와 합의한 기술 스택을 기준으로 작성했습니다. 백엔드 패키지는 현재 팀 저장소의 `package.json`을 기준으로 보완했으며, Prisma 8은 RC 버전을 사용합니다.
 
