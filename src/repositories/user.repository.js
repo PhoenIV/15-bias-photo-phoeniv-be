@@ -61,6 +61,12 @@ export class UserRepository {
       .update(data);
   }
 
+  updateInTx(id, data, client = this.#db, expected = {}) {
+    return client.orm.public.User.where({ id, ...expected })
+      .select(...this.#fields)
+      .update(data);
+  }
+
   delete(id) {
     return this.#users
       .where({ id })

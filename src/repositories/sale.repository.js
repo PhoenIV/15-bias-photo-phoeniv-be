@@ -89,13 +89,14 @@ export class SaleRepository {
   findById(saleId, client = this.#db) {
     return client.orm.public.Sale.where({ id: saleId, cancelledAt: null })
       .select(...this.#fields)
-      .include('seller', (seller) => seller.select('id', 'nickname'))
+      .include('seller', (seller) => seller.select('id', 'nickname', 'point'))
       .include('userCard', (userCard) =>
         userCard
-          .select('id', 'netQuantity')
+          .select('id', 'netQuantity', 'totalQuantity')
           .include('photoCard', (photoCard) =>
             photoCard
               .select(
+                'id',
                 'name',
                 'grade',
                 'genre',
@@ -163,5 +164,26 @@ export class SaleRepository {
       id: saleId,
       cancelledAt: null,
     }).update({ cancelledAt: new Date().toISOString() });
+  }
+
+  createPurchase(userId, saleId, data, client = this.#db, expected = {}) {
+    return client.orm.public.Purchase.select(
+      'id',
+      'quantity',
+      'price',
+      'createdAt',
+    )
+      .include('sale', (sale) =>
+        sale
+          .select('id')
+          .include('userCard', (card) =>
+            card
+              .select('id')
+              .include('photoCard', (card) =>
+                card.select('name', 'grade', 'genre', 'imageUrl'),
+              ),
+          ),
+      )
+      .create({ buyerId: userId, saleId, ...data });
   }
 }

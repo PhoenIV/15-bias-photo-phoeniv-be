@@ -8,19 +8,24 @@ import {
   SaleRepository,
   CardRepository,
   ExchangeOfferRepository,
+  UserRepository,
 } from '#repositories';
 
 import { db } from '#prisma/db.js';
 
 export class SaleService {
+  #db;
   #saleRepository;
   #cardRepository;
   #exchangeOfferRepository;
+  #userRepository;
 
   constructor() {
+    this.#db = db;
     this.#saleRepository = new SaleRepository();
     this.#cardRepository = new CardRepository();
     this.#exchangeOfferRepository = new ExchangeOfferRepository();
+    this.#userRepository = new UserRepository({ db });
   }
 
   async getSales({ sort, cursor, limit }) {
@@ -50,12 +55,12 @@ export class SaleService {
   }
 
   async postSale(userId, userCardId, data) {
-    const result = await db.transaction(async (tx) => {
+    const result = await this.#db.transaction(async (tx) => {
       const userCard = await this.#cardRepository.findById(userCardId, tx);
       if (Number(userId) !== userCard.ownerId) {
         throw new ForbiddenException(ERROR_MESSAGE.MUST_OWN_CARD_TO_SELL);
       }
-      if (userCard.netQuantity < data.quantity) {
+      if (userCard.netQuantity < data.totalQuantity) {
         throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_CARD);
       }
       if (data.price < userCard.photoCard.minPrice) {
@@ -64,16 +69,17 @@ export class SaleService {
 
       await this.#cardRepository.update(
         userCardId,
-        { netQuantity: userCard.netQuantity - data.quantity },
+        { netQuantity: userCard.netQuantity - data.totalQuantity },
         tx,
         { netQuantity: userCard.netQuantity },
       );
-      await this.#saleRepository.create(
+      return await this.#saleRepository.create(
         {
           ...data,
           userCardId,
           sellerId: userId,
-          remainingQuantity: data.quantity,
+          totalQuantity: data.totalQuantity,
+          remainingQuantity: data.totalQuantity,
         },
         tx,
       );
@@ -82,7 +88,7 @@ export class SaleService {
   }
 
   async updateSale(userId, saleId, data) {
-    const result = await db.transaction(async (tx) => {
+    const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
 
       if (!sale) {
@@ -105,25 +111,22 @@ export class SaleService {
       let userCardData;
 
       // 판매 수량을 바꿨는데 잔여 순보유수량보다 많거나 0 이하일 때
-      if (data.quantity !== undefined) {
-        const change = data.quantity - sale.remainingQuantity;
+      if (data.totalQuantity !== undefined) {
+        const change = data.totalQuantity - sale.remainingQuantity;
         if (change > sale.userCard.netQuantity) {
           throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_CARD);
         }
-        if (data.quantity <= 0) {
+        if (data.totalQuantity <= 0) {
           throw new BadRequestException(ERROR_MESSAGE.CANNOT_SELL_ZERO_ITEM);
         }
         userCardData = {
           netQuantity: sale.userCard.netQuantity - change,
         };
 
-        data.totalQuantity = data.quantity;
-        data.remainingQuantity = data.quantity;
+        data.remainingQuantity = data.totalQuantity;
       }
 
-      const { quantity, ...saleData } = data;
-
-      const newSale = await this.#saleRepository.update(saleId, saleData, tx, {
+      const newSale = await this.#saleRepository.update(saleId, data, tx, {
         remainingQuantity: sale.remainingQuantity,
       });
       const newUserCard = userCardData
@@ -140,7 +143,7 @@ export class SaleService {
   }
 
   async deleteSale(userId, saleId) {
-    const result = await db.transaction(async (tx) => {
+    const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
 
       if (!sale) {
@@ -156,7 +159,6 @@ export class SaleService {
         { netQuantity: sale.userCard.netQuantity + sale.remainingQuantity },
         tx,
       );
-      //교환을제시한 사람들에게 netQuantity 복구시켜주기 -> 각 제안의 id별로 별도 처리
       await Promise.all(
         sale.exchangeOffers.map((offer) => {
           return this.#cardRepository.update(
@@ -172,5 +174,69 @@ export class SaleService {
       return newSale;
     });
     return result; // 명세에 맞게 평평하게 다듬어야 함.
+  }
+
+  async makePurchase(userId, saleId, data) {
+    const result = await this.#db.transaction(async (tx) => {
+      const sale = await this.#saleRepository.findById(saleId, tx);
+      const user = await this.#userRepository.findById(userId);
+      const createData = {
+        ownerId: userId,
+        photoCardId: sale.userCard.photoCard.id,
+        totalQuantity: data.quantity,
+        netQuantity: data.quantity,
+      };
+      const buyerCard = await this.#cardRepository.findByOwnerAndPhotoCard(
+        userId,
+        sale.userCard.photoCard.id,
+        tx,
+      );
+      const updateData = buyerCard
+        ? {
+            totalQuantity: buyerCard.totalQuantity + data.quantity,
+            netQuantity: buyerCard.netQuantity + data.quantity,
+          }
+        : createData;
+
+      const purchase = await this.#saleRepository.createPurchase(
+        userId,
+        saleId,
+        { ...data, price: sale.price, saleId },
+        tx,
+        { price: sale.price },
+      );
+      await this.#userRepository.updateInTx(
+        sale.seller.id,
+        { point: sale.seller.point + sale.price * data.quantity },
+        tx,
+      );
+      await this.#userRepository.updateInTx(
+        user.id,
+        { point: user.point - sale.price * data.quantity },
+        tx,
+        { point: user.point },
+      );
+      await this.#cardRepository.update(
+        sale.userCard.id,
+        { totalQuantity: sale.userCard.totalQuantity - data.quantity },
+        tx,
+        { totalQuantity: sale.userCard.totalQuantity },
+      );
+      await this.#cardRepository.upsert(
+        userId,
+        sale.userCard.photoCard.id,
+        createData,
+        updateData,
+        tx,
+      );
+      await this.#saleRepository.update(
+        saleId,
+        { remainingQuantity: sale.remainingQuantity - data.quantity },
+        tx,
+        { remainingQuantity: sale.remainingQuantity },
+      );
+      return purchase;
+    });
+    return result;
   }
 }

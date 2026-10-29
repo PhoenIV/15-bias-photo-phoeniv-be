@@ -15,10 +15,24 @@ export class CardRepository {
       .first();
   }
 
+  findByOwnerAndPhotoCard(ownerId, photoCardId, client = this.#db) {
+    return client.orm.public.UserCard.where({ ownerId, photoCardId })
+      .select('id', 'netQuantity', 'totalQuantity')
+      .first();
+  }
+
   update(userCardId, data, client = this.#db, expected = {}) {
     return client.orm.public.UserCard.where({
       id: userCardId,
       ...expected,
     }).update(data);
+  }
+
+  upsert(buyerId, photoCardId, createData, updateData, client = this.#db) {
+    return client.orm.public.UserCard.upsert({
+      create: createData,
+      update: updateData,
+      conflictOn: { ownerId: buyerId, photoCardId: photoCardId },
+    });
   }
 }
