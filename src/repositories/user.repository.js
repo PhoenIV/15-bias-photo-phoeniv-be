@@ -31,6 +31,13 @@ export class UserRepository {
       .first();
   }
 
+  findByNickname(nickname) {
+    return this.#users
+      .where({ nickname })
+      .select(...this.#fields)
+      .first();
+  }
+
   findById(id) {
     return this.#users
       .where({ id })
