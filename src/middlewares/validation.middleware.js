@@ -1,5 +1,5 @@
 import { flattenError } from 'zod';
-import { ERROR_MESSAGE } from '#constants';
+import { ERROR_MESSAGE, ERROR_CODE } from '#constants';
 import { BadRequestException } from '#exceptions';
 
 /**
@@ -28,7 +28,7 @@ export const validate = (target, schema) => {
         const { fieldErrors } = flattenError(result.error);
 
         throw new BadRequestException(ERROR_MESSAGE.VALIDATION_FAILED, {
-          code: 'VALIDATION_FAILED',
+          code: ERROR_CODE.VALIDATION_FAILED,
           fieldErrors,
         });
       }
