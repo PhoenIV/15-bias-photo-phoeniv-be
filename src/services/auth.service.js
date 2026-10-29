@@ -42,7 +42,7 @@ export class AuthService {
 
       return { user, tokens };
     } catch (error) {
-      if (error.code === DB_ERROR.UNIQUE_VIOLATION) {
+      if (error.sqlState === DB_ERROR.UNIQUE_VIOLATION) {
         throw new ConflictException(ERROR_MESSAGE.RESOURCE_CONFLICT);
       }
       throw error;
