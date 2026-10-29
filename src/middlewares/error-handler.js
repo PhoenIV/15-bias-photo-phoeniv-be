@@ -17,7 +17,7 @@ export const errorHandler = (err, _req, res, _next) => {
   if (err.status >= 400 && err.status < 500) {
     return res.status(err.status).json({
       error: {
-        code: ERROR_MESSAGE.BAD_REQUEST,
+        code: 'BAD_REQUEST',
         message: ERROR_MESSAGE.BAD_REQUEST,
         fieldErrors: {},
       },
@@ -28,7 +28,7 @@ export const errorHandler = (err, _req, res, _next) => {
   if (err.sqlState === DB_ERROR.UNIQUE_VIOLATION) {
     return res.status(HTTP_STATUS.CONFLICT).json({
       error: {
-        code: ERROR_MESSAGE.RESOURCE_CONFLICT,
+        code: 'RESOURCE_CONFLICT',
         message: ERROR_MESSAGE.RESOURCE_CONFLICT,
         fieldErrors: {},
       },
@@ -39,7 +39,7 @@ export const errorHandler = (err, _req, res, _next) => {
   console.error(err.stack);
   res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
     error: {
-      code: ERROR_MESSAGE.INTERNAL_SERVER_ERROR,
+      code: 'INTERNAL_SERVER_ERROR',
       message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR,
       fieldErrors: {},
     },
