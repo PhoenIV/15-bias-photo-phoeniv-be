@@ -1,4 +1,5 @@
 import { db } from '#prisma/db.js';
+import { or } from '@prisma/orm-postgres/orm-client';
 
 const SORTS = {
   latest: {
@@ -41,12 +42,52 @@ export class SaleRepository {
   }
 
   async findPage(
-    { sort = 'latest', cursor, limit = 15 } = {},
+    { sort, cursor, limit, keyword, grade, genre, excludeSoldOut } = {},
     client = this.#db,
   ) {
     const { orderBy, cursorKeys } = SORTS[sort];
 
-    const ordered = client.orm.public.Sale.where({ cancelledAt: null })
+    const searchPattern = keyword.trim() ? `%${keyword.trim()}%` : null;
+
+    let filtered = client.orm.public.Sale.where({ cancelledAt: null });
+
+    if (searchPattern !== null) {
+      filtered = filtered.where((sale) =>
+        or(
+          sale.exchangeDescription.ilike(searchPattern),
+          sale.userCard.some((userCard) =>
+            userCard.photoCard.some((photoCard) =>
+              or(
+                photoCard.name.ilike(searchPattern),
+                photoCard.description.ilike(searchPattern),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (grade) {
+      filtered = filtered.where((sale) =>
+        sale.userCard.some((userCard) =>
+          userCard.photoCard.some((photoCard) => photoCard.grade.eq(grade)),
+        ),
+      );
+    }
+
+    if (genre) {
+      filtered = filtered.where((sale) =>
+        sale.userCard.some((userCard) =>
+          userCard.photoCard.some((photoCard) => photoCard.genre.eq(genre)),
+        ),
+      );
+    }
+
+    if (excludeSoldOut) {
+      filtered = filtered.where((sale) => sale.remainingQuantity.gt(0));
+    }
+
+    const ordered = filtered
       .select(...this.#fields)
       .include('seller', (seller) => seller.select('id', 'nickname'))
       .include('userCard', (userCard) =>

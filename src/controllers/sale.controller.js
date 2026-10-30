@@ -23,8 +23,17 @@ export class SaleController extends BaseController {
   }
 
   async getSalesList(req, res) {
-    const { sort, cursor, limit } = req.query;
-    const list = await this.#saleService.getSales({ sort, cursor, limit });
+    const { sort, cursor, limit, keyword, grade, genre, excludeSoldOut } =
+      req.query;
+    const list = await this.#saleService.getSales({
+      sort,
+      cursor,
+      limit,
+      keyword,
+      grade,
+      genre,
+      excludeSoldOut,
+    });
     res.status(HTTP_STATUS.OK).json(list);
   }
 

@@ -28,11 +28,25 @@ export class SaleService {
     this.#userRepository = new UserRepository({ db });
   }
 
-  async getSales({ sort, cursor, limit }) {
+  async getSales(options = {}) {
+    const {
+      sort = 'latest',
+      cursor,
+      limit = 15,
+      keyword = '',
+      grade,
+      genre,
+      excludeSoldOut = false,
+    } = options;
+
     const { items, hasNext, nextCursor } = await this.#saleRepository.findPage({
       sort,
       cursor,
       limit,
+      keyword,
+      grade,
+      genre,
+      excludeSoldOut,
     });
     return {
       data: items,
