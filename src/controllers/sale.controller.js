@@ -25,7 +25,7 @@ export class SaleController extends BaseController {
   async getSalesList(req, res) {
     const { sort, cursor, limit, keyword, grade, genre, excludeSoldOut } =
       req.query;
-    const list = await this.#saleService.getSales({
+    const salesList = await this.#saleService.getSales({
       sort,
       cursor,
       limit,
@@ -34,12 +34,13 @@ export class SaleController extends BaseController {
       genre,
       excludeSoldOut,
     });
-    res.status(HTTP_STATUS.OK).json(list);
+    res.status(HTTP_STATUS.OK).json(salesList);
   }
 
   async getSaleDetail(req, res) {
-    const saleId = Number(req.paramms);
-    const sale = await this.#saleService.getSaleDetail(saleId);
+    const userId = req.user.id;
+    const saleId = Number(req.params);
+    const sale = await this.#saleService.getSaleDetail(userId, saleId);
     res.status(HTTP_STATUS.OK).json(sale);
   }
 
@@ -50,7 +51,8 @@ export class SaleController extends BaseController {
   }
 
   async updateSale(req, res) {
-    const { userId, saleId, ...data } = req.body;
+    const saleId = Number(req.params.saleId);
+    const { userId, ...data } = req.body;
     const sale = await this.#saleService.updateSale(userId, saleId, data);
     res.status(HTTP_STATUS.OK).json(sale);
   }
@@ -64,7 +66,7 @@ export class SaleController extends BaseController {
 
   async makePurchase(req, res) {
     const { userId, ...data } = req.body;
-    const { saleId } = req.params;
+    const saleId = Number(req.params.saleId);
     const purchase = await this.#saleService.makePurchase(userId, saleId, data);
     res.status(HTTP_STATUS.CREATED).json(purchase);
   }

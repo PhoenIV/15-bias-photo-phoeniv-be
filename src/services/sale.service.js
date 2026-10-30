@@ -13,6 +13,49 @@ import {
 
 import { db } from '#prisma/db.js';
 
+const toSaleResponse = (sale) => {
+  if (!sale) return;
+
+  const userCard = sale.userCard;
+  const photoCard = sale.userCard.photoCard;
+
+  const {
+    id,
+    price,
+    totalQuantity,
+    remainingQuantity,
+    exchangeGrade,
+    exchangeGenre,
+    exchangeDescription,
+    createdAt,
+  } = sale;
+  const seller = { id: sale.seller.id, nickname: sale.seller.nickname };
+  const card = {
+    id: userCard.id,
+    name: photoCard.name,
+    grade: photoCard.grade,
+    genre: photoCard.genre,
+    description: photoCard.description,
+    imageUrl: photoCard.imageUrl,
+  };
+  const creator = {
+    id: photoCard.creator.id,
+    nickname: photoCard.creator.nickname,
+  };
+
+  return {
+    id,
+    price,
+    totalQuantity,
+    remainingQuantity,
+    exchangeGrade,
+    exchangeGenre,
+    exchangeDescription,
+    createdAt,
+    seller,
+    card: { ...card, creator },
+  };
+};
 export class SaleService {
   #db;
   #saleRepository;
@@ -49,7 +92,7 @@ export class SaleService {
       excludeSoldOut,
     });
     return {
-      data: items,
+      data: items.map((sale) => toSaleResponse(sale)),
       pagination: {
         limit,
         hasNext,
@@ -64,8 +107,11 @@ export class SaleService {
     if (!sale) {
       throw new NotFoundException(ERROR_MESSAGE.SALE_NOT_FOUND);
     }
+
+    const parsedSale = toSaleResponse(sale);
     const isMine = sale.seller.id === userId;
-    return { ...sale, isMine };
+
+    return { data: { ...parsedSale, isMine } };
   }
 
   async postSale(userId, userCardId, data) {
@@ -98,7 +144,8 @@ export class SaleService {
         tx,
       );
     });
-    return result;
+    const parsedSale = toSaleResponse(result);
+    return { data: parsedSale };
   }
 
   async updateSale(userId, saleId, data) {
@@ -153,7 +200,9 @@ export class SaleService {
         : undefined;
       return { newSale, newUserCard };
     });
-    return result; // 명세에 맞게 평평하게 다듬어야 함.
+    const parsedSale =
+      result.newSale !== null ? toSaleResponse(result.newSale) : null;
+    return { data: parsedSale };
   }
 
   async deleteSale(userId, saleId) {
@@ -184,10 +233,10 @@ export class SaleService {
           );
         }),
       );
-
       return newSale;
     });
-    return result; // 명세에 맞게 평평하게 다듬어야 함.
+    const deletedSale = { id: result.id, cancelledAt: result.cancelledAt };
+    return { data: deletedSale };
   }
 
   async makePurchase(userId, saleId, data) {
@@ -236,7 +285,7 @@ export class SaleService {
         tx,
         { totalQuantity: sale.userCard.totalQuantity },
       );
-      await this.#cardRepository.upsert(
+      const newUserCard = await this.#cardRepository.upsert(
         userId,
         sale.userCard.photoCard.id,
         createData,
@@ -249,8 +298,27 @@ export class SaleService {
         tx,
         { remainingQuantity: sale.remainingQuantity },
       );
-      return purchase;
+      return { sale, newUserCard, purchase };
     });
-    return result;
+
+    // 트랙잭션이 끝난 후 반환되는 객체에 담긴 카드 아이디는 구매자(새 주인)쪽의 userCardId
+    const { sale, newUserCard, purchase } = result;
+    const {
+      id,
+      quantity,
+      price,
+      createdAt,
+      saleIdFromResult = saleId,
+    } = purchase;
+    const card = {
+      id: newUserCard.id,
+      name: sale.userCard.photoCard.name,
+      grade: sale.userCard.photoCard.grade,
+      genre: sale.userCard.photoCard.genre,
+      imageUrl: sale.userCard.photoCard.imageUrl,
+    };
+    return {
+      data: { id, quantity, price, createdAt, saleId: saleIdFromResult, card },
+    };
   }
 }
