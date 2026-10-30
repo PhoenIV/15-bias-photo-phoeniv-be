@@ -62,6 +62,9 @@ export class AuthService {
       includePassword: true,
     });
     if (!user || !user.password) {
+      await this.#passwordProvider.compareDummy(password);
+      //DB에 없는 유저의 정보로 로그인했을 때 401을 반환하는 속도를 조절한다
+
       throw new UnauthorizedException(ERROR_MESSAGE.INVALID_CREDENTIALS, {
         code: ERROR_CODE.INVALID_CREDENTIALS,
       });

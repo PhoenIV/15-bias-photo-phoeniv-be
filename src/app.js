@@ -30,9 +30,13 @@ export class App {
     );
     this.app.use(express.json());
     this.app.use(cookieParser());
-    this.app.use((req, res, next) =>
-      authMiddleware.authenticate(req, res, next),
-    );
+    this.app.use((req, res, next) => {
+      //전역에 걸려있는 authenticate가 로그아웃에는 필요가 없음
+      if (req.method === 'POST' && req.path === '/api/auth/logout') {
+        return next();
+      }
+      return authMiddleware.authenticate(req, res, next);
+    });
   }
 
   routes(controller) {
