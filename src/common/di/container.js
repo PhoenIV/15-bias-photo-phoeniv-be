@@ -7,7 +7,7 @@ import {
 } from 'awilix';
 import { config } from '#config';
 import { db } from '#prisma/db.js';
-import { UserRepository } from '#repositories';
+import { PointDrawRepository, UserRepository } from '#repositories';
 import { AuthService } from '#services';
 import { AuthController, Controller } from '#controllers';
 import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
@@ -25,6 +25,9 @@ export const createContainer = () => {
     config: asValue(config),
     db: asValue(db),
     userRepository: asClass(UserRepository, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    pointDrawRepository: asClass(PointDrawRepository, {
       lifetime: Lifetime.SINGLETON,
     }),
     passwordProvider: asClass(PasswordProvider, {
