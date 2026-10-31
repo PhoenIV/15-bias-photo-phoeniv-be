@@ -49,7 +49,7 @@ export class PointDrawRepository {
       //4-1) 쓰기
       const newDraw = await tx.orm.public.PointDraw.create({
         userId,
-        createdAt: new Date().toISOString,
+        createdAt: new Date().toISOString(),
       });
       const newPoint = user.point + amount;
       //뽑기 이후 다음 뽑기 할 수 있는 시간
