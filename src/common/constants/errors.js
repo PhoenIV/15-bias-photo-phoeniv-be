@@ -95,6 +95,9 @@ export const ERROR_MESSAGE = {
   FAILED_TO_UPDATE_POINT_DRAW: '포인트 뽑기 이력을 수정하지 못했습니다.',
   FAILED_TO_DELETE_POINT_DRAW: '포인트 뽑기 이력을 삭제하지 못했습니다.',
 
+  //포인트 뽑기 대기 시간 관련
+  POINT_COOLDOWN_NOT_ENOUGH: '마지막 뽑기에서 1시간 후 다시 참여할 수 있어요.',
+
   // 인증 관련
   NO_AUTH_TOKEN: '인증 토큰이 없습니다.',
   INVALID_TOKEN: '유효하지 않거나 만료된 토큰입니다.',
@@ -130,4 +133,7 @@ export const ERROR_CODE = {
   INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
   EMAIL_DUPLICATE: 'EMAIL_DUPLICATE',
   NICKNAME_DUPLICATE: 'NICKNAME_DUPLICATE',
+
+  //랜덤 포인트 뽑기
+  BOX_COOLDOWN: 'BOX_COOLDOWN',
 };
