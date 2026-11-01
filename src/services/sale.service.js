@@ -6,16 +6,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '#exceptions';
-import {
-  SaleRepository,
-  CardRepository,
-  ExchangeOfferRepository,
-  UserRepository,
-} from '#repositories';
 
-import { db } from '#prisma/db.js';
-
-// 리포지토리 응답을 명세에 맞는 형태로 가공하는 함수
+// 응답을 명세에 맞는 형태로 가공하는 함수
 const toSaleResponse = (sale) => {
   if (!sale) return;
 
@@ -66,12 +58,18 @@ export class SaleService {
   #exchangeOfferRepository;
   #userRepository;
 
-  constructor() {
+  constructor({
+    db,
+    saleRepository,
+    cardRepository,
+    exchangeOfferRepository,
+    userRepository,
+  }) {
     this.#db = db;
-    this.#saleRepository = new SaleRepository();
-    this.#cardRepository = new CardRepository();
-    this.#exchangeOfferRepository = new ExchangeOfferRepository();
-    this.#userRepository = new UserRepository({ db });
+    this.#saleRepository = saleRepository;
+    this.#cardRepository = cardRepository;
+    this.#exchangeOfferRepository = exchangeOfferRepository;
+    this.#userRepository = userRepository;
   }
 
   async getSales(options = {}) {
@@ -124,6 +122,7 @@ export class SaleService {
         throw new NotFoundException(ERROR_MESSAGE.USERCARD_NOT_FOUND);
       }
       if (userId !== userCard.ownerId) {
+        console.log(userId, userCard.ownerId);
         throw new ForbiddenException(ERROR_MESSAGE.MUST_OWN_CARD_TO_SELL);
       }
       if (userCard.netQuantity < data.totalQuantity) {
@@ -254,8 +253,8 @@ export class SaleService {
     return { data: deletedSale };
   }
 
-  async makePurchase(userId, saleId, data) {
-    const { expectedPrice, ...purchaseData } = data;
+  async makePurchase(userIds, saleId, data) {
+    const { userId, expectedPrice, ...purchaseData } = data;
     const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
       if (!sale) {
@@ -272,8 +271,13 @@ export class SaleService {
         throw new BadRequestException(ERROR_MESSAGE.LOW_INVENTORY);
       }
       if (user.point < purchaseData.quantity * sale.price) {
+        console.log(user);
         throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_POINT);
       }
+      if (expectedPrice < sale.price) {
+        throw new BadRequestException(ERROR_MESSAGE.PRICE_AUGMENTED);
+      }
+
       const createData = {
         ownerId: userId,
         photoCardId: sale.userCard.photoCard.id,
@@ -326,7 +330,7 @@ export class SaleService {
         saleId,
         { remainingQuantity: sale.remainingQuantity - data.quantity },
         tx,
-        { price: expectedPrice, remainingQuantity: sale.remainingQuantity },
+        { remainingQuantity: sale.remainingQuantity },
       );
 
       if (

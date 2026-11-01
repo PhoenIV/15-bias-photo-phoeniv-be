@@ -63,6 +63,7 @@ export const ERROR_MESSAGE = {
   INSUFFICIENT_POINT: '보유한 포인트가 부족합니다.',
   LOW_INVENTORY: '구매가능 수량이 부족합니다.',
   CANNOT_BUY_OWN_SALE: '내가 판매한 카드를 구매할 수 없습니다.',
+  PRICE_AUGMENTED: '가격이 인상되었습니다.',
 
   // 교환 신청 관련
   EXCHANGE_OFFER_NOT_FOUND: '교환 신청 정보를 찾을 수 없습니다.',

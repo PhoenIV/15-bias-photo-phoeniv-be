@@ -1,5 +1,4 @@
 import { HTTP_STATUS } from '#constants';
-import { SaleService } from '#services';
 import { BaseController } from '../base.controller.js';
 import { needsLogin, validate } from '#middlewares';
 import {
@@ -13,9 +12,9 @@ import {
 export class SaleController extends BaseController {
   #saleService;
 
-  constructor() {
+  constructor({ saleService }) {
     super();
-    this.#saleService = new SaleService();
+    this.#saleService = saleService;
   }
 
   routes() {
@@ -49,9 +48,9 @@ export class SaleController extends BaseController {
     );
     this.router.post(
       '/:saleId/purchases',
+      needsLogin,
       validate('params', saleIdSchema),
       validate('body', purchaseSchema),
-      needsLogin,
       (req, res) => this.makePurchase(req, res),
     );
     return this.router;

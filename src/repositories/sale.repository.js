@@ -1,4 +1,3 @@
-import { db } from '#prisma/db.js';
 import { or } from '@prisma/orm-postgres/orm-client';
 
 const SORTS = {
@@ -36,7 +35,7 @@ export class SaleRepository {
   #db;
   #fields;
 
-  constructor() {
+  constructor({ db }) {
     this.#db = db;
     this.#fields = SALE_FIELDS;
   }
@@ -116,15 +115,6 @@ export class SaleRepository {
         : null,
     };
   }
-
-  // api 명세서에서 totalCount를 돌려주기 때문에 수량을 세는 별도의 리포지토리가 필요함(아래).
-  // 단, totalCount가 불필요해서 없애는 방향으로 명세서를 수정하고 아래함수는 쓰지 않게 될 것 같음.
-  // async countActive(client = this.#db) {
-  //   const { total } = await client.orm.public.Sale.where({
-  //     cancelledAt: null,
-  //   }).aggregate((agg) => ({ total: agg.count() }));
-  //   return total;
-  // }
 
   findById(saleId, client = this.#db) {
     return client.orm.public.Sale.where({ id: saleId, cancelledAt: null })
