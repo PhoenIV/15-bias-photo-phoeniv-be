@@ -1,9 +1,7 @@
-import { db } from '#prisma/db.js';
-
 export class CardRepository {
   #db;
 
-  constructor() {
+  constructor({ db }) {
     this.#db = db;
   }
 

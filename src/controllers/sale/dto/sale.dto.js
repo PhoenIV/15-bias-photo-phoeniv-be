@@ -1,23 +1,26 @@
 import z from 'zod';
 
-const cursorObjectSchema = z.union([
-  z
-    .object({
-      createdAt: z.string(),
-      id: z.number().int().positive(),
-    })
-    .strict(),
-  z
-    .object({
-      price: z.number().int().nonnegative(),
-      id: z.number().int().positive(),
-    })
-    .strict(),
-]);
+const cursorObjectSchema = z
+  .union([
+    z
+      .object({
+        createdAt: z.iso.datetime({ offset: true }),
+        id: z.number().int().positive(),
+      })
+      .strict(),
+    z
+      .object({
+        price: z.number().int().nonnegative(),
+        id: z.number().int().positive(),
+      })
+      .strict(),
+  ])
+  .optional();
 
 // cursor는 요청 쿼리를 통해 객체처럼 생긴 문자열을 받는다. 이를 제이슨 형태로 파싱해서 cursorObjectSchema로 전달한다.
 // 처음 들어온 값이 문자열이 아니거나 JSON 파싱에 실패시에는 값을 그대로 전달하면 cursorObjectSchema에서 걸린다.
 const cursorSchema = z.preprocess((value) => {
+  if (value === '') return undefined; // 빈 문자열이 오류를 내지 않도록 undefined로 반환.
   if (typeof value !== 'string') return value;
   try {
     return JSON.parse(value);
@@ -54,18 +57,33 @@ const GENRE_ENUM = [
 ];
 
 // 판매글 목록 조회시 - target: "query"
-export const getSalesSchema = z.object({
-  sort: z.enum(SORT_ENUM).optional(),
-  cursor: cursorSchema.optional(),
-  limit: z.coerce.number().int().positive().max(50).optional(),
-  keyword: z.string().max(50).optional(),
-  grade: z.enum(GRADE_ENUM).optional(),
-  genre: z.enum(GENRE_ENUM).optional(),
-  excludeSoldOut: z
-    .enum(excludeSoldOutSchema.enum)
-    .pipe(z.transform((e) => excludeSoldOutSchema.transform(e)))
-    .optional(),
-});
+export const getSalesSchema = z
+  .object({
+    sort: z.enum(SORT_ENUM).optional(),
+    cursor: cursorSchema, // cursorSchema의 후처리 스키마인 cursorObjectSchema에 .optional()이 있어 이 줄에는 해당 조건이 없어도 된다.
+    limit: z.coerce.number().int().positive().max(50).optional(),
+    keyword: z.string().max(50).optional(),
+    grade: z.enum(GRADE_ENUM).optional(),
+    genre: z.enum(GENRE_ENUM).optional(),
+    excludeSoldOut: z
+      .enum(excludeSoldOutSchema.enum)
+      .pipe(z.transform((e) => excludeSoldOutSchema.transform(e)))
+      .optional(),
+  })
+  .superRefine((query, context) => {
+    //superRefine으로 정렬 방식에 맞는 커서가 들어오는지 교차검증합니다.
+    if (!query.cursor) return;
+    const sort = query.sort ?? 'latest';
+    const isPriceSort = sort === 'priceAsc' || sort === 'priceDesc';
+    const hasPrice = 'price' in query.cursor;
+    if (isPriceSort !== hasPrice) {
+      context.addIssue({
+        code: 'custom',
+        path: ['cursor'],
+        message: 'cursor 형식이 sort와 일치하지 않습니다.',
+      });
+    }
+  });
 
 // 판매글 상세 조회, 수정, 삭제 및 구매시 - target: "params"
 export const saleIdSchema = z.object({

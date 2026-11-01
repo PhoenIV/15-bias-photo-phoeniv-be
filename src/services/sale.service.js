@@ -269,11 +269,11 @@ export class SaleService {
       if (purchaseData.quantity > sale.remainingQuantity) {
         throw new BadRequestException(ERROR_MESSAGE.LOW_INVENTORY);
       }
-      if (user.point < purchaseData.quantity * sale.price) {
-        throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_POINT);
-      }
       if (expectedPrice < sale.price) {
         throw new BadRequestException(ERROR_MESSAGE.PRICE_AUGMENTED);
+      }
+      if (user.point < purchaseData.quantity * sale.price) {
+        throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_POINT);
       }
 
       const createData = {
