@@ -2066,7 +2066,11 @@ components:
         exchangeGenre: { $ref: '#/components/schemas/GenreNullable' }
         exchangeDescription: { type: string, nullable: true }
         createdAt: { type: string, format: date-time }
-        isMine: { type: boolean, description: 상세 조회에서 로그인한 사용자의 판매글인지 여부 }
+        isMine:
+          {
+            type: boolean,
+            description: 상세 조회에서 로그인한 사용자의 판매글인지 여부,
+          }
         seller:
           type: object
           properties:
@@ -2079,7 +2083,12 @@ components:
             name: { type: string, example: 몬스테라 사진 }
             grade: { $ref: '#/components/schemas/Grade' }
             genre: { $ref: '#/components/schemas/Genre' }
-            description: { type: string, nullable: true, example: 멋진 몬스테라 사진을 찍었습니다. }
+            description:
+              {
+                type: string,
+                nullable: true,
+                example: 멋진 몬스테라 사진을 찍었습니다.,
+              }
             imageUrl: { type: string }
             creator:
               type: object
