@@ -1,8 +1,10 @@
 import { ERROR_MESSAGE } from '#constants';
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   NotFoundException,
+  UnauthorizedException,
 } from '#exceptions';
 import {
   SaleRepository,
@@ -13,6 +15,7 @@ import {
 
 import { db } from '#prisma/db.js';
 
+// 리포지토리 응답을 명세에 맞는 형태로 가공하는 함수
 const toSaleResponse = (sale) => {
   if (!sale) return;
 
@@ -114,10 +117,13 @@ export class SaleService {
     return { data: { ...parsedSale, isMine } };
   }
 
-  async postSale(userId, userCardId, data) {
+  async postSale(userId, data) {
     const result = await this.#db.transaction(async (tx) => {
-      const userCard = await this.#cardRepository.findById(userCardId, tx);
-      if (Number(userId) !== userCard.ownerId) {
+      const userCard = await this.#cardRepository.findById(data.userCardId, tx);
+      if (!userCard) {
+        throw new NotFoundException(ERROR_MESSAGE.USERCARD_NOT_FOUND);
+      }
+      if (userId !== userCard.ownerId) {
         throw new ForbiddenException(ERROR_MESSAGE.MUST_OWN_CARD_TO_SELL);
       }
       if (userCard.netQuantity < data.totalQuantity) {
@@ -127,22 +133,25 @@ export class SaleService {
         throw new BadRequestException(ERROR_MESSAGE.PRICE_TOO_LOW);
       }
 
-      await this.#cardRepository.update(
-        userCardId,
+      const newCard = await this.#cardRepository.update(
+        data.userCardId,
         { netQuantity: userCard.netQuantity - data.totalQuantity },
         tx,
         { netQuantity: userCard.netQuantity },
       );
-      return await this.#saleRepository.create(
+      const sale = await this.#saleRepository.create(
         {
           ...data,
-          userCardId,
           sellerId: userId,
           totalQuantity: data.totalQuantity,
           remainingQuantity: data.totalQuantity,
         },
         tx,
       );
+      if (!newCard || !sale) {
+        throw new ConflictException(ERROR_MESSAGE.FAILED_TO_CREATE_SALE);
+      }
+      return sale;
     });
     const parsedSale = toSaleResponse(result);
     return { data: parsedSale };
@@ -198,6 +207,9 @@ export class SaleService {
             { netQuantity: sale.userCard.netQuantity },
           )
         : undefined;
+      if (!newSale || (userCardData && !newUserCard)) {
+        throw new ConflictException(ERROR_MESSAGE.FAILED_TO_UPDATE_SALE);
+      }
       return { newSale, newUserCard };
     });
     const parsedSale =
@@ -217,12 +229,12 @@ export class SaleService {
       }
       await this.#exchangeOfferRepository.markCancelledAll(saleId, tx);
       const newSale = await this.#saleRepository.markCancelled(saleId, tx);
-      await this.#cardRepository.update(
+      const newCard = await this.#cardRepository.update(
         sale.userCard.id,
         { netQuantity: sale.userCard.netQuantity + sale.remainingQuantity },
         tx,
       );
-      await Promise.all(
+      const restoredCards = await Promise.all(
         sale.exchangeOffers.map((offer) => {
           return this.#cardRepository.update(
             offer.offeredUserCard.id,
@@ -233,6 +245,9 @@ export class SaleService {
           );
         }),
       );
+      if (!newSale || !newCard || restoredCards.some((card) => !card)) {
+        throw new ConflictException(ERROR_MESSAGE.FAILED_TO_DELETE_SALE);
+      }
       return newSale;
     });
     const deletedSale = { id: result.id, cancelledAt: result.cancelledAt };
@@ -240,9 +255,25 @@ export class SaleService {
   }
 
   async makePurchase(userId, saleId, data) {
+    const { expectedPrice, ...purchaseData } = data;
     const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
-      const user = await this.#userRepository.findById(userId);
+      if (!sale) {
+        throw new NotFoundException(ERROR_MESSAGE.SALE_NOT_FOUND);
+      }
+      const user = await this.#userRepository.findByIdInTx(userId, tx);
+      if (!user) {
+        throw new UnauthorizedException(ERROR_MESSAGE.UNAUTHORIZED);
+      }
+      if (sale.seller.id === userId) {
+        throw new ForbiddenException(ERROR_MESSAGE.CANNOT_BUY_OWN_SALE);
+      }
+      if (purchaseData.quantity > sale.remainingQuantity) {
+        throw new BadRequestException(ERROR_MESSAGE.LOW_INVENTORY);
+      }
+      if (user.point < purchaseData.quantity * sale.price) {
+        throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_POINT);
+      }
       const createData = {
         ownerId: userId,
         photoCardId: sale.userCard.photoCard.id,
@@ -264,22 +295,21 @@ export class SaleService {
       const purchase = await this.#saleRepository.createPurchase(
         userId,
         saleId,
-        { ...data, price: sale.price, saleId },
+        { ...purchaseData, price: sale.price },
         tx,
-        { price: sale.price },
       );
-      await this.#userRepository.updateInTx(
+      const newSeller = await this.#userRepository.updateInTx(
         sale.seller.id,
         { point: sale.seller.point + sale.price * data.quantity },
         tx,
       );
-      await this.#userRepository.updateInTx(
+      const newUser = await this.#userRepository.updateInTx(
         user.id,
         { point: user.point - sale.price * data.quantity },
         tx,
         { point: user.point },
       );
-      await this.#cardRepository.update(
+      const newSellerCard = await this.#cardRepository.update(
         sale.userCard.id,
         { totalQuantity: sale.userCard.totalQuantity - data.quantity },
         tx,
@@ -292,12 +322,24 @@ export class SaleService {
         updateData,
         tx,
       );
-      await this.#saleRepository.update(
+      const newSale = await this.#saleRepository.update(
         saleId,
         { remainingQuantity: sale.remainingQuantity - data.quantity },
         tx,
-        { remainingQuantity: sale.remainingQuantity },
+        { price: expectedPrice, remainingQuantity: sale.remainingQuantity },
       );
+
+      if (
+        !purchase ||
+        !newSeller ||
+        !newUser ||
+        !newSellerCard ||
+        !newUserCard ||
+        !newSale
+      ) {
+        throw new ConflictException(ERROR_MESSAGE.FAILED_TO_CREATE_PURCHASE);
+      }
+
       return { sale, newUserCard, purchase };
     });
 

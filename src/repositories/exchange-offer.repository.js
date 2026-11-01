@@ -11,6 +11,6 @@ export class ExchangeOfferRepository {
     return client.orm.public.ExchangeOffer.where({
       saleId: saleId,
       status: 'PENDING',
-    }).update({ status: 'CANCELLED' });
+    }).updateCount({ status: 'CANCELLED' });
   }
 }

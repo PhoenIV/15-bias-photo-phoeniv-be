@@ -1,10 +1,11 @@
 import { BaseController } from './base.controller.js';
 import { HealthCheckController } from './health-check.controller.js';
-import { SaleController } from './sale.controller.js';
+import { SaleController } from './sale/sale.controller.js';
 
 //1. container.js에서 import하기 위해 export - 아래로 추가
 export * from './auth/auth.controller.js';
 export * from './base.controller.js';
+export * from './sale/sale.controller.js';
 export class Controller extends BaseController {
   #authController; //2. private 필드 - 아래로 추가
   #saleController;

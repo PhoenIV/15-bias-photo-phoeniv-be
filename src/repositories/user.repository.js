@@ -45,6 +45,12 @@ export class UserRepository {
       .first();
   }
 
+  findByIdInTx(id, client = this.#db) {
+    return client.orm.public.User.where({ id })
+      .select(...this.#fields)
+      .first();
+  }
+
   findAll({ limit = 20, offset = 0 } = {}) {
     return this.#users
       .select(...this.#fields)

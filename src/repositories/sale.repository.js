@@ -54,7 +54,6 @@ export class SaleRepository {
     if (searchPattern !== null) {
       filtered = filtered.where((sale) =>
         or(
-          sale.exchangeDescription.ilike(searchPattern),
           sale.userCard.some((userCard) =>
             userCard.photoCard.some((photoCard) =>
               or(
@@ -207,7 +206,7 @@ export class SaleRepository {
     }).update({ cancelledAt: new Date().toISOString() });
   }
 
-  createPurchase(userId, saleId, data, client = this.#db, expected = {}) {
+  createPurchase(userId, saleId, data, client = this.#db) {
     return client.orm.public.Purchase.select(
       'id',
       'quantity',
