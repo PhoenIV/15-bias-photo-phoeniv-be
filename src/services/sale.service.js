@@ -122,7 +122,6 @@ export class SaleService {
         throw new NotFoundException(ERROR_MESSAGE.USERCARD_NOT_FOUND);
       }
       if (userId !== userCard.ownerId) {
-        console.log(userId, userCard.ownerId);
         throw new ForbiddenException(ERROR_MESSAGE.MUST_OWN_CARD_TO_SELL);
       }
       if (userCard.netQuantity < data.totalQuantity) {
@@ -253,8 +252,8 @@ export class SaleService {
     return { data: deletedSale };
   }
 
-  async makePurchase(userIds, saleId, data) {
-    const { userId, expectedPrice, ...purchaseData } = data;
+  async makePurchase(userId, saleId, data) {
+    const { expectedPrice, ...purchaseData } = data;
     const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
       if (!sale) {
@@ -271,7 +270,6 @@ export class SaleService {
         throw new BadRequestException(ERROR_MESSAGE.LOW_INVENTORY);
       }
       if (user.point < purchaseData.quantity * sale.price) {
-        console.log(user);
         throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_POINT);
       }
       if (expectedPrice < sale.price) {
