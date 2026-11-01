@@ -8,6 +8,7 @@ import {
 import { config } from '#config';
 import { db } from '#prisma/db.js';
 import {
+  PointDrawRepository,
   CardRepository,
   ExchangeOfferRepository,
   SaleRepository,
@@ -30,6 +31,9 @@ export const createContainer = () => {
     config: asValue(config),
     db: asValue(db),
     userRepository: asClass(UserRepository, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    pointDrawRepository: asClass(PointDrawRepository, {
       lifetime: Lifetime.SINGLETON,
     }),
     passwordProvider: asClass(PasswordProvider, {
