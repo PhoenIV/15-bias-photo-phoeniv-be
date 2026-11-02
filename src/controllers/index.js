@@ -5,7 +5,7 @@ import { HealthCheckController } from './health-check.controller.js';
 export * from './auth/auth.controller.js';
 export * from './base.controller.js';
 export * from './sale/sale.controller.js';
-export * from './pointDraw/pointDraw.controller.js';
+export * from './point-draw/point-draw.controller.js';
 
 export class Controller extends BaseController {
   #authController; //2. private 필드 - 아래로 추가
@@ -25,7 +25,7 @@ export class Controller extends BaseController {
     this.router.use('/health-check', this.healthCheckController.routes());
     this.router.use('/auth', this.#authController.routes());
     this.router.use('/sales', this.#saleController.routes());
-    this.router.use('/pointDraws', this.#pointDrawController.routes());
+    this.router.use('/point-draws', this.#pointDrawController.routes());
     return this.router;
   }
 }
