@@ -14,8 +14,13 @@ import {
   SaleRepository,
   UserRepository,
 } from '#repositories';
-import { AuthService, SaleService } from '#services';
-import { AuthController, Controller, SaleController } from '#controllers';
+import { AuthService, SaleService, PointDrawService } from '#services';
+import {
+  AuthController,
+  PointDrawController,
+  Controller,
+  SaleController,
+} from '#controllers';
 import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
 import { AuthMiddleware } from '#middlewares';
 
@@ -62,6 +67,9 @@ export const createContainer = () => {
     saleService: asClass(SaleService, {
       lifetime: Lifetime.SINGLETON,
     }),
+    pointDrawService: asClass(PointDrawService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
 
     //3. Middleware
     authMiddleware: asClass(AuthMiddleware, {
@@ -73,6 +81,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     saleController: asClass(SaleController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    pointDrawController: asClass(PointDrawController, {
       lifetime: Lifetime.SINGLETON,
     }),
 
