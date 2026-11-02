@@ -8,8 +8,8 @@ import {
 import { config } from '#config';
 import { db } from '#prisma/db.js';
 import { PointDrawRepository, UserRepository } from '#repositories';
-import { AuthService } from '#services';
-import { AuthController, Controller } from '#controllers';
+import { AuthService, PointDrawService } from '#services';
+import { AuthController, PointDrawController, Controller } from '#controllers';
 import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
 import { AuthMiddleware } from '#middlewares';
 
@@ -44,6 +44,9 @@ export const createContainer = () => {
     authService: asClass(AuthService, {
       lifetime: Lifetime.SINGLETON,
     }),
+    pointDrawService: asClass(PointDrawService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
 
     //3. Middleware
     authMiddleware: asClass(AuthMiddleware, {
@@ -52,6 +55,9 @@ export const createContainer = () => {
 
     //4. Controller
     authController: asClass(AuthController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    pointDrawController: asClass(PointDrawController, {
       lifetime: Lifetime.SINGLETON,
     }),
 
