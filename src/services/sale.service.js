@@ -226,11 +226,14 @@ export class SaleService {
         throw new ForbiddenException(ERROR_MESSAGE.UNAUTHORIZED_FOR_THIS_SALE);
       }
       await this.#exchangeOfferRepository.markCancelledAll(saleId, tx);
-      const newSale = await this.#saleRepository.markCancelled(saleId, tx);
+      const newSale = await this.#saleRepository.markCancelled(saleId, tx, {
+        remainingQuantity: sale.remainingQuantity,
+      });
       const newCard = await this.#cardRepository.update(
         sale.userCard.id,
         { netQuantity: sale.userCard.netQuantity + sale.remainingQuantity },
         tx,
+        { netQuantity: sale.userCard.netQuantity },
       );
       const restoredCards = await Promise.all(
         sale.exchangeOffers.map((offer) => {
@@ -240,6 +243,7 @@ export class SaleService {
               netQuantity: offer.offeredUserCard.netQuantity + 1,
             },
             tx,
+            { netQuantity: offer.offeredUserCard.netQuantity },
           );
         }),
       );

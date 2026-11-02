@@ -189,10 +189,11 @@ export class SaleRepository {
       .update(data);
   }
 
-  markCancelled(saleId, client = this.#db) {
+  markCancelled(saleId, client = this.#db, expected = {}) {
     return client.orm.public.Sale.where({
       id: saleId,
       cancelledAt: null,
+      ...expected,
     }).update({ cancelledAt: new Date().toISOString() });
   }
 
