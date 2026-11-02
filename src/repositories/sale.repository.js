@@ -167,8 +167,8 @@ export class SaleRepository {
       .create(data);
   }
 
-  update(saleId, data, client = this.#db, expected = {}) {
-    return client.orm.public.Sale.where({
+  async update(saleId, data, client = this.#db, expected = {}) {
+    const [updated] = client.orm.public.Sale.where({
       id: saleId,
       cancelledAt: null,
       ...expected,
@@ -186,7 +186,8 @@ export class SaleRepository {
               ),
           ),
       )
-      .update(data);
+      .updateAll(data);
+    return updated ?? null;
   }
 
   async markCancelled(saleId, client = this.#db, expected = {}) {
