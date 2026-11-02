@@ -1242,7 +1242,7 @@ paths:
         **가격 변경 방어** (10/27 회의: 구매자가 본 가격과 다르면 구매를 막는다):
         `expectedPrice`(구매자가 화면에서 본 장당 가격)를 보내며, 구매자가 확인한 가격보다 가격이 인상되었을 경우 트랜잭션을 롤백하고 400 `PRICE_AUGMENTED`를 반환합니다.
 
-        **검사 순서**: 요청값 검증(400) → 로그인(401) → 판매글 조회(404) → 본인 판매글 여부(403) → 잔여 수량·포인트 확인(400) → 조건부 갱신 실패(409). 취소된 판매글은 현재 조회 대상에서 제외되어 404입니다.
+        **검사 순서**: 요청값 검증(400) → 로그인(401) → 판매글 조회(404) → 본인 판매글 여부(403) → 잔여 수량·가격·포인트 확인(400) → 조건부 갱신 실패(409). 취소된 판매글은 현재 조회 대상에서 제외되어 404입니다.
       requestBody:
         required: true
         content:
@@ -1256,7 +1256,7 @@ paths:
                   type: integer
                   minimum: 0
                   maximum: 100000
-                  description: 구매자가 화면에서 본 장당 가격. 판매글 가격과 다르면 구매를 중단합니다.
+                  description: 구매자가 화면에서 본 장당 가격. 구매자가 확인한 가격보다 가격이 인상되었을 경우 구매를 중단합니다.
                   example: 10000
       responses:
         '201':
@@ -1288,7 +1288,7 @@ paths:
                           genre: { $ref: '#/components/schemas/Genre' }
                           imageUrl: { type: string }
         '400':
-          description: 요청값 검증 실패, 잔여 수량 부족 또는 포인트 부족
+          description: 요청값 검증 실패, 잔여 수량 부족, 가격 인상 또는 포인트 부족
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
@@ -1310,6 +1310,12 @@ paths:
                     error:
                       code: INSUFFICIENT_POINT
                       message: 보유한 포인트가 부족합니다.
+                      fieldErrors: {}
+                PRICE_AUGMENTED:
+                  value:
+                    error:
+                      code: PRICE_AUGMENTED
+                      message: 가격이 인상되었습니다.
                       fieldErrors: {}
         '401':
           description: 인증 필요
