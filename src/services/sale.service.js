@@ -31,7 +31,7 @@ const toSaleResponse = (sale) => {
     grade: photoCard.grade,
     genre: photoCard.genre,
     description: photoCard.description,
-    imageUrl: photoCard.imageUrl,
+    imagePublicId: photoCard.imagePublicId,
   };
   const creator = {
     id: photoCard.creator.id,
@@ -80,7 +80,7 @@ export class SaleService {
       keyword = '',
       grade,
       genre,
-      excludeSoldOut = false,
+      excludeSoldOut = 'include',
     } = options;
 
     const { items, hasNext, nextCursor } = await this.#saleRepository.findPage({
@@ -364,7 +364,7 @@ export class SaleService {
       name: sale.userCard.photoCard.name,
       grade: sale.userCard.photoCard.grade,
       genre: sale.userCard.photoCard.genre,
-      imageUrl: sale.userCard.photoCard.imageUrl,
+      imagePublicId: sale.userCard.photoCard.imagePublicId,
     };
     return {
       data: { id, quantity, price, createdAt, saleId: saleIdFromResult, card },

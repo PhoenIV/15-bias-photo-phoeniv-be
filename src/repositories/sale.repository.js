@@ -93,7 +93,7 @@ export class SaleRepository {
           .select('id')
           .include('photoCard', (photoCard) =>
             photoCard
-              .select('name', 'grade', 'genre', 'description', 'imageUrl')
+              .select('name', 'grade', 'genre', 'description', 'imagePublicId')
               .include('creator', (creator) =>
                 creator.select('id', 'nickname'),
               ),
@@ -131,7 +131,7 @@ export class SaleRepository {
                 'grade',
                 'genre',
                 'description',
-                'imageUrl',
+                'imagePublicId',
                 'minPrice',
               )
               .include('creator', (creator) =>
@@ -158,7 +158,7 @@ export class SaleRepository {
           .select('id')
           .include('photoCard', (photoCard) =>
             photoCard
-              .select('name', 'grade', 'genre', 'description', 'imageUrl')
+              .select('name', 'grade', 'genre', 'description', 'imagePublicId')
               .include('creator', (creator) =>
                 creator.select('id', 'nickname'),
               ),
@@ -180,7 +180,7 @@ export class SaleRepository {
           .select('id')
           .include('photoCard', (photoCard) =>
             photoCard
-              .select('name', 'grade', 'genre', 'description', 'imageUrl')
+              .select('name', 'grade', 'genre', 'description', 'imagePublicId')
               .include('creator', (creator) =>
                 creator.select('id', 'nickname'),
               ),
@@ -213,7 +213,7 @@ export class SaleRepository {
             card
               .select('id')
               .include('photoCard', (card) =>
-                card.select('name', 'grade', 'genre', 'imageUrl'),
+                card.select('name', 'grade', 'genre', 'imagePublicId'),
               ),
           ),
       )
