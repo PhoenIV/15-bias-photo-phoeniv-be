@@ -19,11 +19,19 @@ export class CardRepository {
       .first();
   }
 
-  update(userCardId, data, client = this.#db, expected = {}) {
-    return client.orm.public.UserCard.where({
+  // update(userCardId, data, client = this.#db, expected = {}) {
+  //   return client.orm.public.UserCard.where({
+  //     id: userCardId,
+  //     ...expected,
+  //   }).update(data);
+  // }
+
+  async update(userCardId, data, client = this.#db, expected = {}) {
+    const [updated] = await client.orm.public.UserCard.where({
       id: userCardId,
       ...expected,
-    }).update(data);
+    }).updateAll(data);
+    return updated ?? null;
   }
 
   upsert(buyerId, photoCardId, createData, updateData, client = this.#db) {

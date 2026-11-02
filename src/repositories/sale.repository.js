@@ -189,12 +189,13 @@ export class SaleRepository {
       .update(data);
   }
 
-  markCancelled(saleId, client = this.#db, expected = {}) {
-    return client.orm.public.Sale.where({
+  async markCancelled(saleId, client = this.#db, expected = {}) {
+    const [cancelled] = await client.orm.public.Sale.where({
       id: saleId,
       cancelledAt: null,
       ...expected,
-    }).update({ cancelledAt: new Date().toISOString() });
+    }).updateAll({ cancelledAt: new Date().toISOString() });
+    return cancelled ?? null;
   }
 
   createPurchase(userId, saleId, data, client = this.#db) {
