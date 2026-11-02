@@ -168,7 +168,7 @@ export class SaleRepository {
   }
 
   async update(saleId, data, client = this.#db, expected = {}) {
-    const [updated] = client.orm.public.Sale.where({
+    const [updated] = await client.orm.public.Sale.where({
       id: saleId,
       cancelledAt: null,
       ...expected,
