@@ -758,8 +758,6 @@ paths:
       description: |
         마켓플레이스 화면(무한 스크롤)에서 씁니다. **커서 방식**(기본 15개)이라 다음 페이지는 이전 응답의 `nextCursor`를 넘깁니다.
         로그인하지 않아도 조회할 수 있습니다.
-
-        ⚠️ 가격순 정렬의 커서 형식(가격 + id)은 구현할 때 정함
       security:
         - {}
         - cookieAuth: []
@@ -767,23 +765,36 @@ paths:
         - name: limit
           in: query
           schema: { type: integer, minimum: 1, maximum: 50, default: 15 }
-        - $ref: '#/components/parameters/Keyword'
+        - name: keyword
+          in: query
+          description: 포토카드 이름 또는 설명 검색어 (포토카드 이름·설명에서 검색)
+          schema: { type: string, maxLength: 50 }
         - name: excludeSoldOut
           in: query
-          description: true면 품절 제외
-          schema: { type: boolean }
+          description: "'exclude'는 품절 제외, 'include'는 품절 포함"
+          schema:
+            type: string
+            enum: [exclude, include]
         - $ref: '#/components/parameters/GenreFilter'
         - $ref: '#/components/parameters/GradeFilter'
         - name: sort
           in: query
           schema:
             type: string
-            enum: [latest, oldest, price_asc, price_desc]
+            enum: [latest, oldest, priceAsc, priceDesc]
             default: latest
         - name: cursor
           in: query
-          description: 이전 응답의 nextCursor (첫 요청엔 생략)
-          schema: { type: string }
+          description: JSON 문자열로 이전 응답의 nextCursor를 전달합니다(첫 요청엔 생략). 시간순은 {createdAt, id}, 가격순은 {price, id} 형식입니다.
+          schema:
+            type: string
+          examples:
+            timeSort:
+              summary: 최신순 또는 오래된 순
+              value: '{"createdAt":"2026-10-31T12:00:00.000Z","id":12}'
+            priceSort:
+              summary: 가격순
+              value: '{"price":12000,"id":12}'
       responses:
         '200':
           description: 조회 성공
@@ -796,11 +807,31 @@ paths:
                     type: array
                     items: { $ref: '#/components/schemas/Sale' }
                   pagination: { $ref: '#/components/schemas/CursorPagination' }
-        '400': { $ref: '#/components/responses/ValidationFailed' }
-        '500': { $ref: '#/components/responses/ServerError' }
+        '400':
+          description: 쿼리 검증 실패
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: VALIDATION_FAILED
+                  message: 입력값 검증에 실패했습니다.
+                  fieldErrors: {}
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INTERNAL_SERVER_ERROR
+                  message: 서버 내부 오류가 발생했습니다.
+                  fieldErrors: {}
     post:
       tags: [Sales]
       summary: 판매글 올리기
+      security:
+        - cookieAuth: []
       description: |
         판매자는 요청으로 받지 않고 로그인 정보로 식별합니다.
         트랜잭션: ① 본인 카드이고 netQuantity ≥ 등록 수량인지 ② price ≥ PhotoCard.minPrice ③ netQuantity 감소 ④ Sale 생성 (remainingQuantity = totalQuantity)
@@ -859,56 +890,75 @@ paths:
                   value:
                     error:
                       code: VALIDATION_FAILED
-                      message: 입력값을 확인해 주세요.
+                      message: 입력값 검증에 실패했습니다.
                       fieldErrors:
                         { totalQuantity: [1~10장 사이로 입력해 주세요.] }
-                SALE_PRICE_TOO_LOW:
+                PRICE_TOO_LOW:
                   summary: 카드의 최소 가격보다 낮음
                   value:
                     error:
                       {
-                        code: SALE_PRICE_TOO_LOW,
-                        message: 판매 가격은 최소 가격 이상이어야 합니다.,
-                        fieldErrors: { price: [최소 10P 이상 입력해 주세요.] },
+                        code: PRICE_TOO_LOW,
+                        message: 최소가격 미만으로 설정할 수 없습니다.,
+                        fieldErrors: {},
                       }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+                INSUFFICIENT_CARD:
+                  summary: 판매할 보유 카드 수량이 부족함
+                  value:
+                    error:
+                      code: INSUFFICIENT_CARD
+                      message: 보유한 카드 수량이 부족합니다.
+                      fieldErrors: {}
+        '401':
+          description: 인증 필요
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: UNAUTHENTICATED
+                  message: 인증이 필요합니다.
+                  fieldErrors: {}
         '403':
-          description: 내 카드가 아님
+          description: 본인 소유 카드가 아님
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               example:
                 error:
-                  {
-                    code: USER_CARD_FORBIDDEN,
-                    message: 본인이 보유한 카드만 판매할 수 있습니다.,
-                    fieldErrors: {},
-                  }
+                  code: MUST_OWN_CARD_TO_SELL
+                  message: 나의 카드만 판매할 수 있습니다.
+                  fieldErrors: {}
         '404':
-          description: 카드가 없음
+          description: 보유 카드를 찾을 수 없음
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               example:
                 error:
-                  {
-                    code: USER_CARD_NOT_FOUND,
-                    message: 카드를 찾을 수 없습니다.,
-                    fieldErrors: {},
-                  }
+                  code: USERCARD_NOT_FOUND
+                  message: 요청하신 보유 카드를 찾을 수 없습니다.
+                  fieldErrors: {}
         '409':
-          description: 판매할 수 있는 수량이 부족함
+          description: 보유 카드 또는 판매글 갱신 충돌
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               example:
                 error:
-                  {
-                    code: CARD_QUANTITY_NOT_ENOUGH,
-                    message: 판매할 수 있는 카드 수량이 부족합니다.,
-                    fieldErrors: {},
-                  }
-        '500': { $ref: '#/components/responses/ServerError' }
+                  code: FAILED_TO_CREATE_SALE
+                  message: 판매글을 생성하지 못했습니다.
+                  fieldErrors: {}
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INTERNAL_SERVER_ERROR
+                  message: 서버 내부 오류가 발생했습니다.
+                  fieldErrors: {}
 
   /api/sales/{saleId}:
     parameters:
@@ -916,6 +966,8 @@ paths:
     get:
       tags: [Sales]
       summary: 판매글 상세 조회
+      security:
+        - cookieAuth: []
       description: |
         **로그인한 사용자만** 조회할 수 있습니다 (10/27 회의).
         구매자 화면과 판매자 화면 모두 이 API를 씁니다. `isMine`으로 어느 화면을 보여줄지 정합니다.
@@ -928,16 +980,54 @@ paths:
                 type: object
                 properties:
                   data: { $ref: '#/components/schemas/Sale' }
-        '400': { $ref: '#/components/responses/ValidationFailed' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/SaleNotFound' }
-        '500': { $ref: '#/components/responses/ServerError' }
+        '400':
+          description: 경로 매개변수 검증 실패
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: VALIDATION_FAILED
+                  message: 입력값 검증에 실패했습니다.
+                  fieldErrors: {}
+        '401':
+          description: 인증 필요
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: UNAUTHENTICATED
+                  message: 인증이 필요합니다.
+                  fieldErrors: {}
+        '404':
+          description: 판매글이 없음 또는 취소됨
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: SALE_NOT_FOUND
+                  message: 판매글 정보를 찾을 수 없습니다.
+                  fieldErrors: {}
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INTERNAL_SERVER_ERROR
+                  message: 서버 내부 오류가 발생했습니다.
+                  fieldErrors: {}
     patch:
       tags: [Sales]
       summary: 판매글 수정하기
+      security:
+        - cookieAuth: []
       description: |
         판매자만 수정할 수 있습니다. 바꿀 필드만 보냅니다.
-        **수량 변경 허용** — 내 남은 카드(netQuantity) + 현재 남은 판매 수량까지 늘릴 수 있고, 이미 팔린 수량 아래로는 줄일 수 없습니다.
+        **수량 변경 허용** — 요청한 수량으로 `totalQuantity`와 `remainingQuantity`를 설정하고, 기존 잔여 판매 수량과의 차이만큼 보유 카드 `netQuantity`를 조정합니다.
       requestBody:
         required: true
         content:
@@ -969,78 +1059,86 @@ paths:
                 properties:
                   data: { $ref: '#/components/schemas/Sale' }
         '400':
-          description: 요청 값 오류
+          description: 요청 값 검증 실패 또는 판매 조건 불충족
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               examples:
                 VALIDATION_FAILED:
-                  summary: 빈 요청 · 범위 초과
                   value:
                     error:
-                      {
-                        code: VALIDATION_FAILED,
-                        message: 입력값을 확인해 주세요.,
-                        fieldErrors: {},
-                      }
-                SALE_PRICE_TOO_LOW:
-                  summary: 최소 가격보다 낮음
+                      code: VALIDATION_FAILED
+                      message: 입력값 검증에 실패했습니다.
+                      fieldErrors: {}
+                PRICE_TOO_LOW:
+                  summary: 카드 최소 가격 미만
                   value:
                     error:
-                      {
-                        code: SALE_PRICE_TOO_LOW,
-                        message: 판매 가격은 최소 가격 이상이어야 합니다.,
-                        fieldErrors: {},
-                      }
-                SALE_QUANTITY_TOO_LOW:
-                  summary: 이미 팔린 수량보다 적게 줄이려 함
+                      code: PRICE_TOO_LOW
+                      message: 최소가격 미만으로 설정할 수 없습니다.
+                      fieldErrors: {}
+                INSUFFICIENT_CARD:
+                  summary: 보유 카드 수량 부족
                   value:
                     error:
-                      {
-                        code: SALE_QUANTITY_TOO_LOW,
-                        message: 이미 판매된 수량보다 적게 줄일 수 없습니다.,
-                        fieldErrors: {},
-                      }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/SaleForbidden' }
-        '404': { $ref: '#/components/responses/SaleNotFound' }
-        '409':
-          description: 지금 상태 때문에 수정 불가
+                      code: INSUFFICIENT_CARD
+                      message: 보유한 카드 수량이 부족합니다.
+                      fieldErrors: {}
+        '401':
+          description: 인증 필요
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
-              examples:
-                SALE_CANCELLED:
-                  summary: 이미 내린 판매글
-                  value:
-                    error:
-                      {
-                        code: SALE_CANCELLED,
-                        message: 판매가 취소된 글입니다.,
-                        fieldErrors: {},
-                      }
-                SALE_SOLD_OUT:
-                  summary: 품절된 판매글
-                  value:
-                    error:
-                      {
-                        code: SALE_SOLD_OUT,
-                        message: 품절된 판매글은 수정할 수 없습니다.,
-                        fieldErrors: {},
-                      }
-                CARD_QUANTITY_NOT_ENOUGH:
-                  summary: 늘리려는 수량만큼 카드가 없음
-                  value:
-                    error:
-                      {
-                        code: CARD_QUANTITY_NOT_ENOUGH,
-                        message: 판매할 수 있는 카드 수량이 부족합니다.,
-                        fieldErrors: {},
-                      }
-        '500': { $ref: '#/components/responses/ServerError' }
+              example:
+                error:
+                  code: UNAUTHENTICATED
+                  message: 인증이 필요합니다.
+                  fieldErrors: {}
+        '403':
+          description: 해당 판매글에 대한 권한 없음
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: UNAUTHORIZED_FOR_THIS_SALE
+                  message: 해당 판매글에 대한 권한이 없습니다.
+                  fieldErrors: {}
+        '404':
+          description: 판매글이 없음 또는 취소됨
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: SALE_NOT_FOUND
+                  message: 판매글 정보를 찾을 수 없습니다.
+                  fieldErrors: {}
+        '409':
+          description: 판매글 또는 보유 카드 갱신 충돌
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: RESOURCE_CONFLICT
+                  message: 판매글을 수정하지 못했습니다.
+                  fieldErrors: {}
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INTERNAL_SERVER_ERROR
+                  message: 서버 내부 오류가 발생했습니다.
+                  fieldErrors: {}
     delete:
       tags: [Sales]
       summary: 판매글 내리기
+      security:
+        - cookieAuth: []
       description: |
         소프트 삭제(cancelledAt 기록)입니다. 남은 수량은 판매자 netQuantity로 복구되고,
         대기 중 교환 제시는 자동 `CANCELLED` 되며 제시 카드도 복구됩니다.
@@ -1065,22 +1163,66 @@ paths:
                           format: date-time,
                           example: '2026-10-26T05:12:30.123Z',
                         }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/SaleForbidden' }
-        '404': { $ref: '#/components/responses/SaleNotFound' }
-        '409':
-          description: 이미 내린 판매글
+        '400':
+          description: 요청 값 검증 실패
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               example:
                 error:
-                  {
-                    code: SALE_CANCELLED,
-                    message: 이미 판매가 취소된 글입니다.,
-                    fieldErrors: {},
-                  }
-        '500': { $ref: '#/components/responses/ServerError' }
+                  code: VALIDATION_FAILED
+                  message: 입력값 검증에 실패했습니다.
+                  fieldErrors: {}
+        '401':
+          description: 인증 필요
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: UNAUTHENTICATED
+                  message: 인증이 필요합니다.
+                  fieldErrors: {}
+        '403':
+          description: 해당 판매글에 대한 권한 없음
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: UNAUTHORIZED_FOR_THIS_SALE
+                  message: 해당 판매글에 대한 권한이 없습니다.
+                  fieldErrors: {}
+        '404':
+          description: 판매글이 없음 또는 취소됨
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: SALE_NOT_FOUND
+                  message: 판매글 정보를 찾을 수 없습니다.
+                  fieldErrors: {}
+        '409':
+          description: 판매글 또는 카드 복구 갱신 충돌
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: FAILED_TO_DELETE_SALE
+                  message: 판매글을 삭제하지 못했습니다.
+                  fieldErrors: {}
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INTERNAL_SERVER_ERROR
+                  message: 서버 내부 오류가 발생했습니다.
+                  fieldErrors: {}
 
   /api/sales/{saleId}/purchases:
     parameters:
@@ -1088,33 +1230,33 @@ paths:
     post:
       tags: [Sales]
       summary: 카드 구매하기
+      security:
+        - cookieAuth: []
       description: |
         구매자는 로그인 정보로 식별합니다. 한 트랜잭션에서 처리합니다.
         ① 내 글·취소 글 확인 ② 남은 수량 조건부 감소 ③ 구매자 포인트 차감 ④ 판매자 포인트 증가 ⑤ Purchase 생성
-        ⑥ 판매자 카드 감소 ⑦ 구매자 카드 추가 (보유 10장 제한) ⑧ PointHistory 2건 ⑨ 알림 (판매, 남은 수량 0이면 품절)
+        ⑥ 판매자 카드 감소 ⑦ 구매자 카드 추가. 포인트 변동 이력과 알림은 추후 구현 예정입니다.
 
         결제 가격은 클라이언트가 보낸 값이 아니라 **구매 시점 판매글의 가격**을 사용합니다.
 
         **가격 변경 방어** (10/27 회의: 구매자가 본 가격과 다르면 구매를 막는다):
-        `expectedPrice`(구매자가 화면에서 본 장당 가격)를 보내면 판매글 가격과 비교해 다를 때 409 `SALE_PRICE_CHANGED`.
-        ⚠️ `expectedPrice` 적용 여부는 Sales 담당 검토 후 확정
+        `expectedPrice`(구매자가 화면에서 본 장당 가격)를 보내며, 구매자가 확인한 가격보다 가격이 인상되었을 경우 트랜잭션을 롤백하고 400 `PRICE_AUGMENTED`를 반환합니다.
 
-        **검사 순서** (여러 개 해당하면 먼저 걸린 에러를 보냄):
-        400 요청 값 → 401 로그인 → 404 판매글 없음 → 403 내 글 → 409 취소 → 409 품절 → 409 가격 변경 → 409 남은 수량 부족 → 409 10장 초과 → 409 포인트 부족
+        **검사 순서**: 요청값 검증(400) → 로그인(401) → 판매글 조회(404) → 본인 판매글 여부(403) → 잔여 수량·가격·포인트 확인(400) → 조건부 갱신 실패(409). 취소된 판매글은 현재 조회 대상에서 제외되어 404입니다.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [quantity]
+              required: [quantity, expectedPrice]
               properties:
                 quantity: { type: integer, minimum: 1, maximum: 10, example: 2 }
                 expectedPrice:
                   type: integer
                   minimum: 0
                   maximum: 100000
-                  description: '⚠️ 검토 중 — 구매자가 화면에서 본 장당 가격. 판매글 가격과 다르면 409'
+                  description: 구매자가 화면에서 본 장당 가격. 구매자가 확인한 가격보다 가격이 인상되었을 경우 구매를 중단합니다.
                   example: 10000
       responses:
         '201':
@@ -1146,92 +1288,85 @@ paths:
                           genre: { $ref: '#/components/schemas/Genre' }
                           imageUrl: { type: string }
         '400':
-          description: 구매 수량이 없거나 1~10이 아님
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/ErrorResponse' }
-              example:
-                error:
-                  code: VALIDATION_FAILED
-                  message: 입력값을 확인해 주세요.
-                  fieldErrors: { quantity: [1~10장 사이로 입력해 주세요.] }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403':
-          description: 내 판매글을 구매하려 함
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/ErrorResponse' }
-              example:
-                error:
-                  {
-                    code: PURCHASE_OWN_SALE,
-                    message: 본인의 판매글은 구매할 수 없습니다.,
-                    fieldErrors: {},
-                  }
-        '404': { $ref: '#/components/responses/SaleNotFound' }
-        '409':
-          description: 지금 상태 때문에 구매 불가
+          description: 요청값 검증 실패, 잔여 수량 부족, 가격 인상 또는 포인트 부족
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               examples:
-                SALE_CANCELLED:
-                  summary: 판매가 취소된 글
+                VALIDATION_FAILED:
                   value:
                     error:
-                      {
-                        code: SALE_CANCELLED,
-                        message: 판매가 취소된 글입니다.,
-                        fieldErrors: {},
-                      }
-                SALE_SOLD_OUT:
-                  summary: 품절
+                      code: VALIDATION_FAILED
+                      message: 입력값 검증에 실패했습니다.
+                      fieldErrors: {}
+                LOW_INVENTORY:
                   value:
                     error:
-                      {
-                        code: SALE_SOLD_OUT,
-                        message: 품절된 포토카드입니다.,
-                        fieldErrors: {},
-                      }
-                SALE_PRICE_CHANGED:
-                  summary: '⚠️ 검토 중 — 구매자가 본 가격과 현재 가격이 다름'
+                      code: LOW_INVENTORY
+                      message: 구매가능 수량이 부족합니다.
+                      fieldErrors: {}
+                INSUFFICIENT_POINT:
                   value:
                     error:
-                      {
-                        code: SALE_PRICE_CHANGED,
-                        message: 판매 가격이 변경되었습니다. 가격을 확인한 뒤 다시 구매해 주세요.,
-                        fieldErrors: {},
-                      }
-                SALE_QUANTITY_NOT_ENOUGH:
-                  summary: 남은 수량보다 많이 구매하려 함
+                      code: INSUFFICIENT_POINT
+                      message: 보유한 포인트가 부족합니다.
+                      fieldErrors: {}
+                PRICE_AUGMENTED:
                   value:
                     error:
-                      {
-                        code: SALE_QUANTITY_NOT_ENOUGH,
-                        message: 남은 수량보다 많이 구매할 수 없습니다.,
-                        fieldErrors:
-                          { quantity: [최대 2장까지 구매할 수 있습니다.] },
-                      }
-                CARD_LIMIT_EXCEEDED:
-                  summary: 구매하면 같은 카드 보유가 10장을 넘음
-                  value:
-                    error:
-                      {
-                        code: CARD_LIMIT_EXCEEDED,
-                        message: 같은 포토카드는 최대 10장까지 보유할 수 있습니다.,
-                        fieldErrors: {},
-                      }
-                POINT_NOT_ENOUGH:
-                  summary: 포인트 부족
-                  value:
-                    error:
-                      {
-                        code: POINT_NOT_ENOUGH,
-                        message: 포인트가 부족합니다.,
-                        fieldErrors: {},
-                      }
-        '500': { $ref: '#/components/responses/ServerError' }
-
+                      code: PRICE_AUGMENTED
+                      message: 가격이 인상되었습니다.
+                      fieldErrors: {}
+        '401':
+          description: 인증 필요
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: UNAUTHENTICATED
+                  message: 인증이 필요합니다.
+                  fieldErrors: {}
+        '403':
+          description: 본인 판매글 구매 시도
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: CANNOT_BUY_OWN_SALE
+                  message: 내가 판매한 카드를 구매할 수 없습니다.
+                  fieldErrors: {}
+        '404':
+          description: 판매글을 찾을 수 없음 (취소된 글 포함)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: SALE_NOT_FOUND
+                  message: 판매글 정보를 찾을 수 없습니다.
+                  fieldErrors: {}
+        '409':
+          description: 트랜잭션 중 조건부 갱신 충돌
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: FAILED_TO_CREATE_PURCHASE
+                  message: 구매이력을 생성하지 못했습니다.
+                  fieldErrors: {}
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INTERNAL_SERVER_ERROR
+                  message: 서버 내부 오류가 발생했습니다.
+                  fieldErrors: {}
   # ───────────────────────── Exchanges ─────────────────────────
   /api/sales/{saleId}/exchanges:
     parameters:
@@ -1748,9 +1883,16 @@ components:
       description: 커서 방식 (마켓플레이스 무한 스크롤 전용, 기본 15개)
       properties:
         limit: { type: integer, example: 15 }
-        totalCount: { type: integer, example: 100 }
         hasNext: { type: boolean, example: true }
-        nextCursor: { type: string, nullable: true, example: '16' }
+        nextCursor:
+          type: object
+          nullable: true
+          description: 시간순 정렬은 createdAt과 id, 가격순 정렬은 price와 id를 포함하며 다음 페이지가 없으면 null입니다.
+          properties:
+            createdAt: { type: string, format: date-time }
+            price: { type: integer }
+            id: { type: integer }
+          example: { createdAt: '2026-10-31T12:00:00.000Z', id: 16 }
 
     Grade:
       type: string
@@ -1920,44 +2062,39 @@ components:
 
     Sale:
       type: object
-      description: |
-        판매글. 취소된 판매글은 목록·상세에 나오지 않으므로, 응답에 오는 판매글은 판매 중 또는 품절입니다.
-        품절 = remainingQuantity 0 (`isSoldOut: true`)
-        ⚠️ 마이갤러리 카드(MyCard)와 카드 정보 모양이 다름 — 통일 여부 확인
+      description: 판매글 응답. 상세 조회일 때만 isMine이 포함됩니다.
       properties:
         id: { type: integer, example: 1 }
         price: { type: integer, example: 10000 }
         totalQuantity: { type: integer, example: 3 }
         remainingQuantity: { type: integer, example: 2 }
-        isSoldOut:
-          {
-            type: boolean,
-            description: remainingQuantity가 0이면 true,
-            example: false,
-          }
         exchangeGrade: { $ref: '#/components/schemas/GradeNullable' }
         exchangeGenre: { $ref: '#/components/schemas/GenreNullable' }
         exchangeDescription: { type: string, nullable: true }
         createdAt: { type: string, format: date-time }
+        isMine:
+          {
+            type: boolean,
+            description: 상세 조회에서 로그인한 사용자의 판매글인지 여부,
+          }
         seller:
           type: object
           properties:
             id: { type: integer, example: 7 }
             nickname: { type: string, example: 몬스테라 }
-        isMine:
-          {
-            type: boolean,
-            description: 로그인한 사용자의 판매글인지 (판매자 화면 / 구매자 화면 구분),
-          }
         card:
           type: object
           properties:
-            id: { type: integer, example: 1 }
+            id: { type: integer, description: 판매자의 UserCard ID, example: 1 }
             name: { type: string, example: 몬스테라 사진 }
             grade: { $ref: '#/components/schemas/Grade' }
             genre: { $ref: '#/components/schemas/Genre' }
             description:
-              { type: string, example: 멋진 몬스테라 사진을 찍었습니다. }
+              {
+                type: string,
+                nullable: true,
+                example: 멋진 몬스테라 사진을 찍었습니다.,
+              }
             imageUrl: { type: string }
             creator:
               type: object
@@ -1970,12 +2107,7 @@ components:
       properties:
         id: { type: integer, example: 3 }
         status: { $ref: '#/components/schemas/ExchangeStatus' }
-        description:
-          {
-            type: string,
-            nullable: true,
-            example: 스페인 여행 사진도 좋은데.. 우리집 앞마당 포토카드와 교환하고 싶습니다!,
-          }
+        description: { type: string, nullable: true }
         createdAt: { type: string, format: date-time }
         proposer:
           type: object

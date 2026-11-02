@@ -7,9 +7,20 @@ import {
 } from 'awilix';
 import { config } from '#config';
 import { db } from '#prisma/db.js';
-import { PointDrawRepository, UserRepository } from '#repositories';
-import { AuthService, PointDrawService } from '#services';
-import { AuthController, PointDrawController, Controller } from '#controllers';
+import {
+  PointDrawRepository,
+  CardRepository,
+  ExchangeOfferRepository,
+  SaleRepository,
+  UserRepository,
+} from '#repositories';
+import { AuthService, SaleService, PointDrawService } from '#services';
+import {
+  AuthController,
+  PointDrawController,
+  Controller,
+  SaleController,
+} from '#controllers';
 import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
 import { AuthMiddleware } from '#middlewares';
 
@@ -39,9 +50,21 @@ export const createContainer = () => {
     cookieProvider: asClass(CookieProvider, {
       lifetime: Lifetime.SINGLETON,
     }),
+    cardRepository: asClass(CardRepository, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    saleRepository: asClass(SaleRepository, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    exchangeOfferRepository: asClass(ExchangeOfferRepository, {
+      lifetime: Lifetime.SINGLETON,
+    }),
 
     //2. Service
     authService: asClass(AuthService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    saleService: asClass(SaleService, {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawService: asClass(PointDrawService, {
@@ -55,6 +78,9 @@ export const createContainer = () => {
 
     //4. Controller
     authController: asClass(AuthController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    saleController: asClass(SaleController, {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawController: asClass(PointDrawController, {
