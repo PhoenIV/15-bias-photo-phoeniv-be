@@ -316,7 +316,7 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
 
   # ───────────────────────── PointDraws ─────────────────────────
-  /api/pointDraws/status:
+  /api/point-draws/status:
     get:
       tags: [PointDraws]
       summary: 랜덤박스 참여 가능 여부 조회
@@ -357,7 +357,7 @@ paths:
                   serverTime: '2026-10-22T03:01:00.000Z'
         '401': { $ref: '#/components/responses/Unauthorized' }
 
-  /api/pointDraws:
+  /api/point-draws:
     post:
       tags: [PointDraws]
       summary: 랜덤박스 뽑기

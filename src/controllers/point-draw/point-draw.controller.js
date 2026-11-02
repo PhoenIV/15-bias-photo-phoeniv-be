@@ -1,7 +1,7 @@
 import { HTTP_STATUS } from '#constants';
 import { needsLogin, validate } from '#middlewares';
 import { BaseController } from '../base.controller.js';
-import { pointDrawSchema } from './dto/pointDraw.dto.js';
+import { pointDrawSchema } from './dto/point-draw.dto.js';
 
 export class PointDrawController extends BaseController {
   #pointDrawService;
