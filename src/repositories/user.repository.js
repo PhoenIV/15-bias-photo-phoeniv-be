@@ -45,8 +45,9 @@ export class UserRepository {
       .first();
   }
 
-  findByIdInTx(id, client = this.#db) {
+  findByIdInTxAndLock(id, client = this.#db) {
     return client.orm.public.User.where({ id })
+      .forUpdate()
       .select(...this.#fields)
       .first();
   }

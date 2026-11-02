@@ -263,7 +263,7 @@ export class SaleService {
       if (!sale) {
         throw new NotFoundException(ERROR_MESSAGE.SALE_NOT_FOUND);
       }
-      const user = await this.#userRepository.findByIdInTx(userId, tx);
+      const user = await this.#userRepository.findByIdInTxAndLock(userId, tx);
       if (!user) {
         throw new UnauthorizedException(ERROR_MESSAGE.UNAUTHORIZED);
       }
