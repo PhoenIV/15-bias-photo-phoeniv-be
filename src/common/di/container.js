@@ -14,14 +14,25 @@ import {
   SaleRepository,
   UserRepository,
 } from '#repositories';
-import { AuthService, SaleService, PointDrawService } from '#services';
+import {
+  AuthService,
+  SaleService,
+  PointDrawService,
+  CardService,
+} from '#services';
 import {
   AuthController,
   PointDrawController,
   Controller,
   SaleController,
+  CardController,
 } from '#controllers';
-import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
+import {
+  PasswordProvider,
+  TokenProvider,
+  CookieProvider,
+  CloudinaryProvider,
+} from '#providers';
 import { AuthMiddleware } from '#middlewares';
 
 //함수로 한번 감싼 이유는 원하는 시점에서 함수를 실행시키기 위해
@@ -59,6 +70,9 @@ export const createContainer = () => {
     exchangeOfferRepository: asClass(ExchangeOfferRepository, {
       lifetime: Lifetime.SINGLETON,
     }),
+    cloudinaryProvider: asClass(CloudinaryProvider, {
+      lifetime: Lifetime.SINGLETON,
+    }),
 
     //2. Service
     authService: asClass(AuthService, {
@@ -68,6 +82,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawService: asClass(PointDrawService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    cardService: asClass(CardService, {
       lifetime: Lifetime.SINGLETON,
     }),
 
@@ -84,6 +101,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawController: asClass(PointDrawController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    cardController: asClass(CardController, {
       lifetime: Lifetime.SINGLETON,
     }),
 
