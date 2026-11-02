@@ -308,6 +308,7 @@ export class SaleService {
         sale.seller.id,
         { point: sale.seller.point + sale.price * data.quantity },
         tx,
+        { point: sale.seller.point },
       );
       const newUser = await this.#userRepository.updateInTx(
         user.id,
