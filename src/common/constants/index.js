@@ -3,4 +3,4 @@ export * from './errors.js';
 export * from './time.js';
 export * from './exit-code.js';
 export * from './auth-constant.js';
-export * from './pointDraw-constant.js';
+export * from './point-draw-constant.js';
