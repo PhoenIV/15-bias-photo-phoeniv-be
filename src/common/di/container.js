@@ -14,12 +14,18 @@ import {
   SaleRepository,
   UserRepository,
 } from '#repositories';
-import { AuthService, SaleService, PointDrawService } from '#services';
+import {
+  AuthService,
+  SaleService,
+  PointDrawService,
+  ExchangeService,
+} from '#services';
 import {
   AuthController,
   PointDrawController,
   Controller,
   SaleController,
+  ExchangeController,
 } from '#controllers';
 import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
 import { AuthMiddleware } from '#middlewares';
@@ -67,6 +73,9 @@ export const createContainer = () => {
     saleService: asClass(SaleService, {
       lifetime: Lifetime.SINGLETON,
     }),
+    exchangeService: asClass(ExchangeService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
     pointDrawService: asClass(PointDrawService, {
       lifetime: Lifetime.SINGLETON,
     }),
@@ -81,6 +90,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     saleController: asClass(SaleController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    exchangeController: asClass(ExchangeController, {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawController: asClass(PointDrawController, {
