@@ -34,4 +34,21 @@ export class CardRepository {
       conflictOn: { ownerId: buyerId, photoCardId: photoCardId },
     });
   }
+
+  // 이번 달 포토카드 생성 횟수 조회
+  countMonthlyCreated(creatorId, startOfMonth, endOfMonth, client = this.#db) {
+    return client.orm.public.PhotoCard.where((card) =>
+      card.creatorId.eq(creatorId),
+    )
+      .where((card) => card.createdAt.gte(startOfMonth))
+      .where((card) => card.createdAt.lt(endOfMonth))
+      .aggregate((agg) => ({
+        count: agg.count(),
+      }));
+  }
+
+  // 포토카드 원본 생성
+  createPhotoCard(data, client = this.#db) {
+    return client.orm.public.PhotoCard.create(data); // 또는 insert(data)
+  }
 }

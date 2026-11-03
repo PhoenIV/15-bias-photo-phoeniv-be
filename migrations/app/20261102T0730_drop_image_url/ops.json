@@ -1,0 +1,52 @@
+[
+  {
+    "id": "dropColumn.photo_card.image_url",
+    "label": "Drop column \"image_url\" from \"photo_card\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "image_url",
+        "table": "photo_card"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"image_url\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "photo_card",
+          "image_url"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"image_url\" on \"photo_card\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"image_url\"",
+        "sql": "ALTER TABLE \"public\".\"photo_card\" DROP COLUMN \"image_url\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"image_url\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "photo_card",
+          "image_url"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"image_url\" on \"photo_card\""
+        }
+      }
+    ]
+  }
+]

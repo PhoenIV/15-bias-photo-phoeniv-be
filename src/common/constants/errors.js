@@ -26,6 +26,7 @@ export const ERROR_MESSAGE = {
   FAILED_TO_CREATE_PHOTOCARD: '포토카드를 생성하지 못했습니다.',
   FAILED_TO_UPDATE_PHOTOCARD: '카드 기본정보를 수정하지 못했습니다.',
   FAILED_TO_DELETE_PHOTOCARD: '카드 기본정보를 삭제하지 못했습니다.',
+  CARD_QUOTA_EXCEEDED: '이번 달 포토카드 생성 한도(3회)를 초과했습니다.',
 
   // 사용자 보유 포토카드 관련
   USERCARD_NOT_FOUND: '요청하신 보유 카드를 찾을 수 없습니다.',
@@ -138,6 +139,16 @@ export const ERROR_MESSAGE = {
   BAD_REQUEST: '잘못된 요청입니다.',
   RESOURCE_CONFLICT: '이미 존재하는 데이터입니다.',
   INTERNAL_SERVER_ERROR: '서버 내부 오류가 발생했습니다.',
+
+  // 이미지 업로드 관련
+  IMAGE_REQUIRED: '이미지 파일은 필수입니다.',
+  INVALID_IMAGE_TYPE: 'JPEG, PNG, WebP 형식의 이미지만 업로드할 수 있습니다.',
+  IMAGE_TOO_LARGE: '이미지 크기는 5MB 이하여야 합니다.',
+  IMAGE_FILE_COUNT_EXCEEDED: '이미지는 1개만 업로드할 수 있습니다.',
+  IMAGE_FIELD_COUNT_EXCEEDED: '텍스트 필드는 최대 6개까지 입력할 수 있습니다.',
+  IMAGE_PART_COUNT_EXCEEDED: '요청에 포함된 항목이 너무 많습니다.',
+  IMAGE_FIELD_VALUE_TOO_LARGE: '텍스트 필드의 크기가 너무 큽니다.',
+  INVALID_IMAGE_REQUEST: '이미지 업로드 요청이 올바르지 않습니다.',
 };
 
 // 에러 코드 상수 (클라이언트가 분기에 쓰는 영문 식별자, API 명세 기준)
@@ -172,4 +183,12 @@ export const ERROR_CODE = {
   CARD_LIMIT_EXCEEDED: 'CARD_LIMIT_EXCEEDED',
   //랜덤 포인트 뽑기
   BOX_COOLDOWN: 'BOX_COOLDOWN',
+
+  // 포토카드
+  CARD_QUOTA_EXCEEDED: 'CARD_QUOTA_EXCEEDED',
+
+  // 이미지 업로드
+  IMAGE_REQUIRED: 'IMAGE_REQUIRED',
+  INVALID_IMAGE_TYPE: 'INVALID_IMAGE_TYPE',
+  IMAGE_TOO_LARGE: 'IMAGE_TOO_LARGE',
 };

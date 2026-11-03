@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'93b6141a1d1f87244b599acc6cd86eeb01e8d66c04d7573c375aa4bb3de5e97a'>;
+  StorageHashBase<'e494ffe37769b89df0904ef1b53ec4374ada04618b3b42576c0fd42e23f5e44a'>;
 export type ExecutionHash =
   ExecutionHashBase<'5a452a55476d56f65f87b544dce1877d52e7335b5ec8af486886a19ac969e7ce'>;
 export type ProfileHash =
@@ -505,7 +505,6 @@ export namespace Models {
     grade: FieldOutputTypes['public']['PhotoCard']['grade'];
     id: FieldOutputTypes['public']['PhotoCard']['id'];
     imagePublicId: FieldOutputTypes['public']['PhotoCard']['imagePublicId'];
-    imageUrl: FieldOutputTypes['public']['PhotoCard']['imageUrl'];
     minPrice: FieldOutputTypes['public']['PhotoCard']['minPrice'];
     name: FieldOutputTypes['public']['PhotoCard']['name'];
     totalCreated: FieldOutputTypes['public']['PhotoCard']['totalCreated'];
@@ -980,12 +979,6 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
                 readonly image_public_id: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly image_url: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -1933,10 +1926,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly imageUrl: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
               readonly minPrice: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -1983,7 +1972,6 @@ type ContractBase = Omit<
                 readonly grade: { readonly column: 'grade' };
                 readonly id: { readonly column: 'id' };
                 readonly imagePublicId: { readonly column: 'image_public_id' };
-                readonly imageUrl: { readonly column: 'image_url' };
                 readonly minPrice: { readonly column: 'min_price' };
                 readonly name: { readonly column: 'name' };
                 readonly totalCreated: { readonly column: 'total_created' };
