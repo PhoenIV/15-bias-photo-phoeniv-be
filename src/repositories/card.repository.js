@@ -7,8 +7,10 @@ export class CardRepository {
 
   // 마이 갤러리 조회에 사용하는 공통 필터 조건 생성
   #buildMyCardsQuery({ ownerId, keyword, grade, genre }, client) {
-    // 로그인한 사용자의 UserCard 조회
-    let query = client.orm.public.UserCard.where({ ownerId });
+    // 로그인한 사용자의 보유 수량이 있는 UserCard 조회
+    let query = client.orm.public.UserCard.where({ ownerId }).where(
+      (userCard) => userCard.totalQuantity.gt(0),
+    );
 
     // 카드 이름 검색
     if (keyword) {
@@ -152,7 +154,10 @@ export class CardRepository {
 
   findMyCardGrades({ ownerId, keyword, grade, genre }, client = this.#db) {
     let query = client.orm.public.PhotoCard.where((photoCard) =>
-      photoCard.userCards.some((userCard) => userCard.ownerId.eq(ownerId)),
+      photoCard.userCards.some(
+        (userCard) =>
+          userCard.ownerId.eq(ownerId) && userCard.totalQuantity.gt(0),
+      ),
     );
 
     // 카드 이름 검색
