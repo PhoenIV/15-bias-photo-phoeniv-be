@@ -57,13 +57,8 @@ export class CardService {
     };
 
     // 서로 독립적인 조회이므로 Promise.all() 병렬 조회
-    const [cards, countResult, myCardGrades] = await Promise.all([
-      this.#cardRepository.findMyCardsPage({
-        ...filters,
-        page,
-        limit,
-        sort,
-      }),
+    const [cards, countResult, gradeCountRows] = await Promise.all([
+      this.#cardRepository.findMyCardsPage({ ...filters, page, limit, sort }),
       this.#cardRepository.countMyCards(filters),
       this.#cardRepository.findMyCardGrades(filters),
     ]);
@@ -77,8 +72,8 @@ export class CardService {
       LEGENDARY: 0,
     };
 
-    for (const { photoCard } of myCardGrades) {
-      gradeCounts[photoCard.grade] += 1;
+    for (const { grade, cardCount } of gradeCountRows) {
+      gradeCounts[grade] = cardCount;
     }
 
     // API 응답 명세에 맞게 변환

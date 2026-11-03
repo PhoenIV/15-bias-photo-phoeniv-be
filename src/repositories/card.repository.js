@@ -12,7 +12,8 @@ export class CardRepository {
 
     // 카드 이름 검색
     if (keyword) {
-      const searchPattern = `%${keyword}%`;
+      const escapedKeyword = keyword.replace(/[\\%_]/g, '\\$&');
+      const searchPattern = `%${escapedKeyword}%`;
 
       query = query.where((userCard) =>
         userCard.photoCard.some((photoCard) =>
@@ -148,11 +149,31 @@ export class CardRepository {
     }));
   }
 
-  findMyCardGrades(filters, client = this.#db) {
-    // 목록 조회와 동일한 조건
-    return this.#buildMyCardsQuery(filters, client)
-      .select('id')
-      .include('photoCard', (photoCard) => photoCard.select('grade'))
-      .all();
+  findMyCardGrades({ ownerId, keyword, grade, genre }, client = this.#db) {
+    let query = client.orm.public.PhotoCard.where((photoCard) =>
+      photoCard.userCards.some((userCard) => userCard.ownerId.eq(ownerId)),
+    );
+
+    // 카드 이름 검색
+    if (keyword) {
+      const escapedKeyword = keyword.replace(/[\\%_]/g, '\\$&');
+      const searchPattern = `%${escapedKeyword}%`;
+
+      query = query.where((photoCard) => photoCard.name.ilike(searchPattern));
+    }
+
+    // 등급 필터
+    if (grade) {
+      query = query.where((photoCard) => photoCard.grade.eq(grade));
+    }
+
+    // 장르 필터
+    if (genre) {
+      query = query.where((photoCard) => photoCard.genre.eq(genre));
+    }
+
+    return query.groupBy('grade').aggregate((agg) => ({
+      cardCount: agg.count(),
+    }));
   }
 }
