@@ -60,6 +60,10 @@ export const ERROR_MESSAGE = {
   FAILED_TO_CREATE_PURCHASE: '구매이력을 생성하지 못했습니다.',
   FAILED_TO_UPDATE_PURCHASE: '구매이력을 수정하지 못했습니다.',
   FAILED_TO_DELETE_PURCHASE: '구매이력을 삭제하지 못했습니다',
+  INSUFFICIENT_POINT: '보유한 포인트가 부족합니다.',
+  LOW_INVENTORY: '구매가능 수량이 부족합니다.',
+  CANNOT_BUY_OWN_SALE: '내가 판매한 카드를 구매할 수 없습니다.',
+  PRICE_AUGMENTED: '가격이 인상되었습니다.',
 
   // 교환 신청 관련
   EXCHANGE_OFFER_NOT_FOUND: '교환 신청 정보를 찾을 수 없습니다.',
@@ -113,6 +117,9 @@ export const ERROR_MESSAGE = {
   FAILED_TO_UPDATE_POINT_DRAW: '포인트 뽑기 이력을 수정하지 못했습니다.',
   FAILED_TO_DELETE_POINT_DRAW: '포인트 뽑기 이력을 삭제하지 못했습니다.',
 
+  //포인트 뽑기 대기 시간 관련
+  POINT_COOLDOWN_NOT_ENOUGH: '마지막 뽑기에서 1시간 후 다시 참여할 수 있어요.',
+
   // 인증 관련
   NO_AUTH_TOKEN: '인증 토큰이 없습니다.',
   INVALID_TOKEN: '유효하지 않거나 만료된 토큰입니다.',
@@ -163,4 +170,6 @@ export const ERROR_CODE = {
   EXCHANGE_NOT_PENDING: 'EXCHANGE_NOT_PENDING',
   CARD_QUANTITY_NOT_ENOUGH: 'CARD_QUANTITY_NOT_ENOUGH',
   CARD_LIMIT_EXCEEDED: 'CARD_LIMIT_EXCEEDED',
+  //랜덤 포인트 뽑기
+  BOX_COOLDOWN: 'BOX_COOLDOWN',
 };

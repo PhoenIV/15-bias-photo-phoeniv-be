@@ -45,6 +45,13 @@ export class UserRepository {
       .first();
   }
 
+  findByIdInTxAndLock(id, client = this.#db) {
+    return client.orm.public.User.where({ id })
+      .forUpdate()
+      .select(...this.#fields)
+      .first();
+  }
+
   findAll({ limit = 20, offset = 0 } = {}) {
     return this.#users
       .select(...this.#fields)
@@ -61,10 +68,11 @@ export class UserRepository {
       .update(data);
   }
 
-  updateInTx(id, data, client = this.#db, expected = {}) {
-    return client.orm.public.User.where({ id, ...expected })
+  async updateInTx(id, data, client = this.#db, expected = {}) {
+    const [updated] = await client.orm.public.User.where({ id, ...expected })
       .select(...this.#fields)
-      .update(data);
+      .updateAll(data);
+    return updated ?? null;
   }
 
   delete(id) {

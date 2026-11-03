@@ -1,4 +1,4 @@
-import { DB_ERROR, ERROR_MESSAGE } from '#constants';
+import { DB_ERROR, ERROR_CODE, ERROR_MESSAGE } from '#constants';
 import { ConflictException, UnauthorizedException } from '#exceptions';
 
 export class AuthService {
@@ -17,13 +17,19 @@ export class AuthService {
     //이메일 중복 검증
     const existingUser = await this.#userRepository.findByEmail(email);
     if (existingUser) {
-      throw new ConflictException(ERROR_MESSAGE.EMAIL_ALREADY_EXISTS);
+      throw new ConflictException(ERROR_MESSAGE.EMAIL_ALREADY_EXISTS, {
+        code: ERROR_CODE.EMAIL_DUPLICATE,
+        fieldErrors: { email: [ERROR_MESSAGE.EMAIL_ALREADY_EXISTS] },
+      });
     }
 
     //닉네임 중복 검증
     const existNickname = await this.#userRepository.findByNickname(nickname);
     if (existNickname) {
-      throw new ConflictException(ERROR_MESSAGE.NICKNAME_ALREADY_EXISTS);
+      throw new ConflictException(ERROR_MESSAGE.NICKNAME_ALREADY_EXISTS, {
+        code: ERROR_CODE.NICKNAME_DUPLICATE,
+        fieldErrors: { nickname: [ERROR_MESSAGE.NICKNAME_ALREADY_EXISTS] },
+      });
     }
 
     //패스워드 해시 진행 (회원가입이니까)
@@ -56,7 +62,12 @@ export class AuthService {
       includePassword: true,
     });
     if (!user || !user.password) {
-      throw new UnauthorizedException(ERROR_MESSAGE.INVALID_CREDENTIALS);
+      await this.#passwordProvider.compareDummy(password);
+      //DB에 없는 유저의 정보로 로그인했을 때 401을 반환하는 속도를 조절한다
+
+      throw new UnauthorizedException(ERROR_MESSAGE.INVALID_CREDENTIALS, {
+        code: ERROR_CODE.INVALID_CREDENTIALS,
+      });
     }
 
     //패스워드 검증
@@ -65,7 +76,9 @@ export class AuthService {
       user.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException(ERROR_MESSAGE.INVALID_CREDENTIALS);
+      throw new UnauthorizedException(ERROR_MESSAGE.INVALID_CREDENTIALS, {
+        code: ERROR_CODE.INVALID_CREDENTIALS,
+      });
     }
 
     //토큰 2개 발급

@@ -1,4 +1,4 @@
-import { db } from '#prisma/db.js';
+import { or } from '@prisma/orm-postgres/orm-client';
 
 const SORTS = {
   latest: {
@@ -35,18 +35,57 @@ export class SaleRepository {
   #db;
   #fields;
 
-  constructor() {
+  constructor({ db }) {
     this.#db = db;
     this.#fields = SALE_FIELDS;
   }
 
   async findPage(
-    { sort = 'latest', cursor, limit = 15 } = {},
+    { sort, cursor, limit, keyword, grade, genre, excludeSoldOut } = {},
     client = this.#db,
   ) {
     const { orderBy, cursorKeys } = SORTS[sort];
 
-    const ordered = client.orm.public.Sale.where({ cancelledAt: null })
+    const searchPattern = keyword.trim() ? `%${keyword.trim()}%` : null;
+
+    let filtered = client.orm.public.Sale.where({ cancelledAt: null });
+
+    if (searchPattern !== null) {
+      filtered = filtered.where((sale) =>
+        or(
+          sale.userCard.some((userCard) =>
+            userCard.photoCard.some((photoCard) =>
+              or(
+                photoCard.name.ilike(searchPattern),
+                photoCard.description.ilike(searchPattern),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (grade) {
+      filtered = filtered.where((sale) =>
+        sale.userCard.some((userCard) =>
+          userCard.photoCard.some((photoCard) => photoCard.grade.eq(grade)),
+        ),
+      );
+    }
+
+    if (genre) {
+      filtered = filtered.where((sale) =>
+        sale.userCard.some((userCard) =>
+          userCard.photoCard.some((photoCard) => photoCard.genre.eq(genre)),
+        ),
+      );
+    }
+
+    if (excludeSoldOut) {
+      filtered = filtered.where((sale) => sale.remainingQuantity.gt(0));
+    }
+
+    const ordered = filtered
       .select(...this.#fields)
       .include('seller', (seller) => seller.select('id', 'nickname'))
       .include('userCard', (userCard) =>
@@ -76,15 +115,6 @@ export class SaleRepository {
         : null,
     };
   }
-
-  // api 명세서에서 totalCount를 돌려주기 때문에 수량을 세는 별도의 리포지토리가 필요함(아래).
-  // 단, totalCount가 불필요해서 없애는 방향으로 명세서를 수정하고 아래함수는 쓰지 않게 될 것 같음.
-  // async countActive(client = this.#db) {
-  //   const { total } = await client.orm.public.Sale.where({
-  //     cancelledAt: null,
-  //   }).aggregate((agg) => ({ total: agg.count() }));
-  //   return total;
-  // }
 
   findById(saleId, client = this.#db) {
     return client.orm.public.Sale.where({ id: saleId, cancelledAt: null })
@@ -137,8 +167,8 @@ export class SaleRepository {
       .create(data);
   }
 
-  update(saleId, data, client = this.#db, expected = {}) {
-    return client.orm.public.Sale.where({
+  async update(saleId, data, client = this.#db, expected = {}) {
+    const [updated] = await client.orm.public.Sale.where({
       id: saleId,
       cancelledAt: null,
       ...expected,
@@ -156,17 +186,20 @@ export class SaleRepository {
               ),
           ),
       )
-      .update(data);
+      .updateAll(data);
+    return updated ?? null;
   }
 
-  markCancelled(saleId, client = this.#db) {
-    return client.orm.public.Sale.where({
+  async markCancelled(saleId, client = this.#db, expected = {}) {
+    const [cancelled] = await client.orm.public.Sale.where({
       id: saleId,
       cancelledAt: null,
-    }).update({ cancelledAt: new Date().toISOString() });
+      ...expected,
+    }).updateAll({ cancelledAt: new Date().toISOString() });
+    return cancelled ?? null;
   }
 
-  createPurchase(userId, saleId, data, client = this.#db, expected = {}) {
+  createPurchase(userId, saleId, data, client = this.#db) {
     return client.orm.public.Purchase.select(
       'id',
       'quantity',

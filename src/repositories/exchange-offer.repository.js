@@ -1,9 +1,7 @@
-import { db } from '#prisma/db.js';
-
 export class ExchangeOfferRepository {
   #db;
 
-  constructor() {
+  constructor({ db }) {
     this.#db = db;
   }
 
@@ -11,6 +9,6 @@ export class ExchangeOfferRepository {
     return client.orm.public.ExchangeOffer.where({
       saleId: saleId,
       status: 'PENDING',
-    }).update({ status: 'CANCELLED' });
+    }).updateCount({ status: 'CANCELLED' });
   }
 }
