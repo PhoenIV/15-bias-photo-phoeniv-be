@@ -1279,7 +1279,7 @@ paths:
                           name: { type: string }
                           grade: { $ref: '#/components/schemas/Grade' }
                           genre: { $ref: '#/components/schemas/Genre' }
-                          imageUrl: { type: string }
+                          imagePublicId: { type: string }
         '400':
           description: 요청값 검증 실패, 잔여 수량 부족, 가격 인상 또는 포인트 부족
           content:
@@ -1983,8 +1983,7 @@ components:
         netQuantity:
           { type: integer, description: 사용 가능 보유 수량, example: 5 }
         totalQuantity: { type: integer, description: 총 보유 수량, example: 5 }
-        imageUrl:
-          { type: string, example: 'https://res.cloudinary.com/.../sample.jpg' }
+        imagePublicId: { type: string, example: 'main-sample' }
         description:
           { type: string, nullable: true, example: 구름이 사진 포카입니다. }
         creatorNickname: { type: string, example: cloud }
@@ -2012,7 +2011,7 @@ components:
             description: 판매·교환 등록분 포함 총 보유 수량,
             example: 5,
           }
-        imageUrl: { type: string }
+        imagePublicId: { type: string }
         creatorNickname: { type: string, example: cloud }
         updatedAt:
           { type: string, format: date-time, description: 최근 획득·갱신 시각 }
@@ -2049,7 +2048,7 @@ components:
             description: 'SALE: 최초 등록 수량 / EXCHANGE: 1',
             example: 5,
           }
-        imageUrl: { type: string }
+        imagePublicId: { type: string }
         creatorNickname: { type: string, example: cloud }
         createdAt: { type: string, format: date-time }
 
@@ -2088,7 +2087,7 @@ components:
                 nullable: true,
                 example: 멋진 몬스테라 사진을 찍었습니다.,
               }
-            imageUrl: { type: string }
+            imagePublicId: { type: string }
             creator:
               type: object
               properties:
@@ -2114,5 +2113,5 @@ components:
             name: { type: string, example: 스페인 여행 }
             grade: { $ref: '#/components/schemas/Grade' }
             genre: { $ref: '#/components/schemas/Genre' }
-            imageUrl: { type: string }
+            imagePublicId: { type: string }
             price: { type: integer, example: 4 }

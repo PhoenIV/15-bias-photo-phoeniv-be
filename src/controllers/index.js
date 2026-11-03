@@ -5,6 +5,7 @@ import { HealthCheckController } from './health-check.controller.js';
 export * from './auth/auth.controller.js';
 export * from './base.controller.js';
 export * from './sale/sale.controller.js';
+export * from './card/card.controller.js';
 export * from './point-draw/point-draw.controller.js';
 export * from './user/user.controller.js';
 
@@ -13,12 +14,15 @@ export class Controller extends BaseController {
   #pointDrawController;
   #saleController;
   #userController;
+  #cardController;
+
   //3. constructor 인자에 구조분해로 다른 controller 추가
   constructor({
     authController,
     pointDrawController,
     saleController,
     userController,
+    cardController,
   }) {
     super();
     this.healthCheckController = new HealthCheckController();
@@ -26,6 +30,7 @@ export class Controller extends BaseController {
     this.#pointDrawController = pointDrawController;
     this.#saleController = saleController;
     this.#userController = userController;
+    this.#cardController = cardController;
   }
 
   //5. 엔트포인트와 라우트 추가
@@ -33,6 +38,7 @@ export class Controller extends BaseController {
     this.router.use('/health-check', this.healthCheckController.routes());
     this.router.use('/auth', this.#authController.routes());
     this.router.use('/sales', this.#saleController.routes());
+    this.router.use('/cards', this.#cardController.routes());
     this.router.use('/point-draws', this.#pointDrawController.routes());
     this.router.use('/users', this.#userController.routes());
     return this.router;

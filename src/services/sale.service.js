@@ -31,7 +31,7 @@ const toSaleResponse = (sale) => {
     grade: photoCard.grade,
     genre: photoCard.genre,
     description: photoCard.description,
-    imageUrl: photoCard.imageUrl,
+    imagePublicId: photoCard.imagePublicId,
   };
   const creator = {
     id: photoCard.creator.id,
@@ -57,6 +57,7 @@ export class SaleService {
   #cardRepository;
   #exchangeOfferRepository;
   #userRepository;
+  #pointHistoryRepository;
 
   constructor({
     db,
@@ -64,14 +65,17 @@ export class SaleService {
     cardRepository,
     exchangeOfferRepository,
     userRepository,
+    pointHistoryRepository,
   }) {
     this.#db = db;
     this.#saleRepository = saleRepository;
     this.#cardRepository = cardRepository;
     this.#exchangeOfferRepository = exchangeOfferRepository;
     this.#userRepository = userRepository;
+    this.#pointHistoryRepository = pointHistoryRepository;
   }
 
+  // 1. 판매글 목록 조회 함수
   async getSales(options = {}) {
     const {
       sort = 'latest',
@@ -102,6 +106,7 @@ export class SaleService {
     };
   }
 
+  // 2. 판매글 상세 조회 함수
   async getSaleDetail(userId, saleId) {
     const sale = await this.#saleRepository.findById(saleId);
 
@@ -115,6 +120,7 @@ export class SaleService {
     return { data: { ...parsedSale, isMine } };
   }
 
+  // 3. 판매글 게시 함수
   async postSale(userId, data) {
     const result = await this.#db.transaction(async (tx) => {
       const userCard = await this.#cardRepository.findById(data.userCardId, tx);
@@ -155,6 +161,7 @@ export class SaleService {
     return { data: parsedSale };
   }
 
+  // 4. 판매글 수정 함수
   async updateSale(userId, saleId, data) {
     const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
@@ -215,6 +222,7 @@ export class SaleService {
     return { data: parsedSale };
   }
 
+  // 5. 판매글 내리기 함수
   async deleteSale(userId, saleId) {
     const result = await this.#db.transaction(async (tx) => {
       const sale = await this.#saleRepository.findById(saleId, tx);
@@ -256,9 +264,14 @@ export class SaleService {
     return { data: deletedSale };
   }
 
+  // 수지님께: 여기가 구매가 실제로 이루어지는 함수입니다! 262번째 줄에서부터 트랜잭션 콜백 함수가 있습니다.
+  // 6. 구매하기 함수
   async makePurchase(userId, saleId, data) {
     const { expectedPrice, ...purchaseData } = data;
     const result = await this.#db.transaction(async (tx) => {
+      // 트랜잭션 안에서 판매글과 유저(구매자) 정보를 조회합니다.
+      // 유저가 판매자 본인이거나 희망하는 구매수량이 잔여수량보다 많지는 않은지, 금액 변동은 없었는지,
+      // 또는 유저의 포인트가 구매액보다 적지는 않은지 확인합니다.
       const sale = await this.#saleRepository.findById(saleId, tx);
       if (!sale) {
         throw new NotFoundException(ERROR_MESSAGE.SALE_NOT_FOUND);
@@ -280,17 +293,20 @@ export class SaleService {
         throw new BadRequestException(ERROR_MESSAGE.INSUFFICIENT_POINT);
       }
 
+      // upsert가 유저카드 신규 생성으로 진행될 경우 전달할 데이터입니다.
       const createData = {
         ownerId: userId,
         photoCardId: sale.userCard.photoCard.id,
         totalQuantity: data.quantity,
         netQuantity: data.quantity,
       };
+      // 구매자가 이미 같은 카드를 가지고 있는지 확인합니다.
       const buyerCard = await this.#cardRepository.findByOwnerAndPhotoCard(
         userId,
         sale.userCard.photoCard.id,
         tx,
       );
+      // 같은 카드가 이미 있다면 대신 사용할 updateData를 준비합니다.
       const updateData = buyerCard
         ? {
             totalQuantity: buyerCard.totalQuantity + data.quantity,
@@ -298,30 +314,35 @@ export class SaleService {
           }
         : createData;
 
+      // 6-(1). 구매 기록을 생성합니다.
       const purchase = await this.#saleRepository.createPurchase(
         userId,
         saleId,
         { ...purchaseData, price: sale.price },
         tx,
       );
+      // 6-(2). 판매자의 포인트를 증가시킵니다.
       const newSeller = await this.#userRepository.updateInTx(
         sale.seller.id,
         { point: sale.seller.point + sale.price * data.quantity },
         tx,
         { point: sale.seller.point },
       );
+      // 6-(3). 구매자의 포인트를 감소시킵니다.
       const newUser = await this.#userRepository.updateInTx(
         user.id,
         { point: user.point - sale.price * data.quantity },
         tx,
         { point: user.point },
       );
+      // 6-(4). 판매자의 카드 총 보유 수량을 감소시킵니다. (netQuantity는 판매에 내놓은 수량은 뺀 수량이라 변동이 없습니다.)
       const newSellerCard = await this.#cardRepository.update(
         sale.userCard.id,
         { totalQuantity: sale.userCard.totalQuantity - data.quantity },
         tx,
         { totalQuantity: sale.userCard.totalQuantity },
       );
+      // 6-(5). 구매자의 카드 보유 수량을 증가시킵니다. 기존에 카드가 없었다면 새로 생성합니다.
       const newUserCard = await this.#cardRepository.upsert(
         userId,
         sale.userCard.photoCard.id,
@@ -329,6 +350,7 @@ export class SaleService {
         updateData,
         tx,
       );
+      // 6-(6). 판매글의 표시되는 잔여수량을 감소시킵니다.
       const newSale = await this.#saleRepository.update(
         saleId,
         { remainingQuantity: sale.remainingQuantity - data.quantity },
@@ -336,6 +358,8 @@ export class SaleService {
         { remainingQuantity: sale.remainingQuantity },
       );
 
+      // 포인트 히스토리 생성에 갱신값이 사용되기 때문에, 먼저 6개 함수의 실행 결과를 확인합니다.
+      // 하나라도 실패시 오류를 던집니다.
       if (
         !purchase ||
         !newSeller ||
@@ -347,10 +371,41 @@ export class SaleService {
         throw new ConflictException(ERROR_MESSAGE.FAILED_TO_CREATE_PURCHASE);
       }
 
+      // 6-(7). 구매자의 포인트 차감 기록을 생성합니다.
+      const buyerPointHistory =
+        await this.#pointHistoryRepository.createByPurchase(
+          {
+            amount: -(sale.price * data.quantity),
+            balanceAfter: newUser.point,
+            userId: user.id,
+            purchaseId: purchase.id,
+          },
+          tx,
+        );
+      // 6-(8). 판매자의 포인트 증가 기록을 생성합니다.
+      const sellerPointHistory =
+        await this.#pointHistoryRepository.createByPurchase(
+          {
+            amount: +(sale.price * data.quantity),
+            balanceAfter: newSeller.point,
+            userId: sale.seller.id,
+            purchaseId: purchase.id,
+          },
+          tx,
+        );
+      // 6-(9). "🙋 알림 생성은 여기에 작성해주시면 될 것 같습니다!"
+      // 알림 생성 작성후에는 아래의 if절에 알림 생성 결과도 추가해주세요.
+
+      // 트랜잭션 내에 나머지 함수의 생성 결과도 확인합니다.
+      if (!buyerPointHistory || !sellerPointHistory) {
+        throw new ConflictException(ERROR_MESSAGE.FAILED_TO_CREATE_PURCHASE);
+      }
+
+      // 응답으로는 구매를 성공한 유저의 화면에서 필요한 정보만을 반환합니다.
       return { sale, newUserCard, purchase };
     });
 
-    // 트랙잭션이 끝난 후 반환되는 객체에 담긴 카드 아이디는 구매자(새 주인)쪽의 userCardId
+    // 명세에 맞게 나갈 수 있도록 응답을 1차 가공합니다.
     const { sale, newUserCard, purchase } = result;
     const {
       id,
@@ -364,7 +419,7 @@ export class SaleService {
       name: sale.userCard.photoCard.name,
       grade: sale.userCard.photoCard.grade,
       genre: sale.userCard.photoCard.genre,
-      imageUrl: sale.userCard.photoCard.imageUrl,
+      imagePublicId: sale.userCard.photoCard.imagePublicId,
     };
     return {
       data: { id, quantity, price, createdAt, saleId: saleIdFromResult, card },

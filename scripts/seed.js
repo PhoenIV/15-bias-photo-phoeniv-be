@@ -69,9 +69,6 @@ const getDbId = (idMap, mockId, label) => {
   return dbId;
 };
 
-// imagePublicId는 필수 컬럼인데 mock에 없어서 임시 값을 만들고, id 매핑용 키로도 씁니다.
-const makeImagePublicId = (card) => `seed/card-${card.id}`;
-
 const makeUserInput = async ({ email, nickname, password, points }) => ({
   email: email.toLowerCase(),
   nickname,
@@ -86,8 +83,7 @@ const makePhotoCardInput = (card, creatorId) => ({
   genre: mapEnum(GENRE_MAP, card.genre, 'genre'),
   minPrice: card.price,
   totalCreated: card.totalQuantity,
-  imagePublicId: makeImagePublicId(card),
-  imageUrl: card.imageUrl,
+  imagePublicId: card.imagePublicId,
   creatorId,
 });
 
@@ -134,7 +130,7 @@ export const seedPhotoCards = async (db, cards, userIdMap) => {
   );
 
   return new Map(
-    cards.map((card) => [card.id, idByPublicId.get(makeImagePublicId(card))]),
+    cards.map((card) => [card.id, idByPublicId.get(card.imagePublicId)]),
   );
 };
 

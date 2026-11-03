@@ -85,7 +85,6 @@ namespace public {
     minPrice      Int               @map("min_price")
     totalCreated  Int               @map("total_created")
     imagePublicId String            @unique @map("image_public_id")
-    imageUrl      String            @map("image_url")
     createdAt     TimestamptzString @default(now()) @map("created_at")
     creatorId     Int               @map("creator_id")
     creator       User              @relation(fields: [creatorId], references: [id], onDelete: Restrict)
