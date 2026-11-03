@@ -305,14 +305,7 @@ paths:
                   data:
                     type: object
                     properties:
-                      id: { type: integer, description: 회원 번호, example: 7 }
-                      nickname: { type: string, example: 포토초보 }
-                      point:
-                        {
-                          type: integer,
-                          description: 현재 보유 포인트,
-                          example: 105,
-                        }
+                      user: { $ref: '#/components/schemas/AuthUser' }
         '401': { $ref: '#/components/responses/Unauthorized' }
 
   # ───────────────────────── PointDraws ─────────────────────────

@@ -88,6 +88,18 @@ export class AuthService {
     return { user: rest, tokens };
   }
 
+  //내 정보 조회
+  async getMe(userId) {
+    const user = await this.#userRepository.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException(ERROR_MESSAGE.UNAUTHORIZED, {
+        code: ERROR_CODE.UNAUTHENTICATED,
+      });
+    }
+
+    return user;
+  }
+
   //새 토큰 발급
   async refreshTokens(refreshToken) {
     const payload = this.#tokenProvider.verifyRefreshToken(refreshToken);

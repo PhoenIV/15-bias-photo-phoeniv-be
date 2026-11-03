@@ -20,6 +20,7 @@ import {
   PointDrawController,
   Controller,
   SaleController,
+  UserController,
 } from '#controllers';
 import { PasswordProvider, TokenProvider, CookieProvider } from '#providers';
 import { AuthMiddleware } from '#middlewares';
@@ -84,6 +85,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawController: asClass(PointDrawController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    userController: asClass(UserController, {
       lifetime: Lifetime.SINGLETON,
     }),
 
