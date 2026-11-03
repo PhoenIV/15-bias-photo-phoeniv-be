@@ -1,6 +1,10 @@
 import { HTTP_STATUS } from '#constants';
 import { BaseController } from '../base.controller.js';
-import { cardCreateSchema, myCardQuerySchema } from './dto/card.dto.js';
+import {
+  cardCreateSchema,
+  myCardQuerySchema,
+  mySaleQuerySchema,
+} from './dto/card.dto.js';
 import {
   needsLogin,
   validate,
@@ -29,6 +33,14 @@ export class CardController extends BaseController {
       (req, res) => this.getMyCards(req, res),
     );
 
+    // 나의 판매·교환 포토카드 목록 조회
+    this.router.get(
+      '/me/sales',
+      needsLogin,
+      validate('query', mySaleQuerySchema),
+      this.getMySales.bind(this),
+    );
+
     this.router.post(
       '/',
       needsLogin,
@@ -54,6 +66,16 @@ export class CardController extends BaseController {
     const query = req.query;
 
     const result = await this.#cardService.getMyCards(userId, query);
+
+    return res.status(HTTP_STATUS.OK).json(result);
+  }
+
+  // 나의 판매·교환 포토카드 목록 조회
+  async getMySales(req, res) {
+    const userId = req.user.id;
+    const query = req.query;
+
+    const result = await this.#cardService.getMySales(userId, query);
 
     return res.status(HTTP_STATUS.OK).json(result);
   }
