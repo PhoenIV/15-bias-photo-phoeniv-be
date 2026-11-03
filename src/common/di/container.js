@@ -13,6 +13,7 @@ import {
   ExchangeOfferRepository,
   SaleRepository,
   UserRepository,
+  PointHistoryRepository,
 } from '#repositories';
 import {
   AuthService,
@@ -71,6 +72,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     cloudinaryProvider: asClass(CloudinaryProvider, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    pointHistoryRepository: asClass(PointHistoryRepository, {
       lifetime: Lifetime.SINGLETON,
     }),
 
