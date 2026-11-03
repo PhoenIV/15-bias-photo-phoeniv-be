@@ -45,6 +45,73 @@ export class CardService {
     };
   }
 
+  // 마이갤러리 조회
+  async getMyCards(userId, query) {
+    const { page, limit, keyword, grade, genre, sort } = query;
+
+    const filters = {
+      ownerId: userId,
+      keyword,
+      grade,
+      genre,
+    };
+
+    // 서로 독립적인 조회이므로 Promise.all() 병렬 조회
+    const [cards, countResult, myCardGrades] = await Promise.all([
+      this.#cardRepository.findMyCardsPage({
+        ...filters,
+        page,
+        limit,
+        sort,
+      }),
+      this.#cardRepository.countMyCards(filters),
+      this.#cardRepository.findMyCardGrades(filters),
+    ]);
+
+    const { totalCount } = countResult;
+
+    const gradeCounts = {
+      COMMON: 0,
+      RARE: 0,
+      SUPER_RARE: 0,
+      LEGENDARY: 0,
+    };
+
+    for (const { photoCard } of myCardGrades) {
+      gradeCounts[photoCard.grade] += 1;
+    }
+
+    // API 응답 명세에 맞게 변환
+    const data = cards.map((userCard) => ({
+      userCardId: userCard.id,
+      photoCardId: userCard.photoCardId,
+      name: userCard.photoCard.name,
+      grade: userCard.photoCard.grade,
+      genre: userCard.photoCard.genre,
+      minPrice: userCard.photoCard.minPrice,
+      netQuantity: userCard.netQuantity,
+      totalQuantity: userCard.totalQuantity,
+      imagePublicId: userCard.photoCard.imagePublicId,
+      creatorNickname: userCard.photoCard.creator.nickname,
+      updatedAt: userCard.updatedAt,
+    }));
+
+    // 전체 페이지 수 계산
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNext: page < totalPages,
+      },
+      gradeCounts,
+    };
+  }
+
   async createPhotoCard(userId, cardData, imageBuffer) {
     // 1. 생성 한도 확인
     const quota = await this.getQuota(userId);

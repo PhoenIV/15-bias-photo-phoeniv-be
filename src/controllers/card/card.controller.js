@@ -1,6 +1,6 @@
 import { HTTP_STATUS } from '#constants';
 import { BaseController } from '../base.controller.js';
-import { cardCreateSchema } from './dto/card.dto.js';
+import { cardCreateSchema, myCardQuerySchema } from './dto/card.dto.js';
 import {
   needsLogin,
   validate,
@@ -22,6 +22,13 @@ export class CardController extends BaseController {
       this.getQuota(req, res),
     );
 
+    this.router.get(
+      '/me',
+      needsLogin,
+      validate('query', myCardQuerySchema),
+      (req, res) => this.getMyCards(req, res),
+    );
+
     this.router.post(
       '/',
       needsLogin,
@@ -40,6 +47,15 @@ export class CardController extends BaseController {
     const result = await this.#cardService.getQuota(userId);
 
     return res.status(HTTP_STATUS.OK).json({ data: result });
+  }
+
+  async getMyCards(req, res) {
+    const userId = req.user.id;
+    const query = req.query;
+
+    const result = await this.#cardService.getMyCards(userId, query);
+
+    return res.status(HTTP_STATUS.OK).json(result);
   }
 
   async createCard(req, res) {
