@@ -1,3 +1,4 @@
+import { and } from '@prisma/orm-postgres/orm-client';
 export class CardRepository {
   #db;
 
@@ -154,9 +155,8 @@ export class CardRepository {
 
   findMyCardGrades({ ownerId, keyword, grade, genre }, client = this.#db) {
     let query = client.orm.public.PhotoCard.where((photoCard) =>
-      photoCard.userCards.some(
-        (userCard) =>
-          userCard.ownerId.eq(ownerId) && userCard.totalQuantity.gt(0),
+      photoCard.userCards.some((userCard) =>
+        and(userCard.ownerId.eq(ownerId), userCard.totalQuantity.gt(0)),
       ),
     );
 
