@@ -1,4 +1,5 @@
 import { ForbiddenException } from '#exceptions';
+import { ERROR_CODE } from '#constants';
 
 export class CardService {
   #cardRepository;
@@ -52,7 +53,7 @@ export class CardService {
       throw new ForbiddenException(
         '이번 달 포토카드 생성 한도(3회)를 초과했습니다.',
         {
-          code: 'QUOTA_EXCEEDED',
+          code: ERROR_CODE.CARD_QUOTA_EXCEEDED,
           fieldErrors: {},
         },
       );

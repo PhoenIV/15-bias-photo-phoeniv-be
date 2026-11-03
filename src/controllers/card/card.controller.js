@@ -1,7 +1,13 @@
 import { HTTP_STATUS } from '#constants';
 import { BaseController } from '../base.controller.js';
 import { cardCreateSchema } from './dto/card.dto.js';
-import { needsLogin, validate, receiveImage, requireImage } from '#middlewares';
+import {
+  needsLogin,
+  validate,
+  receiveImage,
+  requireImage,
+  validateImageContent,
+} from '#middlewares';
 
 export class CardController extends BaseController {
   #cardService;
@@ -21,6 +27,7 @@ export class CardController extends BaseController {
       needsLogin,
       receiveImage,
       requireImage,
+      validateImageContent,
       validate('body', cardCreateSchema),
       (req, res) => this.createCard(req, res),
     );

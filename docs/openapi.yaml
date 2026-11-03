@@ -1990,8 +1990,7 @@ components:
         netQuantity:
           { type: integer, description: 사용 가능 보유 수량, example: 5 }
         totalQuantity: { type: integer, description: 총 보유 수량, example: 5 }
-        imagePublicId:
-          { type: string, example: 'https://res.cloudinary.com/.../sample.jpg' }
+        imagePublicId: { type: string, example: 'main-sample' }
         description:
           { type: string, nullable: true, example: 구름이 사진 포카입니다. }
         creatorNickname: { type: string, example: cloud }
