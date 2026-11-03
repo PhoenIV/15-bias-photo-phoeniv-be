@@ -77,6 +77,7 @@ export class CardController extends BaseController {
 
     const result = await this.#cardService.getMySales(userId, query);
 
+    res.set('Cache-Control', 'no-store');
     return res.status(HTTP_STATUS.OK).json(result);
   }
 
