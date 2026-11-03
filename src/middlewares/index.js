@@ -3,3 +3,4 @@ export * from './notfound.js';
 export * from './auth.middleware.js';
 export * from './authorization.middleware.js';
 export * from './validation.middleware.js';
+export * from './receive-image.middleware.js';
