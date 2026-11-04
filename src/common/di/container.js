@@ -26,6 +26,7 @@ import {
   PointDrawController,
   Controller,
   SaleController,
+  UserController,
   CardController,
 } from '#controllers';
 import {
@@ -105,6 +106,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawController: asClass(PointDrawController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    userController: asClass(UserController, {
       lifetime: Lifetime.SINGLETON,
     }),
     cardController: asClass(CardController, {
