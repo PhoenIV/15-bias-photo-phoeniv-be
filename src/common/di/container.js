@@ -14,12 +14,14 @@ import {
   SaleRepository,
   UserRepository,
   PointHistoryRepository,
+  NotificationRepository,
 } from '#repositories';
 import {
   AuthService,
   SaleService,
   PointDrawService,
   CardService,
+  NotificationService,
 } from '#services';
 import {
   AuthController,
@@ -28,6 +30,7 @@ import {
   SaleController,
   UserController,
   CardController,
+  NotificationController,
 } from '#controllers';
 import {
   PasswordProvider,
@@ -78,6 +81,9 @@ export const createContainer = () => {
     pointHistoryRepository: asClass(PointHistoryRepository, {
       lifetime: Lifetime.SINGLETON,
     }),
+    notificationRepository: asClass(NotificationRepository, {
+      lifetime: Lifetime.SINGLETON,
+    }),
 
     //2. Service
     authService: asClass(AuthService, {
@@ -90,6 +96,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     cardService: asClass(CardService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    notificationService: asClass(NotificationService, {
       lifetime: Lifetime.SINGLETON,
     }),
 
@@ -112,6 +121,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     cardController: asClass(CardController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    notificationController: asClass(NotificationController, {
       lifetime: Lifetime.SINGLETON,
     }),
 
