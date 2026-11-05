@@ -42,17 +42,31 @@ export class ExchangeService {
   #saleRepository;
   #cardRepository;
   #exchangeOfferRepository;
+  #userRepository; //상대방 닉네임 조회용 (알림 메시지에 들어감)
+  #notificationRepository; // 알림을 db에 저장
+  #notificationService; //접속 중인 사람에게 "새 알림" 신호 보내기
 
-  constructor({ db, saleRepository, cardRepository, exchangeOfferRepository }) {
+  constructor({
+    db,
+    saleRepository,
+    cardRepository,
+    exchangeOfferRepository,
+    userRepository,
+    notificationRepository,
+    notificationService,
+  }) {
     this.#db = db;
     this.#saleRepository = saleRepository;
     this.#cardRepository = cardRepository;
     this.#exchangeOfferRepository = exchangeOfferRepository;
+    this.#userRepository = userRepository;
+    this.#notificationRepository = notificationRepository;
+    this.#notificationService = notificationService;
   }
 
   // ───────── 1. 교환 제시하기 ─────────
   async createOffer(userId, saleId, { offeredUserCardId, description }) {
-    return this.#db.transaction(async (tx) => {
+    const result = await this.#db.transaction(async (tx) => {
       // 1) 판매글 확인
       const sale = await this.#saleRepository.findById(saleId, tx);
       if (!sale) throwHttp(NotFoundException, 'SALE_NOT_FOUND');
@@ -103,11 +117,23 @@ export class ExchangeService {
         tx,
       );
 
-      // TODO(알림): 판매자에게 "교환 제안 받음" 알림 생성 (같은 tx 안에서)
-      // - userId: sale.seller.id (판매자)
-      // - type: 'EXCHANGE_OFFER_RECEIVED'
-      // - message 예: `[${card.photoCard.grade} | ${card.photoCard.name}] 포토카드로 교환 제안이 들어왔습니다.`
-      // - exchangeOfferId: offer.id (saleId, purchaseId는 비움: 원인은 하나만)
+      // 7) 판매자에게 "교환 제안 받음" 알림 저장
+      //    - 받는 사람: 판매자 (sale.seller.id)
+      //    - 메시지 앞 닉네임: 제시한 사람(나)의 닉네임 → 유저 저장소에서 조회
+      //    - [등급 | 카드이름]: 판매글에 올라간 카드 기준
+      //    - tx를 넘겨서 같은 트랜잭션 안에서 저장 → 중간에 에러 나면 알림도 같이 취소됨
+      const proposer = await this.#userRepository.findById(userId);
+      const { grade, name: cardName } = sale.userCard.photoCard;
+      await this.#notificationRepository.createByExchangeOfferReceived(
+        {
+          userId: sale.seller.id,
+          exchangeOfferId: offer.id,
+          counterpartNickname: proposer.nickname,
+          grade,
+          cardName,
+        },
+        tx,
+      );
 
       return {
         id: offer.id,
@@ -119,8 +145,16 @@ export class ExchangeService {
           grade: card.photoCard.grade,
         },
         createdAt: offer.createdAt,
+        sellerId: sale.seller.id, // 아래에서 신호 보낼 때 쓰려고 잠깐 담아둠
       };
     });
+
+    // 트랜잭션이 성공적으로 끝난 뒤에만 판매자에게 "새 알림" 신호 보내기
+    // sellerId는 응답에 안 나가게 따로 빼고, 나머지(response)만 돌려줌
+
+    const { sellerId, ...response } = result;
+    this.#notificationService.emitChanged(sellerId);
+    return response;
   }
 
   // ───────── 2. 판매글의 교환 제시 목록 ─────────
@@ -166,7 +200,7 @@ export class ExchangeService {
 
   // ───────── 4. 승인 / 거절 / 취소 ─────────
   async updateStatus(userId, exchangeId, status) {
-    return this.#db.transaction(async (tx) => {
+    const result = await this.#db.transaction(async (tx) => {
       const offer = await this.#exchangeOfferRepository.findById(
         exchangeId,
         tx,
@@ -194,16 +228,43 @@ export class ExchangeService {
         await this.#changeCard(offer.offeredUserCard, { net: +1 }, tx);
       }
 
-      // TODO(알림): 승인·거절이면 제시자에게 알림 생성 (같은 tx 안에서)
-      // - 취소(CANCELLED)는 알림 없음 (10/27 회의)
-      // - userId: offer.proposerId (제시자)
-      // - type: 승인 'EXCHANGE_APPROVED' / 거절 'EXCHANGE_REJECTED'
-      // - message 예: `[${grade} | ${name}] 포토카드 교환이 성사되었습니다.` / `...거절되었습니다.`
-      //   (grade, name은 offer.sale.userCard.photoCard에 있음)
-      // - exchangeOfferId: offer.id
+      // 승인·거절이면 제시자에게 알림 저장 (취소는 알림 없음, 10/27 회의)
+      //    - 받는 사람: 교환을 제시한 사람 (offer.proposerId)
+      //    - 메시지 앞 닉네임: 승인·거절한 판매자(나)의 닉네임 → 유저 저장소에서 조회
+      //    - [등급 | 카드이름]: 판매글에 올라간 카드 기준
+      //    - 승인이면 "성사" 알림, 거절이면 "거절" 알림 함수를 따로 호출
+      if (status !== 'CANCELLED') {
+        const seller = await this.#userRepository.findById(userId);
+        const { grade, name: cardName } = offer.sale.userCard.photoCard;
+        const data = {
+          userId: offer.proposerId,
+          exchangeOfferId: offer.id,
+          counterpartNickname: seller.nickname,
+          grade,
+          cardName,
+        };
+        if (status === 'APPROVED') {
+          await this.#notificationRepository.createByExchangeApproved(data, tx);
+        } else {
+          await this.#notificationRepository.createByExchangeRejected(data, tx);
+        }
+      }
 
-      return { id: updated.id, status: updated.status, saleId: updated.saleId };
+      return {
+        id: updated.id,
+        status: updated.status,
+        saleId: updated.saleId,
+        proposerId: offer.proposerId, // 아래에서 신호 보낼 때 쓰려고 잠깐 담아둠
+      };
     });
+
+    // 트랜잭션이 끝난 뒤 제시자에게 "새 알림" 신호 보내기 (취소는 알림이 없으니 제외)
+    // proposerId는 응답에 안 나가게 따로 빼고, 나머지(response)만 돌려줌
+    const { proposerId, ...response } = result;
+    if (status !== 'CANCELLED') {
+      this.#notificationService.emitChanged(proposerId);
+    }
+    return response;
   }
 
   // 승인: 서로 카드 1장씩 주고받기
