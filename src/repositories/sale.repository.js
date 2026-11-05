@@ -19,6 +19,12 @@ const SORTS = {
   },
 };
 
+// DB의 createAt을 ISO 형태로 바꾸어서 응답에 내보낸다.
+// 이렇게 해야 nextCursor가 다음 요청의 cursor로 다시 돌아왔을 때, DTO 스키마 검증에서 탈락하지 않는다.
+const toIsoDate = (createdAt) => {
+  return createdAt.replace(' ', 'T').replace(/([+-]\d{2})$/, '$1:00');
+};
+
 const SALE_FIELDS = [
   'id',
   'price',
@@ -111,7 +117,12 @@ export class SaleRepository {
       items,
       hasNext,
       nextCursor: hasNext
-        ? Object.fromEntries(cursorKeys.map((key) => [key, last[key]]))
+        ? Object.fromEntries(
+            cursorKeys.map((key) => [
+              key,
+              key === 'createdAt' ? toIsoDate(last[key]) : last[key],
+            ]),
+          )
         : null,
     };
   }
