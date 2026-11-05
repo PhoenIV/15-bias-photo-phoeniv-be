@@ -208,23 +208,31 @@ export class ExchangeService {
 
   // 승인: 서로 카드 1장씩 주고받기
   async #approve(offer, tx) {
-    if (offer.sale.cancelledAt) throwHttp(ConflictException, 'SALE_CANCELLED');
+    const { sale } = offer;
+    if (sale.cancelledAt) throwHttp(ConflictException, 'SALE_CANCELLED');
+    if (sale.remainingQuantity < 1)
+      throwHttp(ConflictException, 'SALE_SOLD_OUT');
 
-    const sellerCard = offer.sale.userCard; // 판매자가 줄 카드
+    const sellerCard = sale.userCard; // 판매자가 줄 카드 (판매글에 올린 카드)
     const offeredCard = offer.offeredUserCard; // 제시자가 줄 카드 (이미 net -1 된 상태)
 
-    if (sellerCard.netQuantity < 1) {
-      throwHttp(ConflictException, 'CARD_QUANTITY_NOT_ENOUGH');
-    }
+    // 판매글 남은 수량 -1 (아까 본 수량 그대로일 때만, 아니면 품절 409)
+    const updatedSale = await this.#saleRepository.update(
+      sale.id,
+      { remainingQuantity: sale.remainingQuantity - 1 },
+      tx,
+      { remainingQuantity: sale.remainingQuantity },
+    );
+    if (!updatedSale) throwHttp(ConflictException, 'SALE_SOLD_OUT');
 
-    // 판매자: 판매글 카드 1장 내보냄
-    await this.#changeCard(sellerCard, { net: -1, total: -1 }, tx);
-    // 제시자: 맡겨둔 카드 1장 내보냄
+    // 판매자: 판매글에 올려둔 카드 1장이 나감 (판매 등록 안 한 수량은 그대로)
+    await this.#changeCard(sellerCard, { total: -1 }, tx);
+    // 제시자: 맡겨둔 카드 1장이 나감
     await this.#changeCard(offeredCard, { total: -1 }, tx);
     // 제시자가 판매글 카드를 받음
     await this.#receiveCard(offer.proposerId, sellerCard.photoCardId, tx);
     // 판매자가 제시 카드를 받음
-    await this.#receiveCard(offer.sale.sellerId, offeredCard.photoCardId, tx);
+    await this.#receiveCard(sale.sellerId, offeredCard.photoCardId, tx);
   }
 
   // 보유 카드 수량 바꾸기 (그 사이 다른 요청이 바꿨으면 409)
@@ -248,20 +256,21 @@ export class ExchangeService {
       photoCardId,
       tx,
     );
-    if (owned && owned.totalQuantity + 1 > MAX_CARD_PER_PHOTOCARD) {
+
+    // 처음 받는 카드: 새로 만들기
+    // (동시에 다른 요청이 먼저 만들었으면 unique 제약 에러 → 전체 롤백)
+    if (!owned) {
+      await this.#exchangeOfferRepository.createReceivedCard(
+        { ownerId, photoCardId, netQuantity: 1, totalQuantity: 1 },
+        tx,
+      );
+      return;
+    }
+
+    if (owned.totalQuantity + 1 > MAX_CARD_PER_PHOTOCARD) {
       throwHttp(ConflictException, 'CARD_LIMIT_EXCEEDED');
     }
-    await this.#cardRepository.upsert(
-      ownerId,
-      photoCardId,
-      { ownerId, photoCardId, netQuantity: 1, totalQuantity: 1 },
-      owned
-        ? {
-            netQuantity: owned.netQuantity + 1,
-            totalQuantity: owned.totalQuantity + 1,
-          }
-        : { netQuantity: 1, totalQuantity: 1 },
-      tx,
-    );
+    // 이미 있는 카드: 아까 읽은 수량 그대로일 때만 +1 (아니면 409)
+    await this.#changeCard(owned, { net: +1, total: +1 }, tx);
   }
 }

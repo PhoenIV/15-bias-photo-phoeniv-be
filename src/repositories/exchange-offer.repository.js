@@ -20,7 +20,7 @@ export class ExchangeOfferRepository {
     return client.orm.public.ExchangeOffer.where({
       saleId: saleId,
       status: 'PENDING',
-    }).updateCount({ status: 'CANCELLED' });
+    }).updateAndCount({ status: 'CANCELLED' });
   }
 
   // 1) 교환 제시 생성
@@ -35,12 +35,22 @@ export class ExchangeOfferRepository {
       .first();
   }
 
+  // 교환 승인으로 "처음 받는" 카드를 보유 목록에 새로 한 줄 추가한다.
+  // 예: B가 A의 카드 X를 처음 받으면 → (주인 B, 카드 X, 1장) 한 줄 생성
+  // 이미 가진 카드는 이 함수를 쓰지 않는다. (교환 service의 #changeCard로 +1)
+  // 같은 사람이 같은 카드를 두 줄 가질 수 없게 DB 규칙이 있어서(ownerId + photoCardId),
+  // 승인 두 개가 동시에 둘 다 만들려고 하면 두 번째는 DB가 막고 그 승인 전체가 취소된다(409).
+  // 덮어쓰지 않기 때문에 카드가 사라지지 않는다.
+  createReceivedCard(data, client = this.#db) {
+    return client.orm.public.UserCard.create(data);
+  }
+
   // 2) 교환 제시 하나 조회 (승인,거절,취소에 필요한 판매글,카드 정보)
   findById(id, client = this.#db) {
     return client.orm.public.ExchangeOffer.where({ id })
       .include('sale', (sale) =>
         sale
-          .select('id', 'sellerId', 'cancelledAt')
+          .select('id', 'sellerId', 'cancelledAt', 'remainingQuantity')
           .include('userCard', (userCard) =>
             userCard
               .select(...USER_CARD_FIELDS)
