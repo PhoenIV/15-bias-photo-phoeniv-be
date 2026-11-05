@@ -58,6 +58,8 @@ export class SaleService {
   #exchangeOfferRepository;
   #userRepository;
   #pointHistoryRepository;
+  #notificationRepository;
+  #notificationService;
 
   constructor({
     db,
@@ -66,6 +68,8 @@ export class SaleService {
     exchangeOfferRepository,
     userRepository,
     pointHistoryRepository,
+    notificationRepository,
+    notificationService,
   }) {
     this.#db = db;
     this.#saleRepository = saleRepository;
@@ -73,6 +77,8 @@ export class SaleService {
     this.#exchangeOfferRepository = exchangeOfferRepository;
     this.#userRepository = userRepository;
     this.#pointHistoryRepository = pointHistoryRepository;
+    this.#notificationRepository = notificationRepository;
+    this.#notificationService = notificationService;
   }
 
   // 1. 판매글 목록 조회 함수
@@ -393,17 +399,65 @@ export class SaleService {
           },
           tx,
         );
-      // 6-(9). "🙋 알림 생성은 여기에 작성해주시면 될 것 같습니다!"
-      // 알림 생성 작성후에는 아래의 if절에 알림 생성 결과도 추가해주세요.
+      // 6-(9). 구매자 및 판매자에게 알림(품절 시 품절 알림 포함)
+      const { grade, name: cardName } = sale.userCard.photoCard;
+
+      const buyerPurchaseNotification =
+        await this.#notificationRepository.createBuyerPurchaseNotification(
+          {
+            userId: user.id,
+            purchaseId: purchase.id,
+            grade,
+            cardName,
+            quantity: data.quantity,
+          },
+          tx,
+        );
+
+      const sellerPurchaseNotification =
+        await this.#notificationRepository.createByPurchase(
+          {
+            userId: sale.seller.id,
+            purchaseId: purchase.id,
+            counterpartNickname: user.nickname,
+            grade,
+            cardName,
+            quantity: data.quantity,
+          },
+          tx,
+        );
+
+      const isSoldOut = newSale.remainingQuantity === 0;
+      const soldOutNotification = isSoldOut
+        ? await this.#notificationRepository.createBySoldOut(
+            {
+              userId: sale.seller.id,
+              saleId: newSale.id,
+              grade,
+              cardName,
+            },
+            tx,
+          )
+        : null;
 
       // 트랜잭션 내에 나머지 함수의 생성 결과도 확인합니다.
-      if (!buyerPointHistory || !sellerPointHistory) {
+      if (
+        !buyerPointHistory ||
+        !sellerPointHistory ||
+        !buyerPurchaseNotification ||
+        !sellerPurchaseNotification ||
+        (isSoldOut && !soldOutNotification)
+      ) {
         throw new ConflictException(ERROR_MESSAGE.FAILED_TO_CREATE_PURCHASE);
       }
 
       // 응답으로는 구매를 성공한 유저의 화면에서 필요한 정보만을 반환합니다.
       return { sale, newUserCard, purchase };
     });
+
+    // 트랜잭션 커밋 완료 후 구매자와 판매자에게 실시간 SSE 변경 알림 전송
+    this.#notificationService.emitChanged(userId);
+    this.#notificationService.emitChanged(result.sale.seller.id);
 
     // 명세에 맞게 나갈 수 있도록 응답을 1차 가공합니다.
     const { sale, newUserCard, purchase } = result;

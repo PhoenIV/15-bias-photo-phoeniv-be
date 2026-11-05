@@ -7,26 +7,34 @@ export * from './base.controller.js';
 export * from './sale/sale.controller.js';
 export * from './card/card.controller.js';
 export * from './point-draw/point-draw.controller.js';
+export * from './user/user.controller.js';
+export * from './notification/notification.controller.js';
 
 export class Controller extends BaseController {
   #authController; //2. private 필드 - 아래로 추가
   #pointDrawController;
   #saleController;
+  #userController;
   #cardController;
+  #notificationController;
 
   //3. constructor 인자에 구조분해로 다른 controller 추가
   constructor({
     authController,
     pointDrawController,
     saleController,
+    userController,
     cardController,
+    notificationController,
   }) {
     super();
     this.healthCheckController = new HealthCheckController();
     this.#authController = authController; //4. this로 필드 저장 - 아래로 추가
     this.#pointDrawController = pointDrawController;
     this.#saleController = saleController;
+    this.#userController = userController;
     this.#cardController = cardController;
+    this.#notificationController = notificationController;
   }
 
   //5. 엔트포인트와 라우트 추가
@@ -36,6 +44,8 @@ export class Controller extends BaseController {
     this.router.use('/sales', this.#saleController.routes());
     this.router.use('/cards', this.#cardController.routes());
     this.router.use('/point-draws', this.#pointDrawController.routes());
+    this.router.use('/users', this.#userController.routes());
+    this.router.use('/notifications', this.#notificationController.routes());
     return this.router;
   }
 }

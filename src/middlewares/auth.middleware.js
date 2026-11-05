@@ -39,6 +39,11 @@ export class AuthMiddleware {
 
     if (renewed) {
       this.#cookieProvider.setAuthCookies(res, renewed.tokens);
+      req.cookies = {
+        ...req.cookies,
+        accessToken: renewed.tokens.accessToken,
+        refreshToken: renewed.tokens.refreshToken,
+      };
       req.user = { id: renewed.user.id };
       return next();
     } //-> req.user = { id: renewed.user.id };
