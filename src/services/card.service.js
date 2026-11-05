@@ -45,6 +45,68 @@ export class CardService {
     };
   }
 
+  // 마이 갤러리 조회
+  async getMyCards(userId, query) {
+    const { page, limit, keyword, grade, genre, sort } = query;
+
+    const filters = {
+      ownerId: userId,
+      keyword,
+      grade,
+      genre,
+    };
+
+    // 서로 독립적인 조회이므로 병렬 조회
+    const [cards, countResult, gradeCountRows] = await Promise.all([
+      this.#cardRepository.findMyCardsPage({ ...filters, page, limit, sort }),
+      this.#cardRepository.countMyCards(filters),
+      this.#cardRepository.findMyCardGrades(filters),
+    ]);
+
+    const { totalCount } = countResult;
+
+    const gradeCounts = {
+      COMMON: 0,
+      RARE: 0,
+      SUPER_RARE: 0,
+      LEGENDARY: 0,
+    };
+
+    for (const { grade, cardCount } of gradeCountRows) {
+      gradeCounts[grade] = cardCount;
+    }
+
+    // API 응답 명세에 맞게 변환
+    const data = cards.map((userCard) => ({
+      userCardId: userCard.id,
+      photoCardId: userCard.photoCardId,
+      name: userCard.photoCard.name,
+      grade: userCard.photoCard.grade,
+      genre: userCard.photoCard.genre,
+      minPrice: userCard.photoCard.minPrice,
+      netQuantity: userCard.netQuantity,
+      totalQuantity: userCard.totalQuantity,
+      imagePublicId: userCard.photoCard.imagePublicId,
+      creatorNickname: userCard.photoCard.creator.nickname,
+      updatedAt: userCard.updatedAt,
+    }));
+
+    // 전체 페이지 수 계산
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNext: page < totalPages,
+      },
+      gradeCounts,
+    };
+  }
+
   async createPhotoCard(userId, cardData, imageBuffer) {
     // 1. 생성 한도 확인
     const quota = await this.getQuota(userId);
@@ -96,7 +158,7 @@ export class CardService {
         return { photoCard, userCard };
       });
     } catch (error) {
-      // 4. DB 저장 실패 시 Cloudinary 이미지 정리
+      // DB 저장 실패 시 Cloudinary 이미지 정리
       try {
         await this.#cloudinaryProvider.deleteImage(uploadedImage.publicId);
       } catch (cleanupError) {
@@ -105,5 +167,68 @@ export class CardService {
 
       throw error;
     }
+  }
+
+  // 나의 판매·교환 포토카드 목록 조회
+  async getMySales(userId, query) {
+    const { page, limit, keyword, grade, genre, saleType, isSoldOut } = query;
+
+    const filters = {
+      ownerId: userId,
+      keyword,
+      grade,
+      genre,
+      saleType,
+      isSoldOut,
+    };
+
+    // 목록과 전체 개수를 병렬 조회
+    const [sales, countResult] = await Promise.all([
+      this.#cardRepository.findMySales({
+        ...filters,
+        page,
+        limit,
+      }),
+      this.#cardRepository.countMySales(filters),
+    ]);
+
+    const totalCount = Number(countResult[0]?.totalCount ?? 0);
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // API 응답 명세에 맞게 변환
+    const data = sales.map((item) => ({
+      saleType: item.saleType,
+      itemId: item.itemId,
+      saleId: item.saleId,
+      exchangeOfferId: item.exchangeOfferId,
+      isSoldOut: item.isSoldOut,
+
+      photoCard: {
+        id: item.photoCardId,
+        name: item.name,
+        grade: item.grade,
+        genre: item.genre,
+        minPrice: item.minPrice,
+        imagePublicId: item.imagePublicId,
+        creatorNickname: item.creatorNickname,
+      },
+
+      // 교환 제안은 거래 가격이 없으므로 null
+      price: item.price,
+      quantity: item.quantity,
+      totalQuantity: item.totalQuantity,
+      createdAt: item.createdAt,
+    }));
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNext: page < totalPages,
+      },
+    };
   }
 }

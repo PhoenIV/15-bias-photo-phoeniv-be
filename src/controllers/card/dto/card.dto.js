@@ -71,3 +71,66 @@ export const cardCreateSchema = z.object({
     .max(100, '상세 설명은 최대 100자까지 입력할 수 있습니다.')
     .optional(),
 });
+
+// 마이 갤러리 조회 Query 검증 스키마
+export const myCardQuerySchema = z.object({
+  page: z.coerce
+    .number({ error: '페이지 번호는 숫자여야 합니다.' })
+    .int('페이지 번호는 정수여야 합니다.')
+    .min(1, '페이지 번호는 1 이상이어야 합니다.')
+    .default(1),
+
+  limit: z.coerce
+    .number({ error: '페이지당 개수는 숫자여야 합니다.' })
+    .int('페이지당 개수는 정수여야 합니다.')
+    .min(1, '페이지당 개수는 최소 1개여야 합니다.')
+    .max(50, '페이지당 개수는 최대 50개까지 가능합니다.')
+    .default(12),
+
+  keyword: z
+    .string()
+    .trim()
+    .max(50, '검색어는 최대 50자까지 입력할 수 있습니다.')
+    .transform((value) => value || undefined)
+    .optional(),
+
+  grade: z.enum(GRADES).optional(),
+
+  genre: z.enum(GENRES).optional(),
+
+  sort: z.enum(['latest', 'price_asc', 'price_desc']).default('latest'),
+});
+
+// 나의 판매·교환 목록 조회 Query 검증 스키마
+export const mySaleQuerySchema = z.object({
+  page: z.coerce
+    .number({ error: '페이지 번호는 숫자여야 합니다.' })
+    .int('페이지 번호는 정수여야 합니다.')
+    .min(1, '페이지 번호는 1 이상이어야 합니다.')
+    .default(1),
+
+  limit: z.coerce
+    .number({ error: '페이지당 개수는 숫자여야 합니다.' })
+    .int('페이지당 개수는 정수여야 합니다.')
+    .min(1, '페이지당 개수는 최소 1개여야 합니다.')
+    .max(50, '페이지당 개수는 최대 50개까지 가능합니다.')
+    .default(12),
+
+  keyword: z
+    .string()
+    .trim()
+    .max(50, '검색어는 최대 50자까지 입력할 수 있습니다.')
+    .transform((value) => value || undefined)
+    .optional(),
+
+  grade: z.enum(GRADES).optional(),
+
+  genre: z.enum(GENRES).optional(),
+
+  saleType: z.enum(['SALE', 'EXCHANGE']).optional(),
+
+  isSoldOut: z
+    .enum(['true', 'false'])
+    .transform((value) => value === 'true')
+    .optional(),
+});
