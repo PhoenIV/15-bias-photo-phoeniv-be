@@ -20,6 +20,7 @@ import {
   AuthService,
   SaleService,
   PointDrawService,
+  ExchangeService,
   CardService,
   NotificationService,
 } from '#services';
@@ -28,6 +29,7 @@ import {
   PointDrawController,
   Controller,
   SaleController,
+  ExchangeController,
   UserController,
   CardController,
   NotificationController,
@@ -92,6 +94,9 @@ export const createContainer = () => {
     saleService: asClass(SaleService, {
       lifetime: Lifetime.SINGLETON,
     }),
+    exchangeService: asClass(ExchangeService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
     pointDrawService: asClass(PointDrawService, {
       lifetime: Lifetime.SINGLETON,
     }),
@@ -112,6 +117,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     saleController: asClass(SaleController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    exchangeController: asClass(ExchangeController, {
       lifetime: Lifetime.SINGLETON,
     }),
     pointDrawController: asClass(PointDrawController, {
