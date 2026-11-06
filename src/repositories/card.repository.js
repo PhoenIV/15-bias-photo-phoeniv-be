@@ -153,7 +153,7 @@ export class CardRepository {
     }));
   }
 
-  findMyCardGrades({ ownerId, keyword, grade, genre }, client = this.#db) {
+  findMyCardGrades({ ownerId, keyword, genre }, client = this.#db) {
     let query = client.orm.public.PhotoCard.where((photoCard) =>
       photoCard.userCards.some((userCard) =>
         and(userCard.ownerId.eq(ownerId), userCard.totalQuantity.gt(0)),
@@ -166,11 +166,6 @@ export class CardRepository {
       const searchPattern = `%${escapedKeyword}%`;
 
       query = query.where((photoCard) => photoCard.name.ilike(searchPattern));
-    }
-
-    // 등급 필터
-    if (grade) {
-      query = query.where((photoCard) => photoCard.grade.eq(grade));
     }
 
     // 장르 필터
@@ -369,6 +364,32 @@ export class CardRepository {
     `
       .returnsRow({
         totalCount: 'pg/int8@1',
+      })
+      .build();
+
+    return client.query(query);
+  }
+
+  // 나의 판매·교환 목록의 등급별 집계 (grade 필터는 제외하여 상단 칩 카운트 유지)
+  findMySalesGrades(
+    { ownerId, keyword, genre, saleType, isSoldOut },
+    client = this.#db,
+  ) {
+    const filtered = this.#buildFilteredMySalesRows(
+      { ownerId, keyword, genre, saleType, isSoldOut },
+      client,
+    );
+
+    const query = client.raw.sql`
+      SELECT
+        grade,
+        COUNT(*)::int AS "cardCount"
+      FROM (${filtered}) AS filtered_sales
+      GROUP BY grade
+    `
+      .returnsRow({
+        grade: 'pg/text@1',
+        cardCount: 'pg/int4@1',
       })
       .build();
 
