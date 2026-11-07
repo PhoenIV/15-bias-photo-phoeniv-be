@@ -13,6 +13,11 @@ const envSchema = z
     CLOUDINARY_API_SECRET: z.string().min(1),
     JWT_ACCESS_SECRET: z.string().min(32),
     JWT_REFRESH_SECRET: z.string().min(32),
+    GOOGLE_CLIENT_ID: z.string().trim().min(1),
+    GOOGLE_CLIENT_SECRET: z.string().trim().min(1),
+    GOOGLE_REDIRECT_URI: z.url(),
+    FRONTEND_URL: z.url(),
+    OAUTH_STATE_SECRET: z.string().min(32),
     CORS_ORIGINS: z.string().optional().default(''),
   })
   .refine(
@@ -35,6 +40,11 @@ const parseEnvironment = () => {
       CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
       JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+      FRONTEND_URL: process.env.FRONTEND_URL,
+      OAUTH_STATE_SECRET: process.env.OAUTH_STATE_SECRET,
       CORS_ORIGINS: process.env.CORS_ORIGINS,
     });
   } catch (error) {
