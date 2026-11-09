@@ -6,6 +6,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '#exceptions';
+import { networkInterfaces } from 'node:os';
+import { minLength } from 'zod';
 
 // 응답을 명세에 맞는 형태로 가공하는 함수
 const toSaleResponse = (sale) => {
@@ -32,6 +34,8 @@ const toSaleResponse = (sale) => {
     genre: photoCard.genre,
     description: photoCard.description,
     imagePublicId: photoCard.imagePublicId,
+    netQuantity: userCard.netQuantity,
+    minPrice: photoCard.minPrice,
   };
   const creator = {
     id: photoCard.creator.id,
