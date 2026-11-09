@@ -36,10 +36,8 @@ export class SocialAuthController extends BaseController {
     );
 
     //구글에서 다시 FE 주소로 리다이렉트
-    this.router.get(
-      '/google/callback',
-      validate('query', socialCallbackQuerySchema),
-      (req, res) => this.googleCallback(req, res),
+    this.router.get('/google/callback', (req, res) =>
+      this.googleCallback(req, res),
     );
 
     return this.router;
@@ -79,7 +77,15 @@ export class SocialAuthController extends BaseController {
     this.#cookieProvider.clearOAuthTransactionCookies(res);
 
     try {
-      const { code, state, error } = req.query;
+      //validate에서는 쿼리 검증에 code, state에 대한 검증을 안하므로 여기서 한다
+      const query = socialCallbackQuerySchema.safeParse(req.query);
+      if (!query.success) {
+        throw new BadRequestException(ERROR_MESSAGE.INVALID_SOCIAL_AUTH_STATE, {
+          code: ERROR_CODE.INVALID_SOCIAL_AUTH_STATE,
+        });
+      }
+
+      const { code, state, error } = query.data; //-> 위에서 검증한 query를 사용
       const transaction = this.#oauthStateProvider.verifyState({
         state,
         provider: 'google',
