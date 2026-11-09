@@ -173,9 +173,9 @@ namespace public {
     offeredUserCard   UserCard                 @relation(fields: [offeredUserCardId], references: [id], onDelete: Restrict)
     notifications     Notification[]
 
-    @@unique([saleId, offeredUserCardId]) // 같은 카드로 같은 판매글에 중복제안 방지
     @@index([proposerId], name: "exchange_offer_proposer_id_idx")
     @@index([offeredUserCardId, status], name: "exchange_offer_card_status_idx")
+    @@index([saleId, offeredUserCardId], unique: true, where: sql`"status" = 'PENDING'`, name: "exchange_offer_pending_sale_card_key")
     @@map("exchange_offer")
   }
 
