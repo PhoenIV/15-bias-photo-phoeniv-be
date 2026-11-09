@@ -1,3 +1,5 @@
+import { or } from '@prisma/orm-postgres/orm-client';
+
 export class NotificationRepository {
   #db;
 
@@ -6,9 +8,11 @@ export class NotificationRepository {
   }
 
   // 알림 목록 및 개수 조회에서 공통으로 사용하는 필터 조건 생성
+  // 최근 7일간의 모든 알림 + 7일이 지났더라도 아직 읽지 않은 알림(readAt IS NULL)
   #buildUserNotificationsQuery({ userId, since, unreadOnly }, client) {
     let query = client.orm.public.Notification.where({ userId }).where(
-      (notification) => notification.createdAt.gte(since),
+      (notification) =>
+        or(notification.createdAt.gte(since), notification.readAt.isNull()),
     );
 
     if (unreadOnly) {

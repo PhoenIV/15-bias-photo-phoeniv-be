@@ -30,7 +30,11 @@ export class ExchangeOfferRepository {
 
   // 1-1) 같은 판매글에 같은 카드로 낸 제시 찾기 (중복 확인용)
   findBySaleAndCard(saleId, offeredUserCardId, client = this.#db) {
-    return client.orm.public.ExchangeOffer.where({ saleId, offeredUserCardId })
+    return client.orm.public.ExchangeOffer.where({
+      saleId,
+      offeredUserCardId,
+      status: 'PENDING',
+    })
       .select('id')
       .first();
   }

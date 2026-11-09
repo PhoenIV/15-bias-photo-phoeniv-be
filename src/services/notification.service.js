@@ -20,7 +20,7 @@ export class NotificationService {
     this.#tokenProvider = tokenProvider;
   }
 
-  // 알림 목록 조회 (최근 7일)
+  // 알림 목록 조회 (최근 7일 및 미확인 알림)
   async getNotifications(userId, query = {}) {
     const { page = 1, limit = 12, unreadOnly = false } = query;
 
@@ -30,7 +30,7 @@ export class NotificationService {
       nowMs - NOTIFICATION_RETENTION_DAYS * DAY_IN_MS,
     ).toISOString();
 
-    // 목록, 필터된 전체 개수, 최근 7일 전체 안 읽은 알림 수를 병렬 조회
+    // 목록, 필터된 전체 개수, 전체 안 읽은 알림 수를 병렬 조회
     const [notifications, countResult, unreadCountResult] = await Promise.all([
       this.#notificationRepository.findPageByUser({
         userId,
