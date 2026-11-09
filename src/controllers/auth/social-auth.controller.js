@@ -1,6 +1,6 @@
 import { URL } from 'node:url';
 import { config } from '#config';
-import { ERROR_MESSAGE } from '#constants';
+import { ERROR_CODE, ERROR_MESSAGE } from '#constants';
 import { BadRequestException, UnauthorizedException } from '#exceptions';
 import { validate } from '#middlewares';
 import { BaseController } from '../base.controller.js';
@@ -8,6 +8,12 @@ import {
   socialCallbackQuerySchema,
   socialLoginQuerySchema,
 } from './dto/social.dto.js';
+
+const REDIRECTABLE_ERROR_CODE = [
+  ERROR_CODE.INVALID_SOCIAL_AUTH_STATE,
+  ERROR_CODE.SOCIAL_ACCOUNT_LINK_REQUIRED,
+  ERROR_CODE.SOCIAL_AUTH_FAILED,
+];
 
 export class SocialAuthController extends BaseController {
   #socialAuthService;
@@ -72,32 +78,45 @@ export class SocialAuthController extends BaseController {
     //쿠키 삭제 : 하는 이유는 중간에 에러가 나도 사용된 쿠키가 안남게 하려고
     this.#cookieProvider.clearOAuthTransactionCookies(res);
 
-    const { code, state, error } = req.query;
-    const transaction = this.#oauthStateProvider.verifyState({
-      state,
-      provider: 'google',
-      transactionNonce: nonce,
-      codeVerifier,
-    });
-    if (!transaction) {
-      throw new BadRequestException(ERROR_MESSAGE.INVALID_SOCIAL_AUTH_STATE);
+    try {
+      const { code, state, error } = req.query;
+      const transaction = this.#oauthStateProvider.verifyState({
+        state,
+        provider: 'google',
+        transactionNonce: nonce,
+        codeVerifier,
+      });
+      if (!transaction) {
+        throw new BadRequestException(ERROR_MESSAGE.INVALID_SOCIAL_AUTH_STATE, {
+          code: ERROR_CODE.INVALID_SOCIAL_AUTH_STATE,
+        });
+      }
+      if (error) {
+        throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED, {
+          code: ERROR_CODE.SOCIAL_AUTH_FAILED,
+        });
+      }
+
+      //서버가 구글로 code, codeVerifier를 보내고 getGoogleProfile을 통해서 유저의 profile을 받음
+      //token도 받아오는데 그건 구글의 access-token이라 profile을 받기 위해 getGoogleProfile 함수안에서만 사용함
+      const profile = await this.#socialAuthService.getGoogleProfile({
+        code,
+        codeVerifier,
+      });
+      //구글이 준 profile을 사용해서 우리가 새로 발급한 토큰
+      const { tokens } = await this.#socialAuthService.loginOrSignUp(profile);
+
+      this.#cookieProvider.setAuthCookies(res, tokens);
+
+      //위에서 받은 token, profile을 갖고 FRONTEND_URL + next로 사용자를 리다이렉트 (유저가 로그인 시작한 시점의 화면 페이지)
+      res.redirect(new URL(transaction.next, config.FRONTEND_URL).toString());
+    } catch (error) {
+      const code = REDIRECTABLE_ERROR_CODE.includes(error.code)
+        ? error.code
+        : ERROR_CODE.SOCIAL_AUTH_FAILED;
+      return res.redirect(
+        new URL(`/login?error=${code}`, config.FRONTEND_URL).toString(),
+      );
     }
-    if (error) {
-      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED);
-    }
-
-    //서버가 구글로 code, codeVerifier를 보내고 getGoogleProfile을 통해서 유저의 profile을 받음
-    //token도 받아오는데 그건 구글의 access-token이라 profile을 받기 위해 getGoogleProfile 함수안에서만 사용함
-    const profile = await this.#socialAuthService.getGoogleProfile({
-      code,
-      codeVerifier,
-    });
-    //구글이 준 profile을 사용해서 우리가 새로 발급한 토큰
-    const { tokens } = await this.#socialAuthService.loginOrSignUp(profile);
-
-    this.#cookieProvider.setAuthCookies(res, tokens);
-
-    //위에서 받은 token, profile을 갖고 FRONTEND_URL + next로 사용자를 리다이렉트 (유저가 로그인 시작한 시점의 화면 페이지)
-    res.redirect(new URL(transaction.next, config.FRONTEND_URL).toString());
   }
 }

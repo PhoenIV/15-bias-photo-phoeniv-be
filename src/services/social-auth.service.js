@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { config } from '#config';
-import { DB_ERROR, ERROR_MESSAGE } from '#constants';
+import { DB_ERROR, ERROR_CODE, ERROR_MESSAGE } from '#constants';
 import { ConflictException, UnauthorizedException } from '#exceptions';
 
 //구글에서 온 응답 검사용 스키마
@@ -79,14 +79,18 @@ export class SocialAuthService {
 
     //구글에서 받은 유저 프로필에 이메일이 인증되지 않을 경우
     if (!profile.email || !profile.emailVerified) {
-      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED);
+      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED, {
+        code: ERROR_CODE.SOCIAL_AUTH_FAILED,
+      });
     }
 
     //구글에서 받은 이메일이 우리 서버에도 있는 경우 (중복)
     const email = profile.email.toLowerCase();
     const existingUser = await this.#userRepository.findByEmail(email);
     if (existingUser) {
-      throw new ConflictException(ERROR_MESSAGE.SOCIAL_ACCOUNT_LINK_REQUIRED);
+      throw new ConflictException(ERROR_MESSAGE.SOCIAL_ACCOUNT_LINK_REQUIRED, {
+        code: ERROR_CODE.SOCIAL_ACCOUNT_LINK_REQUIRED,
+      });
     }
 
     //새로 가입하는 사람은 닉네임 만들고 가입 진행
@@ -134,7 +138,9 @@ export class SocialAuthService {
   #parseSocialResponse(schema, payload) {
     const result = schema.safeParse(payload);
     if (!result.success) {
-      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED);
+      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED, {
+        code: ERROR_CODE.SOCIAL_AUTH_FAILED,
+      });
     }
     return result.data;
   }
@@ -148,17 +154,23 @@ export class SocialAuthService {
         //구글 서버가 오류가 났을 때 무한 대기를 막아줌
       });
     } catch {
-      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED);
+      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED, {
+        code: ERROR_CODE.SOCIAL_AUTH_FAILED,
+      });
     }
 
     if (!response.ok) {
-      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED);
+      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED, {
+        code: ERROR_CODE.SOCIAL_AUTH_FAILED,
+      });
     }
 
     try {
       return await response.json();
     } catch {
-      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED);
+      throw new UnauthorizedException(ERROR_MESSAGE.SOCIAL_AUTH_FAILED, {
+        code: ERROR_CODE.SOCIAL_AUTH_FAILED,
+      });
     }
   }
 }
