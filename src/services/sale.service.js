@@ -123,6 +123,12 @@ export class SaleService {
     const parsedSale = toSaleResponse(sale);
     const isMine = sale.seller.id === userId;
 
+    // 수정 모달용: 판매자 본인에게만 보유 수량·최소 가격을 내려줌
+    if (isMine) {
+      parsedSale.card.netQuantity = sale.userCard.netQuantity;
+      parsedSale.card.minPrice = sale.userCard.photoCard.minPrice;
+    }
+
     return { data: { ...parsedSale, isMine } };
   }
 
