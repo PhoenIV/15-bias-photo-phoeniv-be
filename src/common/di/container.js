@@ -23,6 +23,7 @@ import {
   ExchangeService,
   CardService,
   NotificationService,
+  SocialAuthService,
 } from '#services';
 import {
   AuthController,
@@ -33,12 +34,14 @@ import {
   UserController,
   CardController,
   NotificationController,
+  SocialAuthController,
 } from '#controllers';
 import {
   PasswordProvider,
   TokenProvider,
   CookieProvider,
   CloudinaryProvider,
+  OAuthStateProvider,
 } from '#providers';
 import { AuthMiddleware } from '#middlewares';
 
@@ -53,6 +56,8 @@ export const createContainer = () => {
     //1. Provider, 설정값, 데이터 접근
     config: asValue(config),
     db: asValue(db),
+    oauthStateSecret: asValue(config.OAUTH_STATE_SECRET),
+    clientBaseUrl: asValue(config.FRONTEND_URL),
     userRepository: asClass(UserRepository, {
       lifetime: Lifetime.SINGLETON,
     }),
@@ -66,6 +71,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     cookieProvider: asClass(CookieProvider, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    oauthStateProvider: asClass(OAuthStateProvider, {
       lifetime: Lifetime.SINGLETON,
     }),
     cardRepository: asClass(CardRepository, {
@@ -106,6 +114,9 @@ export const createContainer = () => {
     notificationService: asClass(NotificationService, {
       lifetime: Lifetime.SINGLETON,
     }),
+    socialAuthService: asClass(SocialAuthService, {
+      lifetime: Lifetime.SINGLETON,
+    }),
 
     //3. Middleware
     authMiddleware: asClass(AuthMiddleware, {
@@ -132,6 +143,9 @@ export const createContainer = () => {
       lifetime: Lifetime.SINGLETON,
     }),
     notificationController: asClass(NotificationController, {
+      lifetime: Lifetime.SINGLETON,
+    }),
+    socialAuthController: asClass(SocialAuthController, {
       lifetime: Lifetime.SINGLETON,
     }),
 
