@@ -1779,6 +1779,16 @@
                 },
                 {
                   "columns": [
+                    "sale_id",
+                    "offered_user_card_id"
+                  ],
+                  "name": "exchange_offer_pending_sale_card_key_7da1d654",
+                  "prefix": "exchange_offer_pending_sale_card_key",
+                  "unique": true,
+                  "where": "\"status\" = 'PENDING'"
+                },
+                {
+                  "columns": [
                     "proposer_id"
                   ],
                   "name": "exchange_offer_proposer_id_idx_f9a4d8da",
@@ -1799,14 +1809,7 @@
                   "id"
                 ]
               },
-              "uniques": [
-                {
-                  "columns": [
-                    "sale_id",
-                    "offered_user_card_id"
-                  ]
-                }
-              ]
+              "uniques": []
             },
             "notification": {
               "checks": [
@@ -3033,7 +3036,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "e494ffe37769b89df0904ef1b53ec4374ada04618b3b42576c0fd42e23f5e44a"
+    "storageHash": "ac9d649ff5545dfd178c1fea2e8e152d1d7825f33e0d486cd2da8f0cd48214d4"
   },
   "execution": {
     "executionHash": "5a452a55476d56f65f87b544dce1877d52e7335b5ec8af486886a19ac969e7ce",
