@@ -1,5 +1,6 @@
 import {
   ACCESS_TOKEN_TTL_SECONDS,
+  MINUTE_IN_MS,
   REFRESH_TOKEN_TTL_SECONDS,
   SECOND_IN_MS,
 } from '#constants';
@@ -41,5 +42,44 @@ export class CookieProvider {
     res.clearCookie('refreshToken', this.#baseCookieOptions);
     //clearCookie(토큰이름, 옵션): 옵션은 해당 경로로 들어오는 요청의 쿠키를 지워라 라는 의미로
     //요청의 경로를 적는 자리이다
+  }
+
+  //구글 로그인 시작할때 쿠키 2개 저장
+  setOAuthTransactionCookies(res, { transactionNonce, codeVerifier }) {
+    res.cookie('oauthTransactionNonce', transactionNonce, {
+      httpOnly: true,
+      secure: this.#isProduction,
+      sameSite: 'lax',
+      maxAge: 10 * MINUTE_IN_MS,
+      path: '/api/auth/google/callback',
+    });
+
+    res.cookie('oauthCodeVerifier', codeVerifier, {
+      httpOnly: true,
+      secure: this.#isProduction,
+      sameSite: 'lax',
+      maxAge: 10 * MINUTE_IN_MS,
+      path: '/api/auth/google/callback',
+    });
+  }
+
+  //요청의 쿠키에서 Nonce를 읽음
+  getOAuthTransactionNonce(req) {
+    return req.cookies?.oauthTransactionNonce ?? null;
+  }
+
+  //요청의 쿠키에서 codeVerifier를 읽음
+  getOAuthCodeVerifier(req) {
+    return req.cookies?.oauthCodeVerifier ?? null;
+  }
+
+  //쿠키 2개를 삭제
+  clearOAuthTransactionCookies(res) {
+    res.clearCookie('oauthTransactionNonce', {
+      path: '/api/auth/google/callback',
+    });
+    res.clearCookie('oauthCodeVerifier', {
+      path: '/api/auth/google/callback',
+    });
   }
 }
