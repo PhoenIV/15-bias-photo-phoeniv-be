@@ -32,6 +32,8 @@ const toSaleResponse = (sale) => {
     genre: photoCard.genre,
     description: photoCard.description,
     imagePublicId: photoCard.imagePublicId,
+    netQuantity: userCard.netQuantity,
+    minPrice: photoCard.minPrice,
   };
   const creator = {
     id: photoCard.creator.id,
