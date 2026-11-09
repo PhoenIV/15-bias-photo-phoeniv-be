@@ -6,8 +6,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '#exceptions';
-import { networkInterfaces } from 'node:os';
-import { minLength } from 'zod';
 
 // 응답을 명세에 맞는 형태로 가공하는 함수
 const toSaleResponse = (sale) => {
@@ -34,8 +32,6 @@ const toSaleResponse = (sale) => {
     genre: photoCard.genre,
     description: photoCard.description,
     imagePublicId: photoCard.imagePublicId,
-    netQuantity: userCard.netQuantity,
-    minPrice: photoCard.minPrice,
   };
   const creator = {
     id: photoCard.creator.id,
@@ -126,6 +122,12 @@ export class SaleService {
 
     const parsedSale = toSaleResponse(sale);
     const isMine = sale.seller.id === userId;
+
+    // 수정 모달용: 판매자 본인에게만 보유 수량·최소 가격을 내려줌
+    if (isMine) {
+      parsedSale.card.netQuantity = sale.userCard.netQuantity;
+      parsedSale.card.minPrice = sale.userCard.photoCard.minPrice;
+    }
 
     return { data: { ...parsedSale, isMine } };
   }
