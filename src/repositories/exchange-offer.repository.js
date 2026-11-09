@@ -152,4 +152,32 @@ export class ExchangeOfferRepository {
 
     return { items, totalCount };
   }
+
+  // 7) 교환 제시 카드에 표시될 최근 구매가
+  async findLatestPurchasePrice(userCardId, client = this.#db) {
+    const offeredUserCard = await client.orm.public.UserCard.where({
+      id: userCardId,
+    })
+      .select('ownerId', 'photoCardId')
+      .first();
+
+    if (!offeredUserCard) return null;
+
+    return client.orm.public.Purchase.where({
+      buyerId: offeredUserCard.ownerId,
+    })
+      .where((purchase) =>
+        purchase.sale.some((sale) =>
+          sale.userCard.some((userCard) =>
+            userCard.photoCardId.eq(offeredUserCard.photoCardId),
+          ),
+        ),
+      )
+      .orderBy([
+        (purchase) => purchase.createdAt.desc(),
+        (purchase) => purchase.id.desc(),
+      ])
+      .select('price')
+      .first();
+  }
 }
