@@ -182,18 +182,32 @@ export class CardService {
       isSoldOut,
     };
 
-    // 목록과 전체 개수를 병렬 조회
-    const [sales, countResult] = await Promise.all([
+    // 목록, 전체 개수, 등급별 집계를 병렬 조회
+    const [sales, countResult, gradeCountRows] = await Promise.all([
       this.#cardRepository.findMySales({
         ...filters,
         page,
         limit,
       }),
       this.#cardRepository.countMySales(filters),
+      this.#cardRepository.findMySalesGrades(filters),
     ]);
 
     const totalCount = Number(countResult[0]?.totalCount ?? 0);
     const totalPages = Math.ceil(totalCount / limit);
+
+    const gradeCounts = {
+      COMMON: 0,
+      RARE: 0,
+      SUPER_RARE: 0,
+      LEGENDARY: 0,
+    };
+
+    for (const { grade, cardCount } of gradeCountRows) {
+      if (gradeCounts[grade] !== undefined) {
+        gradeCounts[grade] = Number(cardCount);
+      }
+    }
 
     // API 응답 명세에 맞게 변환
     const data = sales.map((item) => ({
@@ -229,6 +243,7 @@ export class CardService {
         totalPages,
         hasNext: page < totalPages,
       },
+      gradeCounts,
     };
   }
 }
