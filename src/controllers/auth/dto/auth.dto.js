@@ -1,17 +1,19 @@
 import z from 'zod';
 
+const passwordSchema = z
+  .string({ error: '비밀번호는 필수입니다.' })
+  .min(8, '비밀번호는 8자 이상이어야 합니다.')
+  .max(12, '비밀번호는 12자 이하여야 합니다.')
+  .regex(/[A-Za-z]/, '비밀번호는 영문을 1자 이상 포함해야 합니다.')
+  .regex(/\d/, '비밀번호는 숫자를 1자 이상 포함해야 합니다.');
+
 export const signUpSchema = z
   .object({
     email: z
       .email('유효한 이메일 형식이 아닙니다.')
       .toLowerCase()
       .max(255, '최대 255자 이내로 입력하세요.'),
-    password: z
-      .string({ error: '비밀번호는 필수입니다.' })
-      .min(8, '비밀번호는 8자 이상이어야 합니다.')
-      .max(12, '비밀번호는 12자 이하여야 합니다.')
-      .regex(/[A-Za-z]/, '비밀번호는 영문을 1자 이상 포함해야 합니다.')
-      .regex(/\d/, '비밀번호는 숫자를 1자 이상 포함해야 합니다.'),
+    password: passwordSchema,
     passwordConfirm: z.string({ error: '비밀번호 확인은 필수입니다.' }),
     nickname: z
       .string({ error: '닉네임은 필수입니다.' })
@@ -27,7 +29,5 @@ export const signUpSchema = z
 
 export const loginSchema = z.object({
   email: z.email('유효한 이메일 형식이 아닙니다.').toLowerCase(),
-  password: z
-    .string({ error: '비밀번호는 필수입니다.' })
-    .min(1, '비밀번호를 입력해주세요.'),
+  password: passwordSchema,
 });

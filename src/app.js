@@ -26,6 +26,7 @@ export class App {
       cors({
         origin: corsOrigins,
         credentials: true,
+        exposedHeaders: ['Retry-After'],
       }),
     );
     this.app.use(express.json());

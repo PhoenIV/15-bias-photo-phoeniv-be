@@ -173,8 +173,20 @@ export class ExchangeService {
         limit,
       });
 
+    // 가장 최근의 매입가 구하여 반환값에 추가하기 (교환 제시받은 카드에 표시용)
+    const parsed = items.map(toOfferResponse);
+    await Promise.all(
+      parsed.map(async (offer) => {
+        const latestPurchase =
+          await this.#exchangeOfferRepository.findLatestPurchasePrice(
+            offer.offeredCard.id,
+          );
+        offer.offeredCard.latestPrice = latestPurchase?.price ?? null;
+      }),
+    );
+
     return {
-      data: items.map(toOfferResponse),
+      data: parsed,
       pagination: toPagination({ page, limit, totalCount }),
     };
   }
