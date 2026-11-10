@@ -133,6 +133,8 @@ export const ERROR_MESSAGE = {
   SOCIAL_ACCOUNT_LINK_REQUIRED:
     '구글 계정과 동일한 계정으로 가입되어있습니다. 일반 로그인으로 진행하세요',
   SOCIAL_AUTH_FAILED: '소셜 로그인에 실패했습니다.',
+  TOO_MANY_LOGIN_ATTEMPTS:
+    '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.',
 
   // 입력 검증
   INVALID_INPUT: '입력값이 올바르지 않습니다.',
@@ -173,6 +175,7 @@ export const ERROR_CODE = {
   INVALID_SOCIAL_AUTH_STATE: 'INVALID_SOCIAL_AUTH_STATE',
   SOCIAL_ACCOUNT_LINK_REQUIRED: 'SOCIAL_ACCOUNT_LINK_REQUIRED',
   SOCIAL_AUTH_FAILED: 'SOCIAL_AUTH_FAILED',
+  TOO_MANY_LOGIN_ATTEMPTS: 'TOO_MANY_LOGIN_ATTEMPTS',
 
   // 교환
   SALE_NOT_FOUND: 'SALE_NOT_FOUND',
