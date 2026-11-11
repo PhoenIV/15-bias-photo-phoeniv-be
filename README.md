@@ -226,8 +226,6 @@ Authorization Code + PKCE 방식으로 구현했고, 구글 인증이 끝나면 
 
 ### 박수환
 
-### 박수환
-
 #### 포토카드 교환 도메인 API 및 트랜잭션 처리 (`POST /api/sales/:saleId/exchanges`, `GET /api/sales/:saleId/exchanges`, `GET /api/exchanges/me`, `PATCH /api/exchanges/:exchangeId`)
 
 - **교환 제시·조회·승인/거절/취소 API 구현**: 구매자의 교환 제시, 판매자·제시자별 교환 목록 조회, 교환 상태 변경(승인·거절·취소)을 단일 도메인으로 구현
