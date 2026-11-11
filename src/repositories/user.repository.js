@@ -16,6 +16,15 @@ export class UserRepository {
     return this.#users.select(...this.#fields).create(data);
   }
 
+  createWithGoogle({ email, nickname, providerId }) {
+    return this.#users.select(...this.#fields).create({
+      email,
+      nickname,
+      provider: 'GOOGLE',
+      providerId,
+    });
+  }
+
   findByEmail(email, { includePassword = false } = {}) {
     const fields = includePassword
       ? [...this.#fields, 'password']
@@ -59,6 +68,16 @@ export class UserRepository {
       .limit(limit)
       .offset(offset)
       .all();
+  }
+
+  findByProvider(provider, providerId) {
+    return this.#users
+      .where({
+        providerId,
+        provider,
+      })
+      .select(...this.#fields)
+      .first();
   }
 
   update(id, data) {

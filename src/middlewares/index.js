@@ -4,3 +4,4 @@ export * from './auth.middleware.js';
 export * from './authorization.middleware.js';
 export * from './validation.middleware.js';
 export * from './receive-image.middleware.js';
+export * from './login-try-limit.middleware.js';

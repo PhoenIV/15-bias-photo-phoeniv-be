@@ -5,3 +5,4 @@ export * from './card.service.js';
 export * from './point-draw.service.js';
 export * from './exchange.service.js';
 export * from './notification.service.js';
+export * from './social-auth.service.js';

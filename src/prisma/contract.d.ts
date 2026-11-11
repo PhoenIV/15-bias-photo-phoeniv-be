@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'e494ffe37769b89df0904ef1b53ec4374ada04618b3b42576c0fd42e23f5e44a'>;
+  StorageHashBase<'ac9d649ff5545dfd178c1fea2e8e152d1d7825f33e0d486cd2da8f0cd48214d4'>;
 export type ExecutionHash =
   ExecutionHashBase<'5a452a55476d56f65f87b544dce1877d52e7335b5ec8af486886a19ac969e7ce'>;
 export type ProfileHash =
@@ -705,9 +705,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [
-                { readonly columns: readonly ['sale_id', 'offered_user_card_id'] },
-              ];
+              uniques: readonly [];
               indexes: readonly [
                 {
                   readonly name: 'exchange_offer_card_status_idx_0ddac7fe';
@@ -720,6 +718,13 @@ type ContractBase = Omit<
                   readonly prefix: 'exchange_offer_offered_user_card_id_idx';
                   readonly columns: readonly ['offered_user_card_id'];
                   readonly unique: false;
+                },
+                {
+                  readonly name: 'exchange_offer_pending_sale_card_key_7da1d654';
+                  readonly prefix: 'exchange_offer_pending_sale_card_key';
+                  readonly columns: readonly ['sale_id', 'offered_user_card_id'];
+                  readonly where: '"status" = \'PENDING\'';
+                  readonly unique: true;
                 },
                 {
                   readonly name: 'exchange_offer_proposer_id_idx_f9a4d8da';

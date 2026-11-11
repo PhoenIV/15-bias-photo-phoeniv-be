@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '#constants';
-import { validate } from '#middlewares';
+import { loginTryLimit, validate } from '#middlewares';
 import { loginSchema, signUpSchema } from './dto/auth.dto.js';
 import { BaseController } from '../base.controller.js';
 
@@ -17,8 +17,11 @@ export class AuthController extends BaseController {
     this.router.post('/signup', validate('body', signUpSchema), (req, res) =>
       this.signUp(req, res),
     );
-    this.router.post('/login', validate('body', loginSchema), (req, res) =>
-      this.login(req, res),
+    this.router.post(
+      '/login',
+      validate('body', loginSchema),
+      loginTryLimit,
+      (req, res) => this.login(req, res),
     );
     this.router.post('/logout', (_req, res) => this.logout(_req, res));
     return this.router;

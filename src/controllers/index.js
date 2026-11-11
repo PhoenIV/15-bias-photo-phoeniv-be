@@ -10,6 +10,7 @@ export * from './point-draw/point-draw.controller.js';
 export * from './exchange/exchange.controller.js';
 export * from './user/user.controller.js';
 export * from './notification/notification.controller.js';
+export * from './auth/social-auth.controller.js';
 
 export class Controller extends BaseController {
   #authController; //2. private 필드 - 아래로 추가
@@ -19,6 +20,7 @@ export class Controller extends BaseController {
   #userController;
   #cardController;
   #notificationController;
+  #socialAuthController;
 
   //3. constructor 인자에 구조분해로 다른 controller 추가
   constructor({
@@ -29,6 +31,7 @@ export class Controller extends BaseController {
     userController,
     cardController,
     notificationController,
+    socialAuthController,
   }) {
     super();
     this.healthCheckController = new HealthCheckController();
@@ -39,12 +42,14 @@ export class Controller extends BaseController {
     this.#userController = userController;
     this.#cardController = cardController;
     this.#notificationController = notificationController;
+    this.#socialAuthController = socialAuthController;
   }
 
   //5. 엔트포인트와 라우트 추가
   routes() {
     this.router.use('/health-check', this.healthCheckController.routes());
     this.router.use('/auth', this.#authController.routes());
+    this.router.use('/auth', this.#socialAuthController.routes());
     this.router.use('/sales', this.#saleController.routes());
     this.router.use('/cards', this.#cardController.routes());
     this.router.use('/point-draws', this.#pointDrawController.routes());
