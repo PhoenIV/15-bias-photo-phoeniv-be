@@ -29,17 +29,17 @@
 
 ## 🛠️ 기술 스택
 
-| 구분                    | 사용 기술 및 도구                                            | 선정 및 활용 이유                                                            |
-| :---------------------- | :----------------------------------------------------------- | :--------------------------------------------------------------------------- |
-| **Runtime & Framework** | Node.js 24+, Express 5 (ESM)                                 | ESM 지원 및 비동기 라우팅 에러 핸들링이 개선된 최신 런타임 환경              |
-| **Database & ORM**      | PostgreSQL, Prisma 8 (RC, `@prisma/orm-postgres`), Neon DB   | Contract 기반 타입 세이프 쿼리 작성 및 서버리스 PostgreSQL 연동              |
-| **Architecture & DI**   | Awilix (`asClass`, `asValue`)                                | IoC 컨테이너 기반 의존성 주입으로 계층 간 결합도 완화 및 테스트 용이성 확보  |
-| **Validation**          | Zod                                                          | 환경 변수, DTO 및 요청 데이터 런타임 스키마 유효성 검증                      |
-| **Auth & Security**     | JWT, bcrypt, cookie-parser, Helmet, CORS                     | Access/Refresh 이중 토큰, 비밀번호 단방향 암호화, HttpOnly 쿠키 및 보안 헤더 |
-| **Media Storage**       | Multer, Cloudinary, file-type                                | 멀티파트 파싱, 매직 넘버 기반 MIME 검증 및 클라우드 이미지 스토리지 연동     |
-| **API Documentation**   | Swagger (`docs/openapi.yaml`, `swagger-ui-express`)          | OpenAPI 3.0 명세 기반 `/api-docs` 대화형 문서 제공                           |
-| **Code Quality**        | ESLint, Prettier, Husky, lint-staged, Commitlint, CodeRabbit | Git Hook 기반 커밋/포맷팅 자동 검사 및 AI 코드 리뷰 연동                     |
-| **Tool & Infra**        | GitHub, Discord, Notion, Render                              | 협업 도구 및 Render 기반 클라우드 배포                                       |
+| 구분                    | 사용 기술 및 도구                                               | 선정 및 활용 이유                                                                            |
+| :---------------------- | :-------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| **Runtime & Framework** | Node.js 24+, Express 5 (ESM)                                    | ESM 지원 및 비동기 라우팅 에러 핸들링이 개선된 최신 런타임 환경                              |
+| **Database & ORM**      | PostgreSQL, Prisma 8 (RC, `@prisma/orm-postgres`), Neon DB      | Contract 기반 타입 세이프 쿼리 작성 및 서버리스 PostgreSQL 연동                              |
+| **Architecture & DI**   | Awilix (`asClass`, `asValue`)                                   | IoC 컨테이너 기반 의존성 주입으로 계층 간 결합도 완화 및 테스트 용이성 확보                  |
+| **Validation**          | Zod                                                             | 환경 변수, DTO 및 요청 데이터 런타임 스키마 유효성 검증                                      |
+| **Auth & Security**     | JWT, bcrypt, cookie-parser, Helmet, rate-limiter-flexible, CORS | Access/Refresh 이중 토큰, 비밀번호 단방향 암호화, 무한 입력 방지, HttpOnly 쿠키 및 보안 헤더 |
+| **Media Storage**       | Multer, Cloudinary, file-type                                   | 멀티파트 파싱, 매직 넘버 기반 MIME 검증 및 클라우드 이미지 스토리지 연동                     |
+| **API Documentation**   | Swagger (`docs/openapi.yaml`, `swagger-ui-express`)             | OpenAPI 3.0 명세 기반 `/api-docs` 대화형 문서 제공                                           |
+| **Code Quality**        | ESLint, Prettier, Husky, lint-staged, Commitlint, CodeRabbit    | Git Hook 기반 커밋/포맷팅 자동 검사 및 AI 코드 리뷰 연동                                     |
+| **Tool & Infra**        | GitHub, Discord, Notion, Render                                 | 협업 도구 및 Render 기반 클라우드 배포                                                       |
 
 > [!NOTE]
 > **Prisma 8 (RC) 채택 및 리스크 관리**: `contract.prisma` 기반의 타입 세이프 쿼리(`@prisma/orm-postgres`)와 향상된 드라이버 성능을 위해 선제 도입하였으며, `pnpm-lock.yaml`을 통한 엄격한 버전 고정으로 RC 버전의 안정성을 관리했습니다.
@@ -124,7 +124,83 @@ sequenceDiagram
 
 ### 임의균(팀장)
 
-(자신이 담당 및 개발한 기능 상세 설명)
+#### 유저 인증·인가
+
+- **회원가입**
+  - 이메일·닉네임 중복 검사 (각각 409)
+  - 비밀번호는 bcrypt로 해시해서 저장
+  - 가입 직후 토큰을 발급해 자동 로그인
+  - Zod 스키마로 비밀번호 8~12자(영문 + 숫자) 검증
+  - 이메일은 소문자로 통일해 저장·조회
+- **로그인**
+  - 이메일과 비밀번호 중 무엇이 틀렸는지 알 수 없게 같은 에러(401)로 응답
+  - `dummyHash`를 사용해 응답 시간 차이로 가입 여부를 추측하지 못하게 함
+- **토큰 관리**
+  - JWT Access Token(15분) + Refresh Token(7일)
+  - 쿠키 옵션 : `HttpOnly` , `SameSite=Lax`, `Secure` (운영=true, 개발=false)
+- **인증 미들웨어 (`authenticate`)**
+  - 모든 요청에서 쿠키의 토큰을 검사하고, 유효하면 `req.user = { id }`를 부여
+  - Access Token이 만료됐거나 만료 5분 전이면 Refresh Token으로 토큰 재발급, 쿠키 갱신
+  - 인증할 수 없는 쿠키는 삭제하고 비로그인 요청으로 통과시킴
+  - 로그아웃 요청은 검사에서 제외
+- **인가 미들웨어 (`needsLogin`)**
+  - 로그인이 필요한 API에 적용하여 `authenticate` 로 통과된 요청들이 여기서 걸러짐
+  - 미들웨어 함수를 생성하는 함수 구조로 만들어 다른 미들웨어를 추가할 수 있음
+- **로그인 시도 제한 미들웨어 (`loginTryLimit`)**
+  - `rate-limiter-flexible`(메모리 방식) 사용
+  - 이메일 기준, 6회 부터 15분 차단 (429 + `Retry-After` 헤더), 로그인 성공 시 실패 횟수 초기화
+- **내 정보 조회 · 로그아웃**
+  - `GET /api/users/me`
+  - `POST /api/auth/logout` (쿠키 삭제, 204)
+
+#### 공용 미들웨어
+
+- **요청 검증 (`validate`)**
+  - Zod 스키마를 사용, `body`, `query`, `params` 중 원하는 대상을 검증
+  - safeParse를 사용해 팀에서 정한 응답 양식 (`fieldErrors`)으로 관리
+- **에러 처리 (`errorHandler`)**
+  - 직접 정의한 예외는 `{ error: { code, message, fieldErrors } }` 형태로 통일해 응답
+  - 라이브러리가 던지는 4xx는 400, DB 유니크 제약 위반은 409, 그 외 에러는 500으로 변환
+  - 등록되지 않은 경로는 공통 404 (`notFound`) 예외로 응답
+
+#### 구글 로그인
+
+Authorization Code + PKCE 방식으로 구현했고, 구글 인증이 끝나면 일반 로그인과 같은 자체 JWT 쿠키를 발급합니다.
+
+- **로그인 시작 (`/auth/google/login`)**
+  - `state`와 PKCE 값(`code_challenge`)을 만들어 구글 로그인 화면으로 리다이렉트
+  - `state`는 HMAC-SHA256으로 서명하고 유효시간은 10분
+  - 검증용 값(`nonce`, `codeVerifier`)은 `HttpOnly` 쿠키에 저장 (콜백 경로에서만 전송, 10분 만료)
+- **콜백 처리 (`/auth/google/callback`)**
+  - 쿠키 값과 `state`를 대조해서 위조·만료·재사용된 요청을 차단 (쿠키는 읽자마자 삭제)
+  - `code`와 `codeVerifier`로 구글에서 토큰을 받고, 그 토큰으로 사용자 프로필 조회
+  - 로그인 또는 가입 처리 후 자체 JWT 쿠키를 발급하고 FE로 리다이렉트
+- **리다이렉트 경로 검증**
+  - 로그인 후 이동할 경로(`next`)는 같은 사이트 내부 경로만 허용 (오픈 리다이렉트 방지)
+  - 실패하면 `/login?error=코드`로 이동하고, FE가 코드를 안내 문구로 바꿔 모달로 표시
+
+**계정 정책**
+
+- 이미 구글로 가입한 사용자는 그대로 로그인 (`provider` + `providerId`로 식별)
+- 구글 이메일이 인증되지 않았으면 실패 처리
+- 같은 이메일의 일반 계정이 있으면 가입시키지 않고 409로 안내
+- 신규 사용자는 자동 가입. 닉네임은 구글 이름을 사용하고, 중복이면 뒤에 숫자 4자리를 붙여 재시도
+
+#### 랜덤 뽑기 (포인트 뽑기)
+
+- **뽑기**
+  - `POST /api/point-draws` (로그인 필요)
+  - 100P, 500P, 1000P를 각각 일정 확률로 포인트 지급
+  - 쿨다운 : 유저별 1시간에 1회
+  - 쿨다운 중이면 429 (`BOX_COOLDOWN`)
+- **상태 조회**
+  - `GET /api/point-draws/status`로 `canDraw`, `nextAvailableAt`, `serverTime` 반환
+  - FE는 `serverTime` 기준으로 남은 시간을 계산해서 기기 시계 차이의 영향을 받지 않음
+- **동시 요청 방어**
+  - 하나의 트랜잭션에서 유저 행을 잠근 뒤 쿨다운을 판단
+  - 더블 클릭이나 여러 탭에서 동시에 눌러도 1회만 지급
+- **포인트 이력 기록**
+  - 트랜잭션 안에서 뽑기 기록(`PointDraw`) 생성, 유저 포인트 증가, `PointHistory`에 지급액과 지급 후 잔액을 함께 기록
 
 ### 김수지
 
