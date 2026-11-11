@@ -40,7 +40,7 @@ info:
     | 403 | 로그인은 했지만 권한 없음 (남의 것) | `SALE_FORBIDDEN`, `USER_CARD_FORBIDDEN` |
     | 404 | 대상이 없음 | `SALE_NOT_FOUND`, `EXCHANGE_NOT_FOUND` |
     | 409 | 요청은 맞지만 **지금 상태** 때문에 처리 불가 | `SALE_SOLD_OUT`, `POINT_NOT_ENOUGH` |
-    | 429 | 시간 제한 | `BOX_COOLDOWN` |
+    | 429 | 시간 제한 / 요청 횟수 제한 | `BOX_COOLDOWN`, `TOO_MANY_LOGIN_ATTEMPTS` |
     | 500 | 서버 오류 | `INTERNAL_SERVER_ERROR` |
 
     - code 이름은 **`대상_상태`** 순서 (`SALE_SOLD_OUT`, `POINT_NOT_ENOUGH`, `CARD_QUANTITY_NOT_ENOUGH`)
@@ -57,6 +57,7 @@ info:
     | 발행량 / 판매·구매 수량 | 1~10장 |
     | 검색어 | 0~50자 |
     | 한 페이지 개수 | 1~50 (알림은 1~30) |
+    | 비밀번호 | 8~12자, 영문·숫자 각 1자 이상 (회원가입·로그인 동일) |
 
     **인증**: 로그인(또는 회원가입)하면 `accessToken`(15분), `refreshToken`(7일)이 httpOnly 쿠키로 저장됩니다.
     이 화면이 백엔드와 같은 주소에서 열려 있으면, 로그인 API를 먼저 실행한 뒤 다른 API를 "Try it out"으로 테스트할 수 있습니다.
@@ -189,6 +190,16 @@ paths:
         성공하면 `accessToken`, `refreshToken` 쿠키가 설정됩니다.
         이메일이 없는 경우와 비밀번호가 틀린 경우 같은 메시지를 반환합니다. 구글 가입 회원의 일반 로그인 시도도 401입니다.
 
+        **비밀번호 형식**은 회원가입과 같은 규칙(8~12자, 영문·숫자 각 1자 이상)으로 검증합니다. 규칙에 맞지 않으면 인증 확인 없이 400으로 응답합니다.
+
+        **로그인 시도 횟수 제한**: 같은 이메일로 **연속 5회**까지는 시도할 수 있고, **6번째 시도부터 15분 동안 429**를 반환합니다 (올바른 비밀번호도 차단).
+        - 15분은 6번째 시도가 거절된 시점부터 셉니다. 남은 시간은 `Retry-After` 헤더(초)로 알려 줍니다.
+        - 로그인에 성공하면 연속 실패 횟수가 초기화됩니다. 차단이 끝나도 횟수가 초기화되어 다시 5회를 시도할 수 있습니다.
+        - 연속 실패 횟수는 최대 1일 동안 유지됩니다.
+        - 400(형식 오류) 요청은 횟수에 포함되지 않습니다.
+        - 이메일은 소문자로 변환해 구분합니다 (`User1@example.com`과 `user1@example.com`은 같은 이메일).
+        - 서버가 재시작되면 횟수가 초기화됩니다.
+
         ⚠️ 구글 로그인(OAuth) API는 기본 기능 완료 후 추가 예정 (임의균)
       security: []
       requestBody:
@@ -200,8 +211,16 @@ paths:
               required: [email, password]
               properties:
                 email:
-                  { type: string, format: email, example: user1@example.com }
-                password: { type: string, example: password1234 }
+                  type: string
+                  format: email
+                  description: 서버에서 소문자로 변환 후 조회
+                  example: user1@example.com
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 12
+                  description: 영문과 숫자를 각각 1자 이상 포함 (회원가입과 동일)
+                  example: password1234
       responses:
         '200':
           description: 로그인 성공
@@ -227,7 +246,17 @@ paths:
                       nickname: 최애덕후,
                       point: 1000,
                     }
-        '400': { $ref: '#/components/responses/ValidationFailed' }
+        '400':
+          description: 이메일 형식 오류, 필수값 누락, 비밀번호 형식 오류 (8~12자, 영문·숫자 포함)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: VALIDATION_FAILED
+                  message: 입력값 검증에 실패했습니다.
+                  fieldErrors:
+                    password: [비밀번호는 8자 이상이어야 합니다.]
         '401':
           description: 이메일이 없거나 비밀번호가 틀림
           content:
@@ -238,6 +267,22 @@ paths:
                   {
                     code: INVALID_CREDENTIALS,
                     message: 이메일 또는 비밀번호가 올바르지 않습니다.,
+                    fieldErrors: {},
+                  }
+        '429':
+          description: 같은 이메일로 연속 5회를 초과해 시도함 (6번째 시도부터 15분 차단). 차단이 풀릴 때까지 올바른 비밀번호도 차단
+          headers:
+            Retry-After:
+              description: 다시 시도할 수 있을 때까지 남은 시간 (초)
+              schema: { type: integer, example: 900 }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  {
+                    code: TOO_MANY_LOGIN_ATTEMPTS,
+                    message: 로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.,
                     fieldErrors: {},
                   }
         '500': { $ref: '#/components/responses/ServerError' }

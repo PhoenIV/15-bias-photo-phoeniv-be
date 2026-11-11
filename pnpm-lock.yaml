@@ -44,6 +44,9 @@ importers:
       multer:
         specifier: ^2.5.0
         version: 2.5.0
+      rate-limiter-flexible:
+        specifier: ^11.4.0
+        version: 11.4.0
       swagger-jsdoc:
         specifier: ^6.3.0
         version: 6.3.0(openapi-types@12.1.3)
@@ -2882,6 +2885,9 @@ packages:
   range-parser@1.3.0:
     resolution: {integrity: sha512-hek2mFQpPuI4E1BBKrSto+BU3e3x4xuarsbiwr3+lf7p44juvFMV0XFWQAP3xUyqXA4RrXLIoaSUGbSt056ZMw==}
     engines: {node: '>= 0.6'}
+
+  rate-limiter-flexible@11.4.0:
+    resolution: {integrity: sha512-+RyuiXEG3odp5c9aZP83H8cld0L7swvz1FxlVzy/7N4zYo4i0GDy5tBhZlPFFOdXXwEilyBREKbVIKDq5bfjlw==}
 
   raw-body@3.0.2:
     resolution: {integrity: sha512-K5zQjDllxWkf7Z5xJdV0/B0WTNqx6vxG70zJE4N0kBs4LovmEYWJzQGxC9bS9RAKu3bgM40lrd5zoLJ12MQ5BA==}
@@ -6100,6 +6106,8 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   range-parser@1.3.0: {}
+
+  rate-limiter-flexible@11.4.0: {}
 
   raw-body@3.0.2:
     dependencies:
