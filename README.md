@@ -226,7 +226,14 @@ Authorization Code + PKCE 방식으로 구현했고, 구글 인증이 끝나면 
 
 ### 박수환
 
-(자신이 담당 및 개발한 기능 상세 설명)
+### 박수환
+
+#### 포토카드 교환 도메인 API 및 트랜잭션 처리 (`POST /api/sales/:saleId/exchanges`, `GET /api/sales/:saleId/exchanges`, `GET /api/exchanges/me`, `PATCH /api/exchanges/:exchangeId`)
+
+- **교환 제시·조회·승인/거절/취소 API 구현**: 구매자의 교환 제시, 판매자·제시자별 교환 목록 조회, 교환 상태 변경(승인·거절·취소)을 단일 도메인으로 구현
+- **제시 단계 다중 검증**: 본인 판매글 제시(`EXCHANGE_OWN_SALE`)·품절(`SALE_SOLD_OUT`)·카드 소유권 및 수량·판매자 교환 조건(등급·장르) 불일치(`EXCHANGE_CONDITION_MISMATCH`)·중복 제시(`EXCHANGE_DUPLICATED`)를 도메인 예외로 방어
+- **권한 분리 및 동시성 제어**: 승인·거절은 판매자, 취소는 제시자만 가능하도록 권한을 분리하고, `updateStatusIfPending`으로 `PENDING` 상태에서만 1회 처리되도록 하여 동시 요청·중복 처리 방지
+- **트랜잭션 기반 카드 소유권 이전 및 알림 연동**: 교환 승인 시 양측 카드 소유권 교환과 교환 결과 알림 생성을 단일 트랜잭션으로 묶어 정합성을 보장하고, 제시 접수·승인·거절 시점에 상대방에게 실시간 알림 발송
 
 ### 이승현
 
